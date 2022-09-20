@@ -1,0 +1,45 @@
+<mvc:View controllerName="com.rava.pedido.pedidoventa.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+        <ObjectHeader
+            id="oh1"
+            responsive="true"
+            binding="{/ProductCollection/}"
+            intro="{Description}"
+            title="{Name}"
+            number="{Price}"
+            numberUnit="{CurrencyCode}"
+            showMarkers="true"
+            markFlagged="true"
+            markFavorite="true"
+            numberState="Success"
+            backgroundDesign="Translucent">
+            <attributes>
+                <ObjectAttribute
+                    title="Manufacturer"
+                    text="{SupplierName}"/>
+            </attributes>
+            <statuses>
+                <ObjectStatus
+                    title="Approval"
+                    text="Pending"
+                    state="Warning"/>
+            </statuses>
+            <headerContainer>
+                <HeaderContainer scrollStep="200" id="headerContainer" scroll="onScroll" content="{/ContentData/}">
+                    <NumericContent size="S" scale="M" value="{value}" valueColor="{color}" indicator="{growth}" press="press" />
+                </HeaderContainer>
+            </headerContainer>
+        </ObjectHeader>
+        <headerContent>
+			<Button text="" press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
+			<Button text="" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
+		</headerContent>
+        <content>
+            <VBox>
+                
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
