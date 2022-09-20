@@ -14,7 +14,6 @@ sap.ui.define([
 
             this.frgIdAddPedido = "frgIdAddPedido";
             
-            
             console.log("init")
         },
         handleRouteMatched: function(){
