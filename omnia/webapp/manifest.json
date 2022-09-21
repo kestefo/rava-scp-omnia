@@ -73,7 +73,12 @@
         "dataSource": "mainService",
         "preload": true,
         "settings": {}
-      }
+      },
+      "Proyect": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "preload": true
+    }
     },
     "resources": {
       "css": [
@@ -90,16 +95,28 @@
         "viewPath": "Cobranza.omnia.view",
         "controlAggregation": "pages",
         "controlId": "app",
-        "clearControlAggregation": false
+        "clearControlAggregation": false,
+        "bypassed": {
+            "target": [
+                "TargetPage1"
+            ]
+        }
       },
       "routes": [
         {
-          "name": "RoutePage1",
-          "pattern": ":?query:",
+          "name": "TargetPage1",
+          "pattern": "Page1/:context:",
           "target": [
             "TargetPage1"
           ]
-        }
+        },
+        {
+            "name": "TargetPage2",
+            "pattern": "Page2/:context:",
+            "target": [
+              "TargetPage2"
+            ]
+          }
       ],
       "targets": {
         "TargetPage1": {
@@ -108,7 +125,14 @@
           "clearControlAggregation": false,
           "viewId": "Page1",
           "viewName": "Page1"
-        }
+        },
+        "TargetPage2": {
+            "viewType": "XML",
+            "transition": "slide",
+            "clearControlAggregation": false,
+            "viewId": "Page2",
+            "viewName": "Page2"
+          }
       }
     },
     "rootView": {
