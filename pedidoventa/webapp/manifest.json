@@ -55,7 +55,8 @@
         "sap.ui.comp": {},
         "sap.ui.generic.app": {},
         "sap.ui.table": {},
-        "sap.ushell": {}
+        "sap.ushell": {},
+        "sap.ui.commons": {}
       }
     },
     "contentDensities": {
@@ -104,6 +105,13 @@
           "target": [
             "Main"
           ]
+        },
+        {
+            "name": "Detail",
+            "pattern": "Detail/:app:",
+            "target": [
+                "Detail"
+            ]
         }
       ],
       "targets": {
@@ -113,6 +121,13 @@
           "clearControlAggregation": false,
           "viewId": "Main",
           "viewName": "Main"
+        },
+        "Detail": {
+            "viewType": "XML",
+            "transition": "slide",
+            "clearControlAggregation": false,
+            "viewId": "Detail",
+            "viewName": "Detail"
         }
       }
     },

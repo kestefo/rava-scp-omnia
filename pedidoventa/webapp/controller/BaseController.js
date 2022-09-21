@@ -492,6 +492,11 @@ sap.ui.define([
 
             oSource.setValue(sValueUsed);
         },
+        _onPressClose: function (oEvent) {
+			var oSource = oEvent.getSource();
+			var sCustom = oSource.data("custom");
+            oSource.getParent().close();
+		},
 
 	});
 
