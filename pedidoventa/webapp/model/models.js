@@ -120,6 +120,137 @@ sap.ui.define([
                     }
                 ]
                 return oModel;
-            }
+            },
+            JsonProductos: function () {
+                var oModel = [
+                    {
+                        "producto": "Conditioner Placenta Life Hydra Macadamia Frasco 1lt",
+                        "cantidad": "6",
+                        "tipo": "L",
+                        "total": "151.16",
+                        "descuentos": "0.00% 0.00%",
+                        "descuentosVolumen": "0.00%"
+                    },
+                    {
+                        "producto": "Conditioner Life Radiant BB-Tox Treatment",
+                        "cantidad": "6",
+                        "tipo": "L",
+                        "total": "151.16",
+                        "descuentos": "0.00% 0.00%",
+                        "descuentosVolumen": ""
+                    },
+                    {
+                        "producto": "MALETA DE CUERINA COLOR NEGRO CON LOGO EN PLACA",
+                        "cantidad": "3",
+                        "tipo": "N",
+                        "total": "100.00",
+                        "descuentos": "0.00% ",
+                        "descuentosVolumen": "0.00%"
+                    }
+                ]
+                return oModel;
+            },
+            JsonFamilia: function () {
+                var oModel = [
+                    {
+                        "key": "01",
+                        "desc": "-Seleccione-"
+                    },
+                    {
+                        "key": "02",
+                        "desc": "Acondicionador Placenta Life Be Natural"
+                    },
+                    {
+                        "key": "03",
+                        "desc": "Acondicionador Placenta Life Saloon"
+                    },
+                    {
+                        "key": "04",
+                        "desc": "Acondicionador Tonno Plus Tonno Plus"
+                    }
+                ]
+                return oModel;
+            },
+            JsonProductoFamilia: function () {
+                var oModel = [
+                    {
+                        "producto": "Plife Radiant Conditioner Nutri - Soft Galonera 3.71l",
+                        "precio": "49.07",
+                        "stock": "329",
+                        "unicaja": "4",
+                        "cantidad": "0",
+                        "state": "Information",
+                        "icon": "sap-icon://outbox"
+                    },
+                    {
+                        "producto": "Plife Radiant Deco Extreme Pote 500mg",
+                        "precio": "44.07",
+                        "stock": "3,629",
+                        "unicaja": "6",
+                        "cantidad": "0",
+                        "state": "Information",
+                        "icon": "sap-icon://outbox"
+                    },
+                    {
+                        "producto": "Plife Radiant Shampo Nutri - Soft Galonera 3.71l",
+                        "precio": "49.07",
+                        "stock": "505",
+                        "unicaja": "4",
+                        "cantidad": "0",
+                        "state": "Information",
+                        "icon": "sap-icon://outbox"
+                    }
+                ]
+                return oModel;
+            },
+            JsonDescuento: function () {
+                var oModel = [
+                    {
+                        "key": "01",
+                        "desc": "Bonificación Kit"
+                    },
+                    {
+                        "key": "02",
+                        "desc": "Fuerza Venta"
+                    },
+                    {
+                        "key": "03",
+                        "desc": "Bonificación por Vendedor"
+                    },
+                    {
+                        "key": "04",
+                        "desc": "Bonificación por Sub-Marca"
+                    },
+                    {
+                        "key": "05",
+                        "desc": "Volúmen por Sub-Marca"
+                    },
+                    {
+                        "key": "06",
+                        "desc": "Volúmen de Venta"
+                    },
+                    {
+                        "key": "07",
+                        "desc": "Combos"
+                    },
+                    {
+                        "key": "08",
+                        "desc": "Producto Especiales"
+                    },
+                    {
+                        "key": "09",
+                        "desc": "Obsequios por productos"
+                    },
+                    {
+                        "key": "10",
+                        "desc": "Descuento por porcentaje de ventas"
+                    },
+                    {
+                        "key": "11",
+                        "desc": "No cuenta con promociones de este tipo"
+                    }
+                ]
+                return oModel;
+            },
     };
 });

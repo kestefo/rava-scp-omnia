@@ -28,6 +28,7 @@ sap.ui.define([
                 this.oModelPedidoVenta.setProperty("/DetailSelectPuntoVenta", models.JsonPuntoVenta());
                 this.oModelPedidoVenta.setProperty("/DetailSelectDireccion", models.JsonDirecciones());
                 this.oModelPedidoVenta.setProperty("/DetailSelectCondPago", models.JsonCondPago());
+                this.oModelPedidoVenta.setProperty("/DescSelect", models.JsonDescuento());
 			}).catch(function (oError) {
 				sap.ui.core.BusyIndicator.hide(0);
 			});
@@ -35,11 +36,6 @@ sap.ui.define([
         _onPressAddPedido: function(){
             this.setFragment("_dialogAddPedido", this.frgIdAddPedido, "AddPedido", this);
         },
-        _onPressClose: function (oEvent) {
-			var oSource = oEvent.getSource();
-			var sCustom = oSource.data("custom");
-            oSource.getParent().close();
-		},
         _onAcceptPedido: function(){
             this._dialogAddPedido.close();
             this.setFragment("_dialogDetailPedido", this.frgIdDetailPedido, "DetailPedido", this);
@@ -51,8 +47,8 @@ sap.ui.define([
             this.setFragment("_dialogEditContact", this.frgIdEditContact, "EditContact", this);
         },
         _onPressAddProducto: function(){
-            this.oRouter.navTo("RouteLaunchpadCreateNotific", {
-                app: "LaunchpadCreateNotific"
+            this.oRouter.navTo("Detail", {
+                app: "2"
             });
         }
     });

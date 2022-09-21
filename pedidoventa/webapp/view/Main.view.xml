@@ -1,4 +1,4 @@
-<mvc:View controllerName="com.rava.pedido.pedidoventa.controller.Main"
+<mvc:View controllerName="com.rava.pedido.pedidoventa.controller.Main" xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
@@ -20,78 +20,44 @@
 		</headerContent>
         <content>
             <VBox class="sapUiSmallMargin">
-                <Table items="{oModelPedidoVenta>/PedidosCreados}"  mode="MultiSelect" growingThreshold="20">
-                    <headerToolbar>
-                        <Toolbar>
-                            <Title text="{i18n>titleTablePedidos}"/>
-                            <ToolbarSpacer/>
-                            <Button text="{i18n>txtbtnAddPedidos}" press="_onPressAddPedido" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}"/>
-                            <Button text="{i18n>txtbtnDeletePedidos}" press="_onPressDeletePedido" type="Reject" icon="sap-icon://delete" tooltip="{i18n>tooltipbtnDelete}"/>
-                        </Toolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColPedidos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColVencimiento}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColTipoDocumento}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColRazonSocial}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColEstado}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColEditar}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleColAgregarProductos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                    </columns>
+                <IconTabBar
+                    id="idIconTabBarMain"
+                    headerMode="Inline"
+                    expanded="{device>/isNoPhone}">
                     <items>
-                        <ColumnListItem type="Inactive">
-                            <cells>
-                                <Text text="{oModelPedidoVenta>pedido}"/>
-                                <Text text="{oModelPedidoVenta>fecha}"/>
-                                <Text text="{oModelPedidoVenta>vencimiento}"/>
-                                <Text text="{oModelPedidoVenta>tipodoc}"/>
-                                <Text text="{oModelPedidoVenta>razonsocial}"/>
-                                <Text text="{oModelPedidoVenta>importe}"/>
-                                <ObjectStatus text="{oModelPedidoVenta>estado}" icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>estate}" />
-                                <Button text="" icon="sap-icon://edit" press="_onPressEditPedido" tooltip="{i18n>tooltipbtnEditar}"/>
-                                <Button text="" icon="sap-icon://add-product" press="_onPressAddProducto" type="Success"/>
-                            </cells>
-                        </ColumnListItem>
+                        <IconTabFilter key="keyMain" text="{i18n>textIconTabPedido}">
+                            <VBox id="vbTableDetalle">
+                                <core:Fragment fragmentName="com.rava.pedido.pedidoventa.view.fragments.TableMain" type="XML"/>
+                            </VBox>
+                        </IconTabFilter>
+                        <IconTabFilter key="keyDesc" text="{i18n>textIconTabDesc}">
+                            <VBox width="100%" wrap="Wrap">
+                                <VBox width="auto" class="sapUiSmallMargin">
+                                    <!-- <ToggleButton text="{i18n>textbtnBon}" width="100%" enabled="true" pressed="true" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnFue}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnBVen}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnBSub}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnVSub}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnVVen}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnCom}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnPEsp}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnOPro}" width="100%" enabled="true" pressed="false" press="onPress" />
+                                    <ToggleButton text="{i18n>textbtnDesc}" width="100%" enabled="true" pressed="false" press="onPress" /> -->
+                                    <ComboBox selectedKey="01" id="slDescuento" items="{oModelPedidoVenta>/DescSelect}" width="100%" change="">
+                                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                                    </ComboBox>
+                                </VBox>
+                                <VBox width="auto" class="sapUiSmallMargin">
+                                    <MessageStrip
+                                        text="{i18n>textErrorDescuento}"
+                                        type="Error">
+                                    </MessageStrip>
+                                </VBox>
+                            </VBox>
+                        </IconTabFilter>
                     </items>
-                </Table>
+                </IconTabBar>
+                
             </VBox>
         </content>
     </Page>

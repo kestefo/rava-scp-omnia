@@ -17,53 +17,6 @@
             </uxap:content>
         </uxap:ObjectPageHeaderContent>
         <content>
-            <!-- <VBox width="auto" class="sapUiSmallMargin">
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textFuerzaVenta}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textPuntoVenta}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textDirecciones}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textFlete}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textCondicionPago}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textFechaEntrega}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textComprobante}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textOrdenCompra}"/>
-                    </VBox>
-                </HBox>
-                <HBox>
-                    <VBox>
-                        <Text text="{i18n>textOrdenCompra}"/>
-                    </VBox>
-                </HBox>
-            </VBox> -->
             <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
                 adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"
                 singleContainerFullSize="false">
