@@ -1,0 +1,128 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:uxap="sap.uxap">
+	<Dialog title="{i18n>titleDialogDetailPedido}" contentHeight="auto" contentWidth="auto" afterOpen="_afterOpenAddPedido">
+        <uxap:ObjectPageHeaderContent>
+            <uxap:content>
+                <VBox width="auto">
+                    <HBox width="auto" justifyContent="SpaceBetween">
+                        <Title text="{i18n>textDatosContacto}" level="H1" />
+                        <Button press="_onPressEditContact" text="{i18n>txtbtnEditar}" icon="sap-icon://edit" tooltip="{i18n>tooltipbtnEditar}"/>
+                    </HBox>
+                    <HBox>
+                        <Text text="{i18n>textEmail}:{i18n>textDataEmail}"/>
+                        <ToolbarSpacer width="100px"/>
+                        <Text text="{i18n>textPhone}:{i18n>textDataPhone}"/>
+                    </HBox>
+                </VBox>
+            </uxap:content>
+        </uxap:ObjectPageHeaderContent>
+        <content>
+            <!-- <VBox width="auto" class="sapUiSmallMargin">
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textFuerzaVenta}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textPuntoVenta}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textDirecciones}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textFlete}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textCondicionPago}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textFechaEntrega}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textComprobante}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textOrdenCompra}"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Text text="{i18n>textOrdenCompra}"/>
+                    </VBox>
+                </HBox>
+            </VBox> -->
+            <f:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"
+                singleContainerFullSize="false">
+                <f:content>
+                    <Label text="{i18n>textFuerzaVenta}"/>
+                    <ComboBox selectedKey="01" id="slFuerzaVenta" items="{oModelPedidoVenta>/DetailSelectFuerzaVenta}" width="100%">
+                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    </ComboBox>
+                    <Label text="{i18n>textPuntoVenta}"/>
+                    <ComboBox selectedKey="01" id="slPuntoVenta" items="{oModelPedidoVenta>/DetailSelectPuntoVenta}" width="100%">
+                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    </ComboBox>
+                    <Label text="{i18n>textDirecciones}"/>
+                    <ComboBox selectedKey="01" id="slDirecciones" items="{oModelPedidoVenta>/DetailSelectDireccion}" width="100%">
+                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    </ComboBox>
+                    <Label text="{i18n>textFlete}"/>
+                    <Input id="inFlete" value="{i18n>textDataFlete}" maxLength="40" enabled="false">
+                        <layoutData>
+                            <l:GridData span="L3 M5"/>
+                        </layoutData>
+                    </Input>
+                    <Label text="{i18n>textCondicionPago}"/>
+                    <ComboBox selectedKey="01" id="slCondicionPago" items="{oModelPedidoVenta>/DetailSelectCondPago}" width="100%">
+                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    </ComboBox>
+                    <Label text="{i18n>textFechaEntrega}"/>
+                    <DatePicker id="dtFechaEntrega" value="{i18n>textDataFechaEntrega}" textAlign="Center" valueFormat="yyyy-MM-dd"
+                        displayFormat="dd/MM/yyyy">
+                        <layoutData>
+                            <l:GridData span="M3"/>
+                        </layoutData>
+                    </DatePicker>
+                    <Label text="{i18n>textComprobante}"/>
+                    <RadioButtonGroup id="rbgComprobante" columns="2">
+                        <RadioButton id="rbComprobante1" text="{i18n>textBoleta}" />
+                        <RadioButton id="rbComprobante2" text="{i18n>textFactura}" />
+                    </RadioButtonGroup>
+                    <Label text="{i18n>textOrdenCompra}"/>
+                    <VBox>
+                        <Input id="inOrdenCompra" value="" maxLength="40" placeholder="{i18n>phOrdenCompra}">
+                            <layoutData>
+                                <l:GridData span="L3 M5"/>
+                            </layoutData>
+                        </Input>
+                        <Label text="{i18n>textFooterOrdenCompra}"/>
+                    </VBox>
+                    <Label text="{i18n>textObservaciones}"/>
+                    <TextArea value=""  placeholder="{i18n>phObservaciones}" showExceededText="true" maxLength="1000" rows="5" width="100%" valueLiveUpdate="false">
+						<layoutData>
+				             <l:GridData span="L3 M5"/>
+				        </layoutData>
+					</TextArea>
+                </f:content>
+            </f:SimpleForm>
+        </content>
+		<buttons>
+			<Button text="{i18n>accpetText}" press="_onAcceptDialog" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

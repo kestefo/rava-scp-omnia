@@ -3,29 +3,11 @@
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
         <ObjectHeader
-            id="oh1"
+            id="objheaderMain"
             responsive="true"
-            binding="{/ProductCollection/}"
-            intro="{Description}"
-            title="{Name}"
-            number="{Price}"
-            numberUnit="{CurrencyCode}"
-            showMarkers="true"
-            markFlagged="true"
-            markFavorite="true"
+            title="{oModelPedidoVenta>/User/nameDescription}"
             numberState="Success"
             backgroundDesign="Translucent">
-            <attributes>
-                <ObjectAttribute
-                    title="Manufacturer"
-                    text="{SupplierName}"/>
-            </attributes>
-            <statuses>
-                <ObjectStatus
-                    title="Approval"
-                    text="Pending"
-                    state="Warning"/>
-            </statuses>
             <headerContainer>
                 <HeaderContainer scrollStep="200" id="headerContainer" scroll="onScroll" content="{/ContentData/}">
                     <NumericContent size="S" scale="M" value="{value}" valueColor="{color}" indicator="{growth}" press="press" />
@@ -37,8 +19,79 @@
 			<Button text="" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
 		</headerContent>
         <content>
-            <VBox>
-                
+            <VBox class="sapUiSmallMargin">
+                <Table items="{oModelPedidoVenta>/PedidosCreados}"  mode="MultiSelect" growingThreshold="20">
+                    <headerToolbar>
+                        <Toolbar>
+                            <Title text="{i18n>titleTablePedidos}"/>
+                            <ToolbarSpacer/>
+                            <Button text="{i18n>txtbtnAddPedidos}" press="_onPressAddPedido" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}"/>
+                            <Button text="{i18n>txtbtnDeletePedidos}" press="_onPressDeletePedido" type="Reject" icon="sap-icon://delete" tooltip="{i18n>tooltipbtnDelete}"/>
+                        </Toolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColPedidos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColVencimiento}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColTipoDocumento}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColRazonSocial}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColEstado}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColEditar}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleColAgregarProductos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive">
+                            <cells>
+                                <Text text="{oModelPedidoVenta>pedido}"/>
+                                <Text text="{oModelPedidoVenta>fecha}"/>
+                                <Text text="{oModelPedidoVenta>vencimiento}"/>
+                                <Text text="{oModelPedidoVenta>tipodoc}"/>
+                                <Text text="{oModelPedidoVenta>razonsocial}"/>
+                                <Text text="{oModelPedidoVenta>importe}"/>
+                                <ObjectStatus text="{oModelPedidoVenta>estado}" icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>estate}" />
+                                <Button text="" icon="sap-icon://edit" press="_onPressEditPedido" tooltip="{i18n>tooltipbtnEditar}"/>
+                                <Button text="" icon="sap-icon://add-product" press="_onPressAddProducto" type="Success"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
             </VBox>
         </content>
     </Page>
