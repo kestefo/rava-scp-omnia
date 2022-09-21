@@ -16,9 +16,23 @@ modules:
       - comravapedidopedidoventa.zip
       name: comravapedidopedidoventa
       target-path: resources/
+    - artifacts:
+      - Cobranzaomnia.zip
+      name: Cobranzaomnia
+      target-path: resources/
 - name: comravapedidopedidoventa
   type: html5
   path: pedidoventa
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: Cobranzaomnia
+  type: html5
+  path: omnia
   build-parameters:
     build-result: dist
     builder: custom
