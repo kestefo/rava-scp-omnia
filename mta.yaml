@@ -20,6 +20,10 @@ modules:
       - Cobranzaomnia.zip
       name: Cobranzaomnia
       target-path: resources/
+    - artifacts:
+      - tomapedido.zip
+      name: tomapedido
+      target-path: resources/
 - name: comravapedidopedidoventa
   type: html5
   path: pedidoventa
@@ -40,6 +44,46 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
+- name: Omnia-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: Omnia-destination-service
+    parameters:
+      content-target: true
+  - name: Omnia-repo-host
+    parameters:
+      service-key:
+        name: Omnia-repo-host-key
+  - name: uaa_Omnia
+    parameters:
+      service-key:
+        name: uaa_Omnia-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: approuterOmnia_Omnia_repo_host
+          ServiceInstanceName: Omnia-html5-srv
+          ServiceKeyName: Omnia-repo-host-key
+          sap.cloud.service: approuterOmnia
+        - Authentication: OAuth2UserTokenExchange
+          Name: approuterOmnia_uaa_Omnia
+          ServiceInstanceName: Omnia-xsuaa-service
+          ServiceKeyName: uaa_Omnia-key
+          sap.cloud.service: approuterOmnia
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: tomapedido
+  type: html5
+  path: tomapedido
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
 resources:
 - name: Omnia-repo-host
   type: org.cloudfoundry.managed-service
@@ -51,7 +95,7 @@ resources:
   type: org.cloudfoundry.managed-service
   parameters:
     config:
-      HTML5Runtime_enabled: false
+      HTML5Runtime_enabled: true
       init_data:
         instance:
           destinations:
@@ -65,5 +109,12 @@ resources:
     service: destination
     service-name: Omnia-destination-service
     service-plan: lite
+- name: uaa_Omnia
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: Omnia-xsuaa-service
+    service-plan: application
 parameters:
   deploy_mode: html5-repo

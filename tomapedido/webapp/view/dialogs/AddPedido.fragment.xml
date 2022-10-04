@@ -1,0 +1,17 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog title="{i18n>titleDialogAddPedido}" contentHeight="auto" contentWidth="500px" afterOpen="_afterOpenAddPedido">
+        <content>
+            <VBox width="auto" class="sapUiSmallMargin">
+                <Text text="{i18n>textDetailAddPedido}"/>
+                <ComboBox id="slUsuario" items="{oModelPedidoVenta>/AddSelectUser}" width="100%">
+                    <core:Item key="{oModelPedidoVenta>RUC}" text="{oModelPedidoVenta>Descripcion}"/>
+                </ComboBox>
+            </VBox>
+        </content>
+		<buttons>
+			<Button text="{i18n>accpetText}" press="_onAcceptPedido" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

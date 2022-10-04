@@ -25,6 +25,21 @@
           "odataVersion": "2.0"
         }
       }
+    },
+    "crossNavigation": {
+        "inbounds": {
+            "intent1": {
+                "signature": {
+                    "parameters": {},
+                    "additionalParameters": "allowed"
+                },
+                "semanticObject": "Cobranza",
+                "action": "display",
+                "title": "Cobranza",
+                "subTitle": "LAP",
+                "icon": "sap-icon://sys-monitor"
+            }
+        }
     }
   },
   "sap.ui": {
@@ -141,5 +156,9 @@
       "async": true,
       "id": "App"
     }
+  },
+  "sap.cloud": {
+      "public": true,
+      "service": "approuterOmnia"
   }
 }
