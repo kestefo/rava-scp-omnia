@@ -497,6 +497,12 @@ sap.ui.define([
 			var sCustom = oSource.data("custom");
             oSource.getParent().close();
 		},
+        goNavConTo: function (sFragmentId, sNavId, sPageId) {
+			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);
+			var oNavCon = Fragment.byId(sFragmentId, sNavId);
+			var oDetailPage = Fragment.byId(sFragmentId, sPageId);
+			oNavCon.to(oDetailPage);
+		},
 
 	});
 

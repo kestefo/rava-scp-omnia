@@ -1,64 +1,56 @@
 <mvc:View controllerName="tomapedido.controller.Main" xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
-        <ObjectHeader
-            id="objheaderMain"
-            responsive="true"
-            title="{oModelPedidoVenta>/User/nameDescription}"
-            numberState="Success"
-            backgroundDesign="Translucent">
-            <headerContainer>
-                <HeaderContainer scrollStep="200" id="headerContainer" scroll="onScroll" content="{/ContentData/}">
-                    <NumericContent size="S" scale="M" value="{value}" valueColor="{color}" indicator="{growth}" press="press" />
-                </HeaderContainer>
-            </headerContainer>
-        </ObjectHeader>
-        <headerContent>
-			<Button text="" press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
-			<Button text="" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
-		</headerContent>
-        <content>
-            <VBox class="sapUiSmallMargin">
-                <IconTabBar
-                    id="idIconTabBarMain"
-                    headerMode="Inline"
-                    expanded="{device>/isNoPhone}">
-                    <items>
-                        <IconTabFilter key="keyMain" text="{i18n>textIconTabPedido}">
-                            <VBox id="vbTableDetalle">
-                                <core:Fragment fragmentName="tomapedido.view.fragments.TableMain" type="XML"/>
-                            </VBox>
-                        </IconTabFilter>
-                        <IconTabFilter key="keyDesc" text="{i18n>textIconTabDesc}">
-                            <VBox width="100%" wrap="Wrap">
-                                <VBox width="auto" class="sapUiSmallMargin">
-                                    <!-- <ToggleButton text="{i18n>textbtnBon}" width="100%" enabled="true" pressed="true" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnFue}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnBVen}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnBSub}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnVSub}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnVVen}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnCom}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnPEsp}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnOPro}" width="100%" enabled="true" pressed="false" press="onPress" />
-                                    <ToggleButton text="{i18n>textbtnDesc}" width="100%" enabled="true" pressed="false" press="onPress" /> -->
-                                    <ComboBox selectedKey="01" id="slDescuento" items="{oModelPedidoVenta>/DescSelect}" width="100%" change="">
-                                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
-                                    </ComboBox>
+    <Shell >
+        <Page id="page" title="{i18n>title}">
+            <ObjectHeader
+                id="objheaderMain"
+                responsive="true"
+                title="{oModelPedidoVenta>/User/nameDescription}"
+                numberState="Success"
+                backgroundDesign="Translucent">
+                <headerContainer>
+                    <HeaderContainer scrollStep="200" id="headerContainer" scroll="onScroll" content="{/ContentData/}">
+                        <NumericContent size="S" scale="M" value="{value}" valueColor="{color}" indicator="{growth}" press="press" />
+                    </HeaderContainer>
+                </headerContainer>
+            </ObjectHeader>
+            <headerContent>
+                <Button text="" press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
+                <Button text="" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
+            </headerContent>
+            <content>
+                <VBox >
+                    <IconTabBar
+                        id="idIconTabBarMain"
+                        headerMode="Inline"
+                        expanded="{device>/isNoPhone}">
+                        <items>
+                            <IconTabFilter key="keyMain" text="{i18n>textIconTabPedido}">
+                                <VBox id="vbTableDetalle">
+                                    <core:Fragment fragmentName="tomapedido.view.fragments.TableMain" type="XML"/>
                                 </VBox>
-                                <VBox width="auto" class="sapUiSmallMargin">
-                                    <MessageStrip
-                                        text="{i18n>textErrorDescuento}"
-                                        type="Error">
-                                    </MessageStrip>
+                            </IconTabFilter>
+                            <IconTabFilter key="keyDesc" text="{i18n>textIconTabDesc}" visible="false">
+                                <VBox width="100%" wrap="Wrap">
+                                    <VBox width="auto" class="sapUiSmallMargin">
+                                        <ComboBox selectedKey="01" id="slDescuento" items="{oModelPedidoVenta>/DescSelect}" width="100%" change="">
+                                            <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                                        </ComboBox>
+                                    </VBox>
+                                    <VBox width="auto" class="sapUiSmallMargin">
+                                        <MessageStrip
+                                            text="{i18n>textErrorDescuento}"
+                                            type="Error">
+                                        </MessageStrip>
+                                    </VBox>
                                 </VBox>
-                            </VBox>
-                        </IconTabFilter>
-                    </items>
-                </IconTabBar>
-                
-            </VBox>
-        </content>
-    </Page>
+                            </IconTabFilter>
+                        </items>
+                    </IconTabBar>
+                    
+                </VBox>
+            </content>
+        </Page>
+    </Shell >
 </mvc:View>

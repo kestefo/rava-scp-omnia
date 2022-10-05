@@ -5,6 +5,7 @@ displayBlock    ="true"
 xmlns:core="sap.ui.core"
 xmlns           ="sap.m"
 xmlns:plugins   ="sap.m.plugins" >
+    <Shell >
    <Page 
 					id				=	"Page2" 
 					title			=	""
@@ -189,5 +190,6 @@ xmlns:plugins   ="sap.m.plugins" >
 							icon	=	"sap-icon://save"/> -->
 					</Toolbar>
 				</footer>
-				</Page>
+    </Page>
+    </Shell >
 </mvc:View>

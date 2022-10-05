@@ -36,8 +36,8 @@
                 "semanticObject": "Cobranza",
                 "action": "display",
                 "title": "Cobranza",
-                "subTitle": "LAP",
-                "icon": "sap-icon://sys-monitor"
+                "subTitle": "",
+                "icon": "sap-icon://batch-payments"
             }
         }
     }

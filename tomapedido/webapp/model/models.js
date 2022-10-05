@@ -203,51 +203,40 @@ sap.ui.define([
                 ]
                 return oModel;
             },
-            JsonDescuento: function () {
+            
+            JsonPromocion: function () {
                 var oModel = [
                     {
-                        "key": "01",
-                        "desc": "Bonificación Kit"
+                        "codigo": "45633",
+                        "descripcion": "Placenta Life Rubio Oscuro",
+                        "cantidad": "2"
                     },
                     {
-                        "key": "02",
-                        "desc": "Fuerza Venta"
+                        "codigo": "45634",
+                        "descripcion": "Placenta Life Keratina",
+                        "cantidad": "1"
                     },
                     {
-                        "key": "03",
-                        "desc": "Bonificación por Vendedor"
+                        "codigo": "45635",
+                        "descripcion": "Placenta Life Control Caída",
+                        "cantidad": "2"
+                    }
+                ]
+                return oModel;
+            },
+            JsonPromocionDetail: function () {
+                var oModel = [
+                    {
+                        "nombre": "Placenta Life Control Caída",
+                        "stock": "123",
+                        "precio": "63.55",
+                        "cantprom": "1"
                     },
                     {
-                        "key": "04",
-                        "desc": "Bonificación por Sub-Marca"
-                    },
-                    {
-                        "key": "05",
-                        "desc": "Volúmen por Sub-Marca"
-                    },
-                    {
-                        "key": "06",
-                        "desc": "Volúmen de Venta"
-                    },
-                    {
-                        "key": "07",
-                        "desc": "Combos"
-                    },
-                    {
-                        "key": "08",
-                        "desc": "Producto Especiales"
-                    },
-                    {
-                        "key": "09",
-                        "desc": "Obsequios por productos"
-                    },
-                    {
-                        "key": "10",
-                        "desc": "Descuento por porcentaje de ventas"
-                    },
-                    {
-                        "key": "11",
-                        "desc": "No cuenta con promociones de este tipo"
+                        "nombre": "Placenta Life Control Caída",
+                        "stock": "327",
+                        "precio": "64.99",
+                        "cantprom": "1"
                     }
                 ]
                 return oModel;

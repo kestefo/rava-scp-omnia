@@ -35,9 +35,9 @@
                     },
                     "semanticObject": "tomapedido",
                     "action": "display",
-                    "title": "Toma Pedido",
+                    "title": "Pedido de Venta",
                     "subTitle": "",
-                    "icon": "sap-icon://sys-monitor"
+                    "icon": "sap-icon://my-sales-order"
                 }
             }
         }

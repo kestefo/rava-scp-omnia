@@ -5,6 +5,7 @@ displayBlock    ="true"
 xmlns:core="sap.ui.core"
 xmlns           ="sap.m"
 xmlns:plugins   ="sap.m.plugins" >
+    <Shell >
     <Page id="page" title="Planillas de Cobranza"  >
         <content>
         <ObjectHeader
@@ -139,4 +140,5 @@ xmlns:plugins   ="sap.m.plugins" >
 			</Toolbar>
 		</footer>
     </Page>
+    </Shell >
 </mvc:View>

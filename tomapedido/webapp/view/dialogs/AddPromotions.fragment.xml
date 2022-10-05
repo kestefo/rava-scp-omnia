@@ -1,0 +1,66 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:uxap="sap.uxap">
+	<Dialog title="{i18n>titleDialogAddDetailPromotions}" contentHeight="auto" contentWidth="{=${device>/system/phone}?'100%':'50%'}" afterOpen="_afterOpenAddPromotions">
+        <content>
+            <uxap:ObjectPageHeaderContent>
+                <uxap:content>
+                    <VBox width="90%">
+                        <HBox width="auto" justifyContent="Center">
+                            <Title text="{i18n>textTitleSecundario}" level="H1" />
+                        </HBox>
+                        <HBox width="auto" justifyContent="Center">
+                            <Label design="Bold" text="{i18n>textDataPromocion}"/>
+                        </HBox>
+                        <HBox width="auto" justifyContent="Center">
+                            <Text text="{i18n>textTitleTerciario}:{i18n>textDataCantidad}"/>
+                        </HBox>
+                    </VBox>
+                </uxap:content>
+            </uxap:ObjectPageHeaderContent>
+            <VBox class="sapUiSmallMargin" width="auto">
+                <Table items="{oModelPedidoVenta>/PromocionesDetail}" mode="SingleSelect" growingThreshold="20">
+                    <columns>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColNombre}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColStock}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColPrecio}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColCantProm}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Active">
+                            <cells>
+                                <Text text="{oModelPedidoVenta>nombre}"/>
+                                <Text text="{oModelPedidoVenta>stock}"/>
+                                <Text text="{oModelPedidoVenta>precio}"/>
+                                <Text text="{oModelPedidoVenta>cantprom}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <HBox width="auto" justifyContent="Center" alignContent="Center" alignItems="Center">
+                    <Text text="{i18n>textSeleccioneCantidad}"/>
+                    <StepInput id="siContadorPromocion" change="_onChangeCounterPromocion" value="1" width="5rem" min="0" max="50"/>
+                </HBox>
+            </VBox>
+        </content>
+		<buttons>
+			<Button text="{i18n>accpetText}" press="_onAcceptPromotions" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

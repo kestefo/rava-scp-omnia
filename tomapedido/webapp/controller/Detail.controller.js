@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "tomapedido/controller/BaseController",
-    "tomapedido/model/models",
+    "tomapedido/model/models"
 ], function (Controller, BaseController, models) {
     "use strict";
 
@@ -15,6 +15,7 @@ sap.ui.define([
             this.frgIdAddProducto = "frgIdAddProducto";
             this.frgIdLoadMasive = "frgIdLoadMasive";
             this.frgIdAddEan = "frgIdAddEan";
+            this.frgIdAddPromotions = "frgIdAddPromotions";
             console.log("init");
         },
         handleRouteMatched: function(){
@@ -126,6 +127,64 @@ sap.ui.define([
         },
         _onPressAddEan: function(){
             this.setFragment("_dialogAddEan", this.frgIdAddEan, "AddEan", this);
+        },
+        _onPressPromotion: function(){
+            var navCon = this.byId("navcIdGroupPromotions");
+            navCon.to(this.byId("IdPromotionsCenter"));
+            // this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
+        },
+        onNavBackPromotion: function(){
+            var navCon = this.byId("navcIdGroupPromotions");
+            navCon.back();
+        },
+        onPressToggleButton: function(oEvent){
+            var oSource = oEvent.getSource();
+            var sCustom = oSource.data("custom");
+            // this._byId("frgIdAddPromotions--idBonificacion");
+            this._byId("idBonificacion").setPressed(false);
+            this._byId("idFuerzaVenta").setPressed(false);
+            this._byId("idBonVendedor").setPressed(false);
+            this._byId("idBonSubMarca").setPressed(false);
+            this._byId("idVolSubMarca").setPressed(false);
+            this._byId("idVolVenta").setPressed(false);
+            this._byId("idCombo").setPressed(false);
+            this._byId("idProdEspec").setPressed(false);
+            this._byId("idObsProducto").setPressed(false);
+            
+            oSource.setPressed(true);
+            
+            var dataFilter=[];
+            switch (sCustom) {
+				case "keyBonificacion":                    
+					break;
+                case "keyFuerzaVenta":
+                    break;
+                case "keyBonVendedor":
+                    break;
+                case "keyBonSubMarca":
+                    break;
+                case "keyVolSubMarca":
+                    dataFilter = models.JsonPromocion();
+                    break;
+                case "keyVolVenta":
+                    break;
+                case "keyCombo":
+                    break;
+                case "keyProdEspec":
+                    break;
+                case "keyObsProducto":
+                    break;
+				default:
+					oSource.getParent().close();
+			}
+
+            this.oModelPedidoVenta.setProperty("/Promociones", dataFilter);
+        },
+        _onNavDetallePromocion: function(){
+            this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
+            var dataFilter=models.JsonPromocionDetail();
+            this.oModelPedidoVenta.setProperty("/PromocionesDetail", dataFilter);
+
         },
     });
 });

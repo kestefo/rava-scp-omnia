@@ -1,75 +1,128 @@
 <mvc:View controllerName="tomapedido.controller.Detail" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
-    xmlns="sap.m" xmlns:f="sap.f" xmlns:core="sap.ui.core">
-    <f:DynamicPage id="dynamicPageId">
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title text="{i18n>titlePageDetail}" wrapping="true" class="sapUiSmallMarginTop"/>
-                </f:heading>
-                <f:navigationActions>
-                    <Button text="Regresar" icon="sap-icon://nav-back" press="_onPressNavButtonDetail"/>
-                </f:navigationActions>
-            </f:DynamicPageTitle>
-        </f:title>
-        <f:header>
-            <f:DynamicPageHeader pinnable="true">
-                <HBox width="100%" class="sapUiSmallMargin" justifyContent="SpaceBetween">
-                    <VBox wrap="Wrap">
-                        <Text text="{i18n>textSubHeaderDetailCredito}"/>
-                        <ObjectStatus text="{i18n>textDataCredito}" state="Information" />
-                    </VBox>
-                    <VBox wrap="Wrap">
-                        <Text text="{i18n>textSubHeaderDetailConsumo}"/>
-                        <ObjectStatus text="{i18n>textDataConsumo}" state="Error" />
-                    </VBox>
-                    <VBox wrap="Wrap">
-                        <Text text="{i18n>textSubHeaderDetailSaldo}"/>
-                        <ObjectStatus text="{i18n>textDataSaldo}" state="Success" />
-                    </VBox>
-                </HBox>
-            </f:DynamicPageHeader>
-        </f:header>
-        <f:content>
-            <VBox>
-                <HBox width="100%" justifyContent="SpaceBetween" wrap="Wrap">
-                    <HBox>
-                        <Label text="{i18n>textPedido}:"/>
-                        <ObjectStatus text="{i18n>textDataPedido}" state="Information" />
-                    </HBox>
-                    <HBox wrap="Wrap">
-                        <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProductPro"/>
-                        <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"/>
-                        <Button text="{i18n>textbtnIngMasivo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressLoadMasive"/>
-                        <Button text="{i18n>textbtnEan}" type="Default" icon="sap-icon://add" press="_onPressAddEan"/>
-                        <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan"/>
-                    </HBox>
-                </HBox>
-                <IconTabBar
-                    id="idIconTabBarDetail"
-                    headerMode="Inline"
-                    expanded="{device>/isNoPhone}">
-                    <items>
-                        <IconTabFilter icon="sap-icon://create-form"  key="keyDetail" text="{i18n>textIconTabDetalle}">
-                            <VBox id="vbTableDetalle">
-                                <core:Fragment fragmentName="tomapedido.view.fragments.TableDetalle" type="XML"/>
+    xmlns="sap.m" xmlns:f="sap.f" xmlns:core="sap.ui.core"
+    xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+    <Shell >
+        <NavContainer id="navcIdGroupPromotions">
+            <f:DynamicPage id="dynamicPageId" showFooter="true">
+                <f:title>
+                    <f:DynamicPageTitle>
+                        <f:heading>
+                            <Title text="{i18n>titlePageDetail}" wrapping="true" class="sapUiSmallMarginTop"/>
+                        </f:heading>
+                        <f:navigationActions>
+                            <Button text="Regresar" icon="sap-icon://nav-back" press="_onPressNavButtonDetail"/>
+                        </f:navigationActions>
+                    </f:DynamicPageTitle>
+                </f:title>
+                <f:header>
+                    <f:DynamicPageHeader pinnable="true">
+                        <HBox width="100%" class="sapUiSmallMargin" justifyContent="SpaceBetween">
+                            <VBox wrap="Wrap">
+                                <Text text="{i18n>textSubHeaderDetailCredito}"/>
+                                <ObjectStatus text="{i18n>textDataCredito}" state="Information" />
                             </VBox>
-                        </IconTabFilter>
-                        <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">
-                            <Text text="Attachments go here ..." />
-                        </IconTabFilter>
-                        <IconTabFilter icon="sap-icon://form" key="keyResumen" text="{i18n>textIconTabResumen}">
-                            <Text text="Notes go here ..." />
-                        </IconTabFilter>
-                    </items>
-                </IconTabBar>
-            </VBox>
-        </f:content>
-        <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer/>
-                <Button type="Accept" text="Accept"/>
-                <Button type="Reject" text="Reject"/>
-            </OverflowToolbar>
-        </f:footer>
-    </f:DynamicPage>
+                            <VBox wrap="Wrap">
+                                <Text text="{i18n>textSubHeaderDetailConsumo}"/>
+                                <ObjectStatus text="{i18n>textDataConsumo}" state="Error" />
+                            </VBox>
+                            <VBox wrap="Wrap">
+                                <Text text="{i18n>textSubHeaderDetailSaldo}"/>
+                                <ObjectStatus text="{i18n>textDataSaldo}" state="Success" />
+                            </VBox>
+                        </HBox>
+                    </f:DynamicPageHeader>
+                </f:header>
+                <f:content>
+                    <VBox height="100%">
+                        <HBox width="100%" justifyContent="SpaceBetween" wrap="Wrap">
+                            <HBox>
+                                <Label text="{i18n>textPedido}:"/>
+                                <ObjectStatus text="{i18n>textDataPedido}" state="Information" />
+                            </HBox>
+                            <HBox wrap="Wrap">
+                                <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProductPro"/>
+                                <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"/>
+                                <Button text="{i18n>textbtnIngMasivo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressLoadMasive"/>
+                                <Button text="{i18n>textbtnEan}" type="Default" icon="sap-icon://add" press="_onPressAddEan"/>
+                                <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan"/>
+                            </HBox>
+                        </HBox>
+                        <IconTabBar
+                            id="idIconTabBarDetail"
+                            headerMode="Inline"
+                            expanded="{device>/isNoPhone}">
+                            <items>
+                                <IconTabFilter icon="sap-icon://create-form"  key="keyDetail" text="{i18n>textIconTabDetalle}">
+                                    <VBox id="vbTableDetalle" height="100%">
+                                        <core:Fragment fragmentName="tomapedido.view.fragments.TableDetalle" type="XML"/>
+                                    </VBox>
+                                </IconTabFilter>
+                                <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">
+                                    <Text text="Attachments go here ..." />
+                                </IconTabFilter>
+                                <IconTabFilter icon="sap-icon://form" key="keyResumen" text="{i18n>textIconTabResumen}">
+                                    <Text text="Notes go here ..." />
+                                </IconTabFilter>
+                            </items>
+                        </IconTabBar>
+                    </VBox>
+                </f:content>
+                <f:footer>
+                    <OverflowToolbar>
+                        <ToolbarSpacer/>
+                        <Button type="Transparent" text="{i18n>txtbtnDescuento}" press="_onPressDiscount"/>
+                        <Button type="Default" text="{i18n>txtbtnPromociones}" press="_onPressPromotion"/>
+                    </OverflowToolbar>
+                </f:footer>
+            </f:DynamicPage>
+            <Page
+				id="IdPromotionsCenter"
+				title="{i18n>titleDialogAddPromotions}" 
+                showNavButton="true"
+                navButtonPress="onNavBackPromotion" >
+				<VBox class="sapUiSmallMargin" width="auto">
+                    <HBox wrap="Wrap" justifyContent="Center">
+                        <ToggleButton id="idBonificacion" text="{i18n>textbtnBon}" pressed="false" press="onPressToggleButton" custom:custom="keyBonificacion"/>
+                        <ToggleButton id="idFuerzaVenta" text="{i18n>textbtnFue}" pressed="false" press="onPressToggleButton" custom:custom="keyFuerzaVenta"/>
+                        <ToggleButton id="idBonVendedor" text="{i18n>textbtnBVen}" pressed="false" press="onPressToggleButton" custom:custom="keyBonVendedor"/>
+                        <ToggleButton id="idBonSubMarca" text="{i18n>textbtnBSub}" pressed="false" press="onPressToggleButton" custom:custom="keyBonSubMarca"/>
+                        <ToggleButton id="idVolSubMarca" text="{i18n>textbtnVSub}" pressed="false" press="onPressToggleButton" custom:custom="keyVolSubMarca"/>
+                        <ToggleButton id="idVolVenta" text="{i18n>textbtnVVen}" pressed="false" press="onPressToggleButton" custom:custom="keyVolVenta"/>
+                        <ToggleButton id="idCombo" text="{i18n>textbtnCom}" pressed="false" press="onPressToggleButton" custom:custom="keyCombo"/>
+                        <ToggleButton id="idProdEspec" text="{i18n>textbtnPEsp}" pressed="false" press="onPressToggleButton" custom:custom="keyProdEspec"/>
+                        <ToggleButton id="idObsProducto" text="{i18n>textbtnOPro}" pressed="false" press="onPressToggleButton" custom:custom="keyObsProducto"/>
+                    </HBox>
+                    <Table items="{oModelPedidoVenta>/Promociones}" growingThreshold="20">
+                        <columns>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                </header>
+                            </Column>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColDescripcion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                </header>
+                            </Column>
+                            <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColCant}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                </header>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem type="Navigation" press="_onNavDetallePromocion">
+                                <cells>
+                                    <Text text="{oModelPedidoVenta>codigo}"/>
+                                    <Text text="{oModelPedidoVenta>descripcion}"/>
+                                    <Text text="{oModelPedidoVenta>cantidad}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+
+			</Page>
+        </NavContainer>
+    </Shell >
 </mvc:View>
