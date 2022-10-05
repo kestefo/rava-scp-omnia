@@ -184,7 +184,6 @@ sap.ui.define([
             this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
             var dataFilter=models.JsonPromocionDetail();
             this.oModelPedidoVenta.setProperty("/PromocionesDetail", dataFilter);
-
-        },
+        }
     });
 });
