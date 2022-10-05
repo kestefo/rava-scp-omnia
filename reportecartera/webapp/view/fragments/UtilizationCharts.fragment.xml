@@ -1,0 +1,67 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" 
+    xmlns:f="sap.ui.layout.form"
+	xmlns:chart="sap.chart"
+	xmlns:viz="sap.viz.ui5.controls"
+	xmlns:vizData="sap.viz.ui5.data"
+	xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds"
+	xmlns:commons="sap.suite.ui.commons"
+	xmlns:data="sap.chart.data"
+    >
+    
+    <HBox visible="true" wrap="Wrap" width="100%" class="sapSmartTemplatesAnalyticalListPageTableContainer">
+        <items>
+        
+        <Title textAlign="Begin" titleStyle="H2" text="{oModelReporte>/sNombreGrafico}"/>
+        
+        <ToolbarSpacer width="2rem"/>
+        
+        <Select 
+            selectedKey		= "{oModelReporte>/sSelectedTipoGrafico}"
+            change			= "onSelectTipoGrafico"
+            items			= "{oModelReporte>/oSelectGrafico}"
+            enabled			= "true"
+            width			= "12.5rem">
+            <items>
+                <core:Item key="{oModelReporte>keyGraf}" text="{oModelReporte>nomGraf}"/>
+            </items>
+        </Select>
+    </items>
+    </HBox>
+    
+    <chart:Chart id="graficoBarrasReporte" width="100%" height="450px" visibleDimensions="__id" 
+        visibleMeasures="mea0"  
+        data="{oModelReporte>/oDataGrafico}" 
+        vizProperties="{oModelReporte>/vizProperties}" 
+        chartType="{oModelReporte>/charType}" 
+        visible="{oModelReporte>/bVisibleChart}"
+        uiConfig="{}">
+        <chart:dimensions>
+            <data:Dimension name="__id" label="Importe" role="category" textProperty="dim0"/>
+        </chart:dimensions>
+        <chart:measures>
+            <data:Measure name="mea0" label="Ventas" role="axis2"/>
+        </chart:measures>
+    </chart:Chart>
+    
+    <viz:VizFrame xmlns="sap.viz" width="100%" height="450px" id="idDonutChart" vizType="donut" 
+        visible="{oModelReporte>/bVisibleDonut}"
+        vizProperties="{oModelReporte>/vizProperties}"
+        uiConfig="{}">
+        <viz:dataset>
+            <vizData:FlattenedDataset data="{oModelReporte>/oDataGrafico}">
+                <vizData:dimensions>
+                    <vizData:DimensionDefinition name="Importe" value="{dim0}"/>
+                </vizData:dimensions>
+                <vizData:measures>
+                    <vizData:MeasureDefinition name="Ventas" value="{mea0}"/>
+                </vizData:measures>
+            </vizData:FlattenedDataset>
+        </viz:dataset>
+        <viz:feeds>
+            <vizFeeds:FeedItem uid="size" type="Measure" values='Ventas'/>
+            <vizFeeds:FeedItem uid="color" type="Dimension" values="Importe"/>
+        </viz:feeds>
+    </viz:VizFrame>
+            
+</core:FragmentDefinition>

@@ -28,6 +28,10 @@ modules:
       - devoluciones.zip
       name: devoluciones
       target-path: resources/
+    - artifacts:
+      - reportecartera.zip
+      name: reportecartera
+      target-path: resources/
 - name: comravapedidopedidoventa
   type: html5
   path: pedidoventa
@@ -91,6 +95,16 @@ modules:
 - name: devoluciones
   type: html5
   path: devoluciones
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: reportecartera
+  type: html5
+  path: reportecartera
   build-parameters:
     build-result: dist
     builder: custom

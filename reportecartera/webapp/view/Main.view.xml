@@ -1,0 +1,50 @@
+<mvc:View controllerName="reportecartera.controller.Main"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"  
+    xmlns:fb="sap.ui.comp.filterbar">
+    <Shell>
+        <Page id="page" title="{i18n>title}">
+            <headerContent>
+                <Button press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
+                <Button press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
+            </headerContent>
+            <content>
+                <fb:FilterBar id="filterbar" reset="_onclearReport" search="_onSearchFB" clear="_onclearReport" cancel="onCancel" showFilterConfiguration="true"
+                    filtersDialogClosed="onFiltersDialogClosed" showRestoreButton="true" showClearOnFB="true" showClearButton="true" filterBarExpanded="true" showGoOnFB="true">
+                    <fb:filterGroupItems>
+                        <fb:FilterGroupItem groupName="advanceSearch" label="{i18n>fechadDesde}" name="envioG" partOfCurrentVariant="true" visibleInFilterBar="true">
+                            <fb:control>
+                                <DatePicker id="dMesDesde" width="100%" displayFormat="MM-y" valueFormat="MM"/>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                        <fb:FilterGroupItem groupName="advanceSearch" name="classObject" label="{i18n>fechadHasta} " partOfCurrentVariant="true"
+                            visibleInFilterBar="true">
+                            <fb:control>
+                                <DatePicker id="dMesHasta" width="100%" displayFormat="MM-y" valueFormat="MM"/>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                    </fb:filterGroupItems>
+                </fb:FilterBar>
+                <IconTabBar
+                    id="idIconTabBarMain"
+                    headerMode="Inline"
+                    expanded="{device>/isNoPhone}">
+                    <items>
+                        <IconTabFilter key="keyReporte" text="{i18n>textIconTabReporte}">
+                            <core:Fragment fragmentName="reportecartera.view.fragments.TableMain" type="XML"/>
+                        </IconTabFilter>
+                        <IconTabFilter key="keyGrafico" text="{i18n>textIconTabGrafico}">
+                            <VBox visible="true">
+                                <items>
+                                    <core:Fragment fragmentName="reportecartera.view.fragments.UtilizationCharts" type="XML"/>
+                                </items>
+                            </VBox>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+            </content>
+        </Page>
+    </Shell >
+</mvc:View>
