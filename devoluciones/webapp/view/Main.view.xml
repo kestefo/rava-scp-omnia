@@ -1,0 +1,15 @@
+<mvc:View controllerName="devoluciones.controller.Main" xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+        <headerContent>
+            <Button press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
+            <Button press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
+        </headerContent>
+        <content>
+            <VBox width="auto" class="sapUiSmallMargin">
+                <core:Fragment fragmentName="devoluciones.view.fragments.TableMain" type="XML"/>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

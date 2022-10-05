@@ -24,6 +24,10 @@ modules:
       - tomapedido.zip
       name: tomapedido
       target-path: resources/
+    - artifacts:
+      - devoluciones.zip
+      name: devoluciones
+      target-path: resources/
 - name: comravapedidopedidoventa
   type: html5
   path: pedidoventa
@@ -77,6 +81,16 @@ modules:
 - name: tomapedido
   type: html5
   path: tomapedido
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: devoluciones
+  type: html5
+  path: devoluciones
   build-parameters:
     build-result: dist
     builder: custom
