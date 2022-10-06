@@ -16,7 +16,7 @@ sap.ui.define([
             this.frgIdDetailPedido = "frgIdDetailPedido";
             this.frgIdEditContact = "frgIdEditContact";
             
-            console.log("init")
+            console.log("hola")
         },
         handleRouteMatched: function(){
             Promise.all([]).then(async values => {
