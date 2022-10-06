@@ -29,11 +29,6 @@ sap.ui.define([
 				onClose: function (sAction) {
 					if (sAction === "Aceptar") {
 						window.open("https://omnia-vq4ejk2u.launchpad.cfapps.us10.hana.ondemand.com/site?siteId=9e0927ac-262f-4928-ba20-c42b5049a077#Shell-home", "_self");
-                        // var sUrl1 = window.location.href;
-                        // var sHash = "#Shell-home";
-                        // var sUrl2 = sUrl1.split("#");
-                        // window.location.assign(sUrl2[0] + sHash);
-						//sap.ui.core.BusyIndicator.show(0);
 					}
 				}
 			});
