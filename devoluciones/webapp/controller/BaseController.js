@@ -522,6 +522,7 @@ sap.ui.define([
             var vista  = this.getView();
             var tablaCliente = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
             // _byId("frgIdAddClient--IdClienteDetail");
+  
             
 
             switch (sCustom) {
