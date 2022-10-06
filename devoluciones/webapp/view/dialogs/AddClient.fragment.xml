@@ -1,16 +1,20 @@
-<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout"
-	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-	<Dialog title="{i18n>titleDialogAddCliente}" contentHeight="{=${device>/system/phone}?'100%':'50%'}" contentWidth="{=${device>/system/phone}?'100%':'70%'}" 
-        afterOpen="_afterOpenAddPedido">
+<core:FragmentDefinition 
+xmlns:core="sap.ui.core" 
+xmlns="sap.m" 
+xmlns:fb="sap.ui.comp.filterbar" 
+xmlns:l="sap.ui.layout"
+xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog title="{i18n>titleDialogAddCliente1}" contentHeight="{=${device>/system/phone}?'100%':'50%'}" contentWidth="{=${device>/system/phone}?'100%':'70%'}" 
+        afterOpen="_afterOpenAddPedido" >
         <NavContainer id="navcIdGroupFacturaBoleta">
             <Page id="IdClienteCenter" showHeader="false" showNavButton="false">
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
                         <Text text="{i18n>textDetailAddCliente}"/>
-                        <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeUser">
+                        <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/KeyAddUser}">
                             <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}"/>
                         </ComboBox>
-                        <Table items="{oModelDevolucion>/AddFacturaBoleta}" growingThreshold="20">
+                        <Table id="id1" items="{oModelDevolucion>/AddFacturaBoleta}" growingThreshold="20">
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>
@@ -68,12 +72,12 @@
                             </HBox>
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textMotivo}:"/>
-                                <ComboBox id="slMotivo" items="{oModelDevolucion>/AddMotivo}" width="100%" change="">
+                                <ComboBox id="slMotivo" items="{oModelDevolucion>/AddMotivo}" width="100%" change="onChamp" selectedKey="{oModelDevolucion>/KeyMotivo}">
                                     <core:Item key="{oModelDevolucion>key}" text="{oModelDevolucion>descripcion}"/>
                                 </ComboBox>
                             </HBox>
                         </HBox>
-                        <Table items="{oModelDevolucion>/AddFacturaBoletaDetail}" mode="MultiSelect" growingThreshold="20">
+                        <Table id="IdTablaClients01" items="{oModelDevolucion>/AddFacturaBoletaDetail}" mode="MultiSelect" growingThreshold="20">
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>

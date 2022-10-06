@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
-    <Table items="{oModelDevolucion>/DevolucionesCreados}"  mode="MultiSelect" growingThreshold="20">
+    <Table id="idTablaPrincipal" items="{oModelDevolucion>/DevolucionesCreados}"  mode="MultiSelect" growingThreshold="20">
         <headerToolbar>
             <Toolbar>
                 <Text text="{i18n>textNuevaSolicitudDevolucion}"/>

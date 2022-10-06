@@ -30,6 +30,7 @@ sap.ui.define([
             _onPressAddFacturaBoleta: function(){
                 this.oModelDevolucion.setProperty("/AddFacturaBoleta", []);
                 this.oModelDevolucion.setProperty("/addClientVisible", false);
+                //this.oModelDevolucion.setProperty("/KeyAddUser" ,"");
                 this.setFragment("_dialogAAddClient", this.frgIdAddClient, "AddClient", this);
             },
             _onChangeUser: function(){
