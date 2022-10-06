@@ -2,7 +2,7 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "com/rava/pedido/pedidoventa/controller/BaseController",
     "com/rava/pedido/pedidoventa/model/models",
-], function (Controller, BaseController, models) {
+], function (Controller, BaseController, models) { 
     "use strict";
 
     var that, bValueHelpEquipment = false;
