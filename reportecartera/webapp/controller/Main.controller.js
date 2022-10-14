@@ -34,6 +34,14 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.hide(0);
                 });
             },
+            _onbtnRefresh:function(){
+                Promise.all([]).then(async values => {
+                    this.getMessageBox('success', that.getI18nText("successRefresh"));
+                }).catch(function (oError) {
+                    console.log(oError);
+                    sap.ui.core.BusyIndicator.hide(0);
+                });
+            },
             _onclearReport: function(){
                 this._byId("dMesDesde").setEnabled(true);
                 this._byId("dMesHasta").setEnabled(false);

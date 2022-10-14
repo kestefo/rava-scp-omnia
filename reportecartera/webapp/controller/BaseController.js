@@ -19,6 +19,28 @@ sap.ui.define([
 	var sMessage = "";
 	return Controller.extend("reportecartera.controller.BaseController", {
 		formatter: Formatter,
+        _onbtnHome:function(){
+            that = this;
+            MessageBox.warning(this.getI18nText("textbtnHome"), {
+				actions: [this.getI18nText("acceptText"), this.getI18nText("cancelText")],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+					if (sAction === that.getI18nText("acceptText")) {
+                        var aplicacion = "#";
+                        var accion = "";
+                        if(!that.isEmpty(sap.ushell.Container)){
+                            var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
+                            oCrossAppNavigator.toExternal({
+                                target: {
+                                    semanticObject: aplicacion,
+                                    action: accion
+                                }
+                            });
+                        }
+					}
+				}
+			});
+        },
         isEmpty: function (inputStr) {
 
 			var flag = false;
