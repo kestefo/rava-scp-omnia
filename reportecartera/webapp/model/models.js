@@ -38,7 +38,7 @@ sap.ui.define([
                 ];
 				return oData;
 			},
-            JsonReporte: function () {
+            JsonReporteCliente: function () {
                 var oModel = [
                     {
                         "fecha": "08/09/2022",
@@ -77,6 +77,47 @@ sap.ui.define([
                         "estate": "None"
                     }
                 ]
+                return oModel;
+            },
+            JsonReporteMarca: function () {
+                var oModel = [
+                    {
+                        "marca": "Marca1",
+                        "submarca": "SubMarca1",
+                        "cantidad": "2",
+                        "importe": "10.5"
+                    },
+                    {
+                        "marca": "Marca1",
+                        "submarca": "SubMarca1",
+                        "cantidad": "3",
+                        "importe": "20.8"
+                    },
+                    {
+                        "marca": "Marca1",
+                        "submarca": "SubMarca2",
+                        "cantidad": "3",
+                        "importe": "20.8"
+                    },
+                    {
+                        "marca": "Marca2",
+                        "submarca": "SubMarca1",
+                        "cantidad": "3",
+                        "importe": "18.2"
+                    },
+                    {
+                        "marca": "Marca2",
+                        "submarca": "SubMarca2",
+                        "cantidad": "3",
+                        "importe": "10.3"
+                    },
+                    {
+                        "marca": "Marca2",
+                        "submarca": "SubMarca3",
+                        "cantidad": "4",
+                        "importe": "15.8"
+                    }
+                ];
                 return oModel;
             },
             JsonVizProperties: function(){

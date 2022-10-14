@@ -16,13 +16,13 @@
                     <fb:filterGroupItems>
                         <fb:FilterGroupItem groupName="advanceSearch" label="{i18n>fechadDesde}" name="envioG" partOfCurrentVariant="true" visibleInFilterBar="true">
                             <fb:control>
-                                <DatePicker id="dMesDesde" width="100%" displayFormat="MM-y" valueFormat="MM"/>
+                                <DatePicker id="dMesDesde" width="100%" displayFormat="MM-yyyy" valueFormat="01/MM/yyyy" change="_onChangeDateDesde"/>
                             </fb:control>
                         </fb:FilterGroupItem>
                         <fb:FilterGroupItem groupName="advanceSearch" name="classObject" label="{i18n>fechadHasta} " partOfCurrentVariant="true"
                             visibleInFilterBar="true">
                             <fb:control>
-                                <DatePicker id="dMesHasta" width="100%" displayFormat="MM-y" valueFormat="MM"/>
+                                <DatePicker id="dMesHasta" width="100%" displayFormat="MM-yyyy" valueFormat="01/MM/yyyy" change="_onChangeDateHasta" navigate="_onNavigateDateHasta"/>
                             </fb:control>
                         </fb:FilterGroupItem>
                     </fb:filterGroupItems>
@@ -32,10 +32,13 @@
                     headerMode="Inline"
                     expanded="{device>/isNoPhone}">
                     <items>
-                        <IconTabFilter key="keyReporte" text="{i18n>textIconTabReporte}">
-                            <core:Fragment fragmentName="reportecartera.view.fragments.TableMain" type="XML"/>
+                        <IconTabFilter key="keyReporteCliente" text="{i18n>textIconTabReporteCliente}">
+                            <core:Fragment fragmentName="reportecartera.view.fragments.TableReporteCliente" type="XML"/>
                         </IconTabFilter>
-                        <IconTabFilter key="keyGrafico" text="{i18n>textIconTabGrafico}">
+                        <IconTabFilter key="keyReporteMarca" text="{i18n>textIconTabReporteMarca}">
+                            <core:Fragment fragmentName="reportecartera.view.fragments.TableReporteMarca" type="XML"/>
+                        </IconTabFilter>
+                        <IconTabFilter key="keyGrafico" text="{i18n>textIconTabGrafico}" visible="false">
                             <VBox visible="true">
                                 <items>
                                     <core:Fragment fragmentName="reportecartera.view.fragments.UtilizationCharts" type="XML"/>

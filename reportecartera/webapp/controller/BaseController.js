@@ -19,6 +19,24 @@ sap.ui.define([
 	var sMessage = "";
 	return Controller.extend("reportecartera.controller.BaseController", {
 		formatter: Formatter,
+        isEmpty: function (inputStr) {
+
+			var flag = false;
+			if (inputStr === '') {
+				flag = true;
+			}
+			if (inputStr === null) {
+				flag = true;
+			}
+			if (inputStr === undefined) {
+				flag = true;
+			}
+			if (inputStr == null) {
+				flag = true;
+			}
+
+			return flag;
+		},
 		validateUser: function () {
 			that = this;
 			var oModel = new sap.ui.model.json.JSONModel();
@@ -536,6 +554,46 @@ sap.ui.define([
                 return groups
             }, {});
         },
+        ValidateFormatDate: function(sValue){
+			var booleanFormatDate = this.formatValidateDate(sValue);
+			if (!booleanFormatDate) {
+				return false;
+			}
+			
+			var booleanDate = this.ValidateDate(sValue);
+			if (!booleanDate) {
+				return false;
+			}
+			
+			var dateReverseToString = this.reverseStringForParameter(sValue,"/");
+			var booleanValidateDate = Date.parse(dateReverseToString);
+			
+			if (isNaN(booleanValidateDate)) {
+				return false;
+			}
+			
+			return true;
+		},
+        formatValidateDate:function(campo){
+			var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+			if ((campo.match(RegExPattern)) && (campo!='')) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		
+		ValidateDate:function(fecha){
+			var fechaf = fecha.split("/");
+			var day = fechaf[0];
+			var month = fechaf[1];
+			var year = fechaf[2];
+			var date = new Date(year,month,'0');
+			if((day-0)>(date.getDate()-0)){
+				return false;
+			}
+			return true;
+		},
 
 	});
 
