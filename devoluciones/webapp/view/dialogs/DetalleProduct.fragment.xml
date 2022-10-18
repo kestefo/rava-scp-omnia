@@ -1,30 +1,7 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-    <Dialog contentHeight="{=${device>/system/phone}?'35%':'35%'}" showHeader="false" contentWidth="{=${device>/system/phone}?'40%':'40%'}" afterOpen="_afterOpenAddPedido">
+    <Dialog contentHeight="{=${device>/system/phone}?'50%':'50%'}" showHeader="false" contentWidth="{=${device>/system/phone}?'100%':'70%'}" afterOpen="_afterOpenAddPedido">
         <NavContainer id="navcIdGroupProducto">
-            <Page id="IdProductoCenter" showHeader="true" showNavButton="false" title="{i18n>titleDialogAddCliente}">
-                <content>
-                    <VBox width="auto" class="sapUiSmallMargin">
-                        <VBox class="sapUiSmallMargin">
-                            <VBox width="auto">
-                                <Title text="{i18n>titleAddDescripcionRuc}" level="H4" />
-                                <ComboBox id="slRuc" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyProducto}">
-                                    <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}" />
-                                </ComboBox>
-                            </VBox>
-                       
-                            <VBox width="auto">
-                                
-                                <Button text="{i18n>txtbtnBuscar}" visible="true" press="BusquedaProducto" custom:custom="closeClient" type="Default" />
-                            </VBox>
-                            
-                        </VBox>
-                    </VBox>
-                </content>
-                <headerContent>
-                    <Button text="" press="onGoHome" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
-                </headerContent>
-            </Page>
-            <Page id="IdProductoDetail" showHeader="false" showNavButton="true" navButtonPress="_onNavBack">
+             <Page id="IdProductoDetail" showHeader="false" showNavButton="true" navButtonPress="_onNavBack">
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
                         <HBox wrap="Wrap" width="auto">
@@ -33,12 +10,12 @@
                             </HBox>
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textMotivo}:" />
-                                <ComboBox id="slMotivo" items="{oModelDevolucion>/AddMotivo}" width="100%" change="">
+                                <ComboBox id="slMotivo01" items="{oModelDevolucion>/AddMotivo}" width="100%" change="">
                                     <core:Item key="{oModelDevolucion>key}" text="{oModelDevolucion>descripcion}" />
                                 </ComboBox>
                             </HBox>
                         </HBox>
-                        <Table id="IdTablaClients" items="{oModelDevolucion>/AddProductoDetail}" mode="MultiSelect" growingThreshold="20">
+                        <Table id="IdTablaProducts" items="{oModelDevolucion>/AddProductoDetail}" mode="MultiSelect" growingThreshold="20">
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>
@@ -90,7 +67,7 @@
         </NavContainer>
         <buttons>
             <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" custom:custom="default" type="Accept" />
-            <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" custom:custom="closeProduct" type="Default" />
+            <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseDetalleProducto" custom:custom="closeProduct" type="Default" />
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

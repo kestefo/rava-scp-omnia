@@ -21,19 +21,48 @@ sap.ui.define([
 	return Controller.extend("devoluciones.controller.BaseController", {
 		formatter: Formatter,
 
+        
         _onbtnHome:function(){
-
-            MessageBox.warning("¿Deseas volver al menú de aplicaciones?", {
-				actions: ["Aceptar", "Cancelar"],
+            that = this;
+            MessageBox.warning(this.getI18nText("textbtnHome"), {
+				actions: [this.getI18nText("acceptText"), this.getI18nText("cancelText")],
 				emphasizedAction: MessageBox.Action.OK,
 				onClose: function (sAction) {
-					if (sAction === "Aceptar") {
-						window.open("https://omnia-vq4ejk2u.launchpad.cfapps.us10.hana.ondemand.com/site?siteId=9e0927ac-262f-4928-ba20-c42b5049a077#Shell-home", "_self");
+					if (sAction === that.getI18nText("acceptText")) {
+                        var aplicacion = "#";
+                        var accion = "";
+                        if(!that.isEmpty(sap.ushell.Container)){
+                            var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
+                            oCrossAppNavigator.toExternal({
+                                target: {
+                                    semanticObject: aplicacion,
+                                    action: accion
+                                }
+                            });
+                        }
 					}
 				}
 			});
-
         },
+
+        isEmpty: function (inputStr) {
+
+			var flag = false;
+			if (inputStr === '') {
+				flag = true;
+			}
+			if (inputStr === null) {
+				flag = true;
+			}
+			if (inputStr === undefined) {
+				flag = true;
+			}
+			if (inputStr == null) {
+				flag = true;
+			}
+
+			return flag;
+		},
 		validateUser: function () {
 			that = this;
 			var oModel = new sap.ui.model.json.JSONModel();
@@ -511,29 +540,30 @@ sap.ui.define([
             var vista  = this.getView();
             var tablaCliente = sap.ui.getCore().byId("IdTablaClients01");   
         },
+       
         _onPressClose: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sCustom = oSource.data("custom");
             var vista  = this.getView();
             var tablaCliente = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
+            var tablaCliente02 = sap.ui.getCore().byId("frgAddDetalleFact--IdTablaClients01");
             // _byId("frgIdAddClient--IdClienteDetail");
   
-            
-
             switch (sCustom) {
 				case "closeClient":
-					this.goNavConTo("frgIdAddClient", "navcIdGroupFacturaBoleta", "IdClienteCenter")
+					// this.goNavConTo("frgIdAddClient", "navcIdGroupFacturaBoleta", "IdClienteCenter")
                     this.oModelDevolucion.setProperty("/AddFacturaBoleta", []);
                     this.oModelDevolucion.setProperty("/KeyAddUser" ,"");
-                    this.oModelDevolucion.setProperty("/AddFacturaBoletaDetail" ,[]);
+                    // this.oModelDevolucion.setProperty("/AddFacturaBoletaDetail" ,[]);
                     this.oModelDevolucion.setProperty("/KeyMotivo","");
                     vista.byId("idTablaPrincipal").removeSelections(true);
                    
-                    tablaCliente.removeSelections(true);
-                   
+                    
 					break;
                 case "closeProduct":
                     this.goNavConTo("frgIdAddProduct", "navcIdGroupProducto", "IdProductoCenter")
+                    this.oModelDevolucion.setProperty("/keyProducto" ,"");
+                    vista.byId("idTablaPrincipal").removeSelections(true);
                     break;
 				default:
             }

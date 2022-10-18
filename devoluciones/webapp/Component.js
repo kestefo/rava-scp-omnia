@@ -22,6 +22,7 @@ sap.ui.define([
              */
             init: function () {
                 // call the base component's init function
+                this.setModel(new sap.ui.model.json.JSONModel({contador : 0}), "contadorGlobal");
                 UIComponent.prototype.init.apply(this, arguments);
 
                 // enable routing

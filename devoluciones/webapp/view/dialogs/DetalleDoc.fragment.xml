@@ -1,0 +1,85 @@
+<core:FragmentDefinition 
+xmlns:core="sap.ui.core" 
+xmlns="sap.m" 
+xmlns:fb="sap.ui.comp.filterbar" 
+xmlns:l="sap.ui.layout"
+xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog title="{i18n>titleDialogAddCliente}" contentHeight="{=${device>/system/phone}?'100%':'50%'}" contentWidth="{=${device>/system/phone}?'100%':'70%'}" 
+        afterOpen="_afterOpenAddPedido" >
+        <NavContainer id="navcIdGroupFacturaBoleta">
+           <Page id="IdClienteDetail03" showHeader="false" showNavButton="true" navButtonPress="_onNavBack">
+                <content>
+                    <VBox width="auto" class="sapUiSmallMargin">
+                        <HBox wrap="Wrap" width="auto">
+                            <HBox wrap="NoWrap" width="50%" alignItems="Center">
+                                <Text text="{i18n>textDocumento}:{i18n>textDataDocumento}"/>
+                            </HBox>
+                            <HBox wrap="NoWrap" width="50%" alignItems="Center">
+                                <Text text="{i18n>textMotivo}:"/>
+                                <ComboBox id="slMotivo02" items="{oModelDevolucion>/AddMotivo}" width="100%" change="onChamp" selectedKey="{oModelDevolucion>/KeyMotivo}">
+                                    <core:Item key="{oModelDevolucion>key}" text="{oModelDevolucion>descripcion}"/>
+                                </ComboBox>
+                            </HBox>
+                         </HBox>
+                        <Table id="IdTablaClients01" items="{oModelDevolucion>/AddFacturaBoletaDetail}" mode="MultiSelect" growingThreshold="20">
+                            <columns>
+                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColCantOrig}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColCantDev}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColTotal}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColCantSolDev}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColMontNC}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Inactive">
+                                    <cells>
+                                        <Text text="{oModelDevolucion>producto}"/>
+                                        <Text text="{oModelDevolucion>Lote}"/>
+                                        <Text text="{oModelDevolucion>cantorig}"/>
+                                        <Text text="{oModelDevolucion>cantdev}"/>
+                                        <Text text="{oModelDevolucion>total}"/>
+                                        <Input value="{oModelDevolucion>cantsoldev}"/>
+                                        <Text text="{oModelDevolucion>montonc}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </VBox>
+                </content>
+            </Page>
+        </NavContainer>
+		<buttons>
+			<!-- <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" custom:custom="default" type="Accept"/> -->
+			<Button text="{i18n>cancelText}" visible="true" press="_onPressCloseDetalle" custom:custom="closeClient" type="Default"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

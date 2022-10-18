@@ -119,6 +119,18 @@
                     "target": [
                         "Main"
                     ]
+                }, {
+                    "name": "ConsultaFactura",
+                    "pattern": "ConsultaFactura/:app:",
+                    "target": [
+                        "ConsultaFactura"
+                    ]
+                },{
+                    "name": "ConsultaProducto",
+                    "pattern": "ConsultaProducto/:app:",
+                    "target": [
+                        "ConsultaProducto"
+                    ]
                 }
             ],
             "targets": {
@@ -127,7 +139,22 @@
                     "transition": "slide",
                     "clearControlAggregation": false,
                     "viewId": "Main",
-                    "viewName": "Main"
+                    "viewName": "Main",
+                    "viewLevel": 1
+                },"ConsultaFactura": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "ConsultaFactura",
+                    "viewName": "ConsultaFactura",
+                    "viewLevel": 2
+                },"ConsultaProducto": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "ConsultaProducto",
+                    "viewName": "ConsultaProducto",
+                    "viewLevel": 3
                 }
             }
         },

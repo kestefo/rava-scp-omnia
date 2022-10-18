@@ -38,6 +38,10 @@ sap.ui.define([
                         "nguia": "37645",
                         "cliente": "DROGUERIA INRETAIL PHARMA",
                         "fecha": "2022-09-29",
+                        "Ref.Factura":"0024-627162",
+                        "Monto":"283",
+                        "Lote":"982731",
+                        "Motivo":"Producto dañado",
                         "estado": "Pendiente",
                         "icon": "sap-icon://pending",
                         "estate": "Warning"
@@ -46,6 +50,10 @@ sap.ui.define([
                         "nguia": "37645",
                         "cliente": "DROGUERIA INRETAIL PHARMA",
                         "fecha": "2022-09-29",
+                        "Ref.Factura":"0024-627162",
+                        "Monto":"283",
+                        "Lote":"982731",
+                        "Motivo":"Producto dañado",
                         "estado": "Pendiente",
                         "icon": "sap-icon://pending",
                         "estate": "Warning"
@@ -54,12 +62,33 @@ sap.ui.define([
                         "nguia": "37645",
                         "cliente": "DROGUERIA INRETAIL PHARMA",
                         "fecha": "2022-09-29",
+                        "Ref.Factura":"0024-627162",
+                        "Monto":"283",
+                        "Lote":"982731",
+                        "Motivo":"Producto dañado",
                         "estado": "Pendiente",
                         "icon": "sap-icon://pending",
                         "estate": "Warning"
                     }
                 ]
                 return oModel;
+            },
+            jsonFiltroClient:function(){
+                var oModel = [
+                    {
+                        "id":"01",
+                        "cliente": "DROGUERIA INRETAIL PHARMA",
+                        
+                    },
+                    {
+                        "id":"02",
+                        "cliente": "DROGUERIA INRETAIL PHARMA",
+                        
+                    }
+                    
+                ]
+                return oModel;
+
             },
             JsonFactura: function () {
                 var oModel = [
@@ -68,7 +97,7 @@ sap.ui.define([
                         "fecha": "27-09-2022",
                         "lote": "893746381321",
                         "cantidad": "1",
-                        "importe": "57752",
+                        "importe": "71.90",
                         "tipo": "1"
                     },
                     {
@@ -76,7 +105,7 @@ sap.ui.define([
                         "fecha": "30-09-2022",
                         "lote": "893746381321",
                         "cantidad": "1",
-                        "importe": "65764",
+                        "importe": "80.90",
                         "tipo": "1"
                     },
                 ]
@@ -95,10 +124,20 @@ sap.ui.define([
                 ]
                 return oModel;
             },
+            JsonMarcaProduct:function(){
+             var oModel=[{
+                 "Id":"01",
+                "Descripcion":"Placenta Life - Radiant",
+                "NombreProducto":"Acconditioner Placenta"
+             }];   
+
+             return oModel;
+            },
             JsonFacturaDetail: function () {
                 var oModel = [
                     {
                         "producto": "Placenta Life Rubio Oscuro",
+                        "Lote":"274659",
                         "cantorig": "10",
                         "cantdev": "1",
                         "total": "941.00",
@@ -107,6 +146,7 @@ sap.ui.define([
                     },
                     {
                         "producto": "Placenta Life Rubio Oscuro",
+                        "Lote":"274660",
                         "cantorig": "12",
                         "cantdev": "1",
                         "total": "941.00",
