@@ -37,41 +37,98 @@ sap.ui.define([
                     {
                         "nguia": "37645",
                         "cliente": "DROGUERIA INRETAIL PHARMA",
+                        "RUC":"10455685212",
                         "fecha": "2022-09-29",
                         "Ref.Factura":"0024-627162",
-                        "Monto":"283",
+                        "Comprobante":"BC024-12154",
+                        "Monto":"283.00",
+                        "FechaEmi":"2022-09-29",
                         "Lote":"982731",
                         "Motivo":"Producto dañado",
-                        "estado": "Pendiente",
+                        "Detalle":"Detalle",
+                        "estado": "Facturado",
                         "icon": "sap-icon://pending",
-                        "estate": "Warning"
+                        "estate": "Warning",
+                        "NroCredito":"982731",
+                        "Motivos":"Motivo 1"
                     },
                     {
                         "nguia": "37645",
                         "cliente": "DROGUERIA INRETAIL PHARMA",
                         "fecha": "2022-09-29",
+                        "RUC":"12345678",
                         "Ref.Factura":"0024-627162",
-                        "Monto":"283",
+                        "Comprobante":"",
+                        "Monto":"283.00",
+                        "FechaEmi":"2022-09-29",
+                        "Detalle":"Detalle",
                         "Lote":"982731",
                         "Motivo":"Producto dañado",
-                        "estado": "Pendiente",
+                        "estado": "Pedido",
                         "icon": "sap-icon://pending",
-                        "estate": "Warning"
+                        "estate": "Warning",
+                        "NroCredito":"982731",
+                        "Motivos":"Motivo 1"
                     },
                     {
                         "nguia": "37645",
                         "cliente": "DROGUERIA INRETAIL PHARMA",
+                        "RUC":"10455685219",
                         "fecha": "2022-09-29",
                         "Ref.Factura":"0024-627162",
-                        "Monto":"283",
+                        "Comprobante":"",
+                        "Monto":"283.00",
+                        "FechaEmi":"2022-09-29",
+                        "Detalle":"Detalle",
                         "Lote":"982731",
                         "Motivo":"Producto dañado",
-                        "estado": "Pendiente",
+                        "estado": "Recibido",
                         "icon": "sap-icon://pending",
-                        "estate": "Warning"
+                        "estate": "Warning",
+                        "NroCredito":"982731",
+                        "Motivos":"Motivo 1"
                     }
                 ]
                 return oModel;
+            },
+            jsonDetalleDevolucion:function(){
+                var oModel = [
+                    {
+                        "Producto":"Placenta Life Rubio",
+                        "Lote": "274659",
+                        "Cantidad":"6",
+                        "Monto":"550.00"
+                        
+                    },
+                    {
+                        "Producto":"Placenta Life Rubio",
+                        "Lote": "274659",
+                        "Cantidad":"6",
+                        "Monto":"550.00"
+                        
+                    },{
+                        "Producto":"Placenta Life Rubio",
+                        "Lote": "274659",
+                        "Cantidad":"6",
+                        "Monto":"550.00"
+                        
+                    },{
+                        "Producto":"Placenta Life Rubio",
+                        "Lote": "274659",
+                        "Cantidad":"6",
+                        "Monto":"550.00"
+                        
+                    },{
+                        "Producto":"Placenta Life Rubio",
+                        "Lote": "274659",
+                        "Cantidad":"6",
+                        "Monto":"550.00"
+                        
+                    }
+                    
+                ]
+                return oModel;
+
             },
             jsonFiltroClient:function(){
                 var oModel = [
@@ -93,7 +150,8 @@ sap.ui.define([
             JsonFactura: function () {
                 var oModel = [
                     {
-                        "documento": "0024-1315",
+                        "Cliente":"DROGUERIA INRETAIL PHARMA",
+                        "documento": "FC0024-1315",
                         "fecha": "27-09-2022",
                         "lote": "893746381321",
                         "cantidad": "1",
@@ -101,7 +159,8 @@ sap.ui.define([
                         "tipo": "1"
                     },
                     {
-                        "documento": "0024-1313",
+                        "Cliente":"DROGUERIA INRETAIL PHARMA",
+                        "documento": "BV0024-1313",
                         "fecha": "30-09-2022",
                         "lote": "893746381321",
                         "cantidad": "1",
@@ -113,6 +172,7 @@ sap.ui.define([
             },
             JsonMotivo: function () {
                 var oModel = [
+                
                     {
                         "key": "1",
                         "descripcion": "Primer Motivo"

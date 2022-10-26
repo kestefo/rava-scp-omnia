@@ -19,6 +19,19 @@
       "target": "$1",
       "service": "html5-apps-repo-rt",
       "authenticationType": "xsuaa"
+    },{
+        "welcomeFile": "/user-api/currentUser",
+        "authenticationMethod": "route",
+        
+        "routes": [
+            {
+                "source": "^/user-api(.*)",
+                "target": "$1",
+                "service": "sap-approuter-userapi",
+                "name":"userapi"
+                
+            }
+        ]
     }
   ]
 }

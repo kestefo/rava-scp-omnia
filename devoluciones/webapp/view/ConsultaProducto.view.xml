@@ -13,81 +13,90 @@
     xmlns="sap.m"
 >
     <Page id="IdClienteCenter" showHeader="true" showNavButton="false" title="Detalle del producto">
+    
         <content>
-           <VBox width="auto" class="sapUiSmallMargin">
-                        <VBox class="sapUiSmallMargin">
-                         
-                            <VBox width="auto">
-                                <Title text="{i18n>textMarca}" level="H4" />
-                                <ComboBox id="slMarca" items="{oModelDevolucion>/AddSelectMarca}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyMarca}">
-                                    <core:Item key="{oModelDevolucion>Id}" text="{oModelDevolucion>Descripcion}"/>
-                                </ComboBox>
-                            </VBox>
-                            <VBox width="auto" class="sapUiSmallMarginTop">
-                                <Title text="{i18n>textNombreProducto}" level="H4" />
-                                <ComboBox id="slProducto" items="{oModelDevolucion>/AddSelectProducto}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyNombProduct}">
-                                    <core:Item key="{oModelDevolucion>Id}" text="{oModelDevolucion>NombreProducto}"/>
-                                </ComboBox>
-                            </VBox>
-                            <VBox width="auto">
-                                <Title text="{i18n>textLote}" level="H4" />
-                                <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad"></Input>
-                                <Button text="{i18n>txtbtnBuscar}" visible="true" press="_SearchPedido"  type="Default" />
-                            </VBox>
-                            <Table items="{oModelDevolucion>/AddProducto}" growingThreshold="20">
-                                <columns>
-                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titleAddColDocumento01}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titleAddColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                    <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titleAddColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                    <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titledetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                    <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titleAddColCantidad}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                    <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titleAddColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                    <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                        <header>
-                                            <Text text="{i18n>titleAddColTipo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                        </header>
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" press="_onNavDetalleProducto">
-                                        <cells>
-                                            <Text text="{oModelDevolucion>documento}"/>
-                                            <Text text="{oModelDevolucion>fecha}"/>
-                                            <Text text="{oModelDevolucion>lote}"/>
-                                            <Button icon="sap-icon://show" press="onDetalleDocFact"/>
-                                            <Text text="{oModelDevolucion>cantidad}"/>
-                                            <Text text="{oModelDevolucion>importe}"/>
-                                            <Text text="{oModelDevolucion>tipo}"/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-                        </VBox>
+        
+            <VBox width="auto" class="sapUiSmallMargin">
+                <VBox class="sapUiSmallMargin">
+                    <VBox width="auto">
+                        <Title text="{i18n>textMarca}" level="H4" />
+                        <ComboBox id="slMarca" items="{oModelDevolucion>/AddSelectMarca}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyMarca}">
+                            <core:Item key="{oModelDevolucion>Id}" text="{oModelDevolucion>Descripcion}" />
+                        </ComboBox>
                     </VBox>
+                    <VBox width="auto" class="sapUiSmallMarginTop">
+                        <Title text="{i18n>textNombreProducto}" level="H4" />
+                        <ComboBox id="slProducto" items="{oModelDevolucion>/AddSelectProducto}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyNombProduct}">
+                            <core:Item key="{oModelDevolucion>Id}" text="{oModelDevolucion>NombreProducto}" />
+                        </ComboBox>
+                    </VBox>
+                    <VBox width="auto">
+                        <Title text="{i18n>textLote}" level="H4" />
+                        <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad" />
+                        <Button text="{i18n>txtbtnBuscar}" visible="true" press="_SearchPedido" type="Default" />
+                    </VBox>
+                    <Table items="{oModelDevolucion>/AddProducto}" growingThreshold="20">
+                       
+                        <columns>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleColCliente}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColDocumento01}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                            <!-- <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column> -->
+
+                            <!-- <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColCantidad}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column> -->
+                            <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                            <!-- <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColTipo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column> -->
+                            <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titledetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem type="Inactive" press="_onNavDetalleProducto">
+                                <cells>
+                                    <Text text="{oModelDevolucion>Cliente}" />
+                                    <Text text="{oModelDevolucion>documento}" />
+                                    <Text text="{oModelDevolucion>fecha}" />
+                                    <!-- <Text text="{oModelDevolucion>lote}" /> -->
+                                    <!-- <Text text="{oModelDevolucion>cantidad}" /> -->
+                                    <Text text="{oModelDevolucion>importe}" />
+                                    <Button icon="sap-icon://show" press="onDetalleDocFact" />
+                                    <!-- <Text text="{oModelDevolucion>tipo}" /> -->
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+            </VBox>
         </content>
 
         <OverflowToolbar>

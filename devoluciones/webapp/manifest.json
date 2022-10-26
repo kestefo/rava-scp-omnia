@@ -115,7 +115,7 @@
             "routes": [
                 {
                     "name": "Main",
-                    "pattern": ":?query:",
+                    "pattern": "Main/:app:",
                     "target": [
                         "Main"
                     ]
@@ -131,16 +131,36 @@
                     "target": [
                         "ConsultaProducto"
                     ]
+                },{
+                    "name": "DetalleDevolucion",
+                    "pattern": "DetalleDevolucion/:app:",
+                    "target": [
+                        "DetalleDevolucion"
+                    ]
+                },{
+                    "name": "PrimeraPantalla",
+                    "pattern": ":?query:",
+                    "target": [
+                        "PrimeraPantalla"
+                    ]
                 }
             ],
             "targets": {
+                "PrimeraPantalla": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "PrimeraPantalla",
+                    "viewName": "PrimeraPantalla",
+                    "viewLevel": 1
+                },
                 "Main": {
                     "viewType": "XML",
                     "transition": "slide",
                     "clearControlAggregation": false,
                     "viewId": "Main",
                     "viewName": "Main",
-                    "viewLevel": 1
+                    "viewLevel": 2
                 },"ConsultaFactura": {
                     "viewType": "XML",
                     "transition": "slide",
@@ -155,6 +175,13 @@
                     "viewId": "ConsultaProducto",
                     "viewName": "ConsultaProducto",
                     "viewLevel": 3
+                },"DetalleDevolucion": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "DetalleDevolucion",
+                    "viewName": "DetalleDevolucion",
+                    "viewLevel": 4
                 }
             }
         },

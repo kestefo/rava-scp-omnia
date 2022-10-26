@@ -46,13 +46,32 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             oModelDevolucion.setProperty("/AddProducto", models.JsonFactura());
             
         },
+        _onPressCloseProduct:function(){
+            this.AbrirProducto.close();
+        },
         onDetalleDocFact:function(){
             var oView = this.getView();
             var that = this;
+            var contCantidad=0;
+            var contTotal=0;
+            var contMonto=0;
             var oModelDevolucion = oView.getModel("oModelDevolucion");
 
           
             oModelDevolucion.setProperty("/AddProductoDetail", models.JsonFacturaDetail());
+
+            models.JsonFacturaDetail().forEach(function(items){
+
+                contCantidad += parseFloat(items.cantorig);
+                contTotal   += parseFloat(items.total);
+                contMonto   += parseFloat(items.montonc);
+
+            });
+
+            oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toString());
+            oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
+            oModelDevolucion.setProperty("/totalMontoDetProduct", contMonto.toFixed(2));
+
             if (!that.AbrirProducto) {
                 that.AbrirProducto = sap.ui.xmlfragment("devoluciones.view.dialogs.DetalleProduct", that);
                 oView.addDependent(that.AbrirProducto);

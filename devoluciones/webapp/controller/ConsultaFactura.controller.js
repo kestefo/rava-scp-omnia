@@ -44,9 +44,25 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var oView = this.getView();
             var that = this;
             var oModelDevolucion = oView.getModel("oModelDevolucion");
+            var contadorCant= 0;
+            var contadorMonto=0;
+            var contadorTotal=0;
 
             oModelDevolucion.setProperty("/addClientVisible", true);
             oModelDevolucion.setProperty("/AddFacturaBoletaDetail", models.JsonFacturaDetail());
+            
+            models.JsonFacturaDetail().forEach(function(element){
+                       
+                contadorCant += parseFloat(element.cantorig);
+                contadorMonto +=parseFloat(element.montonc);
+                contadorTotal +=parseFloat(element.total);
+
+            });
+
+            oModelDevolucion.setProperty("/totalCantidadDet", contadorCant.toString());
+            oModelDevolucion.setProperty("/totalCantSolic", contadorTotal.toFixed(2));
+            oModelDevolucion.setProperty("/totalMontoDet", contadorMonto.toFixed(2));
+            
             if (!that.AddFactBol) {
                 that.AddFactBol = sap.ui.xmlfragment("devoluciones.view.dialogs.DetalleDoc", that);
                 oView.addDependent(that.AddFactBol);
@@ -54,6 +70,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             that.AddFactBol.open();
 
             // this.setFragment("_dialogDetalleFact", this.fragaddDetalleFact, "DetalleDoc", this);//CRomero
+        },
+        _onPressCloseDetalleDoc:function(){
+            this.AddFactBol.close();
         },
         _onPressCloseDetalle: function (oEvent) {//corregir
             var oSource = oEvent.getSource();

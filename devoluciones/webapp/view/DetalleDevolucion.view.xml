@@ -1,0 +1,87 @@
+<mvc:View
+    controllerName="devoluciones.controller.DetalleDevolucion"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:ui="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified"
+    xmlns="sap.m"
+>
+    <Page id="DetalleDev" showHeader="true" showNavButton="false" title="Detalle de Nota de Crédito">
+        <content>
+            <fb:FilterBar id="filter" showClearOnFB="false" clear="onClear" showFilterConfiguration="false" search="onBuscar" useToolbar="false" showGoOnFB="false" showRestoreButton="false">
+                <fb:filterGroupItems>
+                    <fb:FilterGroupItem name="idNroCredito" groupName="Filters" label="{i18n>txtNroCredito}" visibleInFilterBar="true">
+                        <fb:control>
+                            <Input value="{oModelDevolucion>/NroCredito}" editable="{oModelDevolucion>/editableNroCredt}" />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem name="idMotivos01" groupName="Filters" label="{i18n>txtMotivo}" visibleInFilterBar="true">
+                        <fb:control>
+                            <Input value="{oModelDevolucion>/DescripMotivo}" editable="{oModelDevolucion>/editableDescripMot}"/>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                </fb:filterGroupItems>
+            </fb:FilterBar>
+            <VBox width="auto" class="sapUiSmallMargin">
+                <Table id="id12" items="{oModelDevolucion>/AddDetalleDev}" growingThreshold="20">
+                    <columns>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddCantidadDev}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddMonto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            </header>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive" press="_onNavDetalleFacturaBoleta">
+                            <cells>
+                                <Text text="{oModelDevolucion>Producto}" />
+                                <Text text="{oModelDevolucion>Lote}" />
+                                <Text text="{oModelDevolucion>Cantidad}" />
+                                <Text text="{oModelDevolucion>Monto}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto"
+			height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
+				<items>
+					<Text text="" width="" wrapping="false"/>
+					<Text text="{i18n>titleTotal}" wrapping="false" width="auto" textAlign="Initial"  />
+					<Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="auto" textAlign="Center"/>
+					<Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="auto" textAlign="Center" visible="true"/>
+					
+				</items>
+			</VBox>
+            </VBox>
+        </content>
+
+        <OverflowToolbar>
+            <content>
+                <ToolbarSpacer />
+                <!-- <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" type="Accept" /> -->
+                <Button text="{i18n>VolverText}" visible="true" press="pressVolverDetalle" type="Default" />
+            </content>
+        </OverflowToolbar>
+    </Page>
+</mvc:View>
