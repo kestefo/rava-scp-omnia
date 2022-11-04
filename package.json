@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/kestefo/rava-scp-omnia/issues"
   },
-  "homepage": "https://github.com/kestefo/rava-scp-omnia#readme"
+  "homepage": "https://github.com/kestefo/rava-scp-omnia#readme",
+  "dependencies": {
+    "@sap/approuter": "^11.6.1"
+  }
 }

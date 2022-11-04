@@ -2,10 +2,16 @@
     "welcomeFile": "index.html",
     "authenticationMethod": "route",
     "routes": [
-        {
-            "source": "^/user-api(.*)",
-            "target": "$1",
-            "service": "sap-approuter-userapi"
-        }
+      {
+        "source": "^/user-api(.*)",
+        "target": "$1",
+        "service": "sap-approuter-userapi"
+      },
+      {
+        "source": "^(.*)$",
+        "target": "$1",
+        "authenticationType": "xsuaa",
+        "localDir": "./"
+    }
     ]
-}
+  }

@@ -16,25 +16,67 @@ sap.ui.define([
             this.frgIdAddPedido = "frgIdAddPedido";
             this.frgIdDetailPedido = "frgIdDetailPedido";
             this.frgIdEditContact = "frgIdEditContact";
+            this.frgIdLoadData = "frgIdLoadData";
             
+            // jQuery.ajax({
+            //     method: 'GET',
+            //     headers: {
+            //         "X-CSRF-Token": "Fetch"
+            //     },
+            //     cache: false,
+            //     url: "/user-api/currentUser"
+            // }).then(function successCallback(result, xhr, data) {
+            //     console.log(result)
+            // }, function errorCallback(xhr, readyState) {
+            // });
+
             console.log("init")
         },
+        _onbtnRefresh: function(){
+            this.onAfterRendering();
+        },
+        //Primera carga de data
+        onAfterRendering: function(){
+            this.setFragment("_dialogLoadData", this.frgIdLoadData, "LoadData", this);
+
+            this.oModel = this.getModel("oModelMainService");
+            this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+
+            var sPorcentajeTotal = "100",
+                sCantServicios="1";
+            
+            var SPorcentajeParcial=parseInt(sPorcentajeTotal)/parseInt(sCantServicios);
+            // sap.ui.core.BusyIndicator.show(0);
+            Promise.all([this._getCliente()]).then(async values => {
+
+            }).catch(function (oError) {
+				sap.ui.core.BusyIndicator.hide(0);
+			});
+        },
+        _onPressAcceptLoadData : function (oEvent) {
+			var sValue = "100",
+				oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
+
+			oProgressIndicator.setDisplayValue(sValue + '%');
+			oProgressIndicator.setPercentValue(+sValue);
+		},
+        //Primera carga de data
         handleRouteMatched: function(){
             this.oModel = this.getModel("oModelMainService");
             this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
             this.oModelPedidoVenta.setProperty("/DataGeneral", models.createDataGeneralModel());
-            Promise.all([this._getCliente()]).then(async values => {
-                // this.oModelPedidoVenta.setProperty("/AddSelectUser", models.JsonCliente());
+            // Promise.all([this._getCliente()]).then(async values => {
                 // this.oModelPedidoVenta.setProperty("/User", models.JsonUserLoged());
+                // this.oModelPedidoVenta.setProperty("/AddSelectUser", models.JsonCliente());
                 // this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
                 // this.oModelPedidoVenta.setProperty("/DetailSelectFuerzaVenta", models.JsonFuerzaVenta());
                 // this.oModelPedidoVenta.setProperty("/DetailSelectPuntoVenta", models.JsonPuntoVenta());
                 // this.oModelPedidoVenta.setProperty("/DetailSelectDireccion", models.JsonDirecciones());
                 // this.oModelPedidoVenta.setProperty("/DetailSelectCondPago", models.JsonCondPago());
                 // this.oModelPedidoVenta.setProperty("/DescSelect", models.JsonDescuento());
-			}).catch(function (oError) {
-				sap.ui.core.BusyIndicator.hide(0);
-			});
+			// }).catch(function (oError) {
+			// 	sap.ui.core.BusyIndicator.hide(0);
+			// });
         },
 
         //Llamada de data
@@ -65,17 +107,20 @@ sap.ui.define([
 			try{
 				var user = sUser;
 				return new Promise(function (resolve, reject) {
-		        	this.oModel.read("/usuario_contratoSet", {
-						async: false,
-						filters: [new Filter("Usuario", FilterOperator.Contains, user)],
-						success: function (data) {
-							// resolve(data.results);
-						},
-						error: function (error) {
-							sap.ui.core.BusyIndicator.hide(0);
-							reject(error);
-						}
-					});
+                    if (!navigator.onLine) {
+                        this.oModel.read("/usuario_contratoSet", {
+                            async: false,
+                            filters: [new Filter("Usuario", FilterOperator.Contains, user)],
+                            success: function (data) {
+                                resolve(data.results);
+                            },
+                            error: function (error) {
+                                reject(error);
+                            }
+                        });
+                    }else{
+                        resolve(models.JsonCliente());
+                    }
 				});
 			}catch(oError){
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));

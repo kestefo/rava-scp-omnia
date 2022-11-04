@@ -2,15 +2,6 @@ _schema-version: "3.2"
 ID: Omnia
 version: 0.0.1
 modules:
-- name: approuterOmnia
-  type: javascript.nodejs
-  path: approuter
-  parameters:
-    disk-quota: 256M    
-    memory: 256M
-  requires:
-    - name: Omnia-repo-host
-    - name: uaa_Omnia
 - name: Omnia-app-content
   type: com.sap.application.content
   path: .
