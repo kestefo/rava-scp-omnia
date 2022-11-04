@@ -17,7 +17,7 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "/sap/opu/odata/",
+                "uri": "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/",
                 "type": "OData",
                 "settings": {
                     "annotations": [],
@@ -84,7 +84,7 @@
                     "bundleName": "tomapedido.i18n.i18n"
                 }
             },
-            "": {
+            "oModelMainService": {
                 "dataSource": "mainService",
                 "preload": true,
                 "settings": {}

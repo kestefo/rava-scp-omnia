@@ -19,6 +19,16 @@ sap.ui.define([
 	var sMessage = "";
 	return Controller.extend("tomapedido.controller.BaseController", {
 		formatter: Formatter,
+        local:true,
+        getUserLoged: function(){
+			var user = "";
+			if(this.local){
+				user = "liderdeproyecto1@omniasolution.com";
+			}else{
+				user = sap.ushell.Container.getService("UserInfo").getUser().getEmail();
+			}
+			return user;
+		},
 		validateUser: function () {
 			that = this;
 			var oModel = new sap.ui.model.json.JSONModel();
@@ -50,6 +60,54 @@ sap.ui.define([
 				});
 			});
 
+		},
+        _onbtnHome:function(){
+            that = this;
+            MessageBox.warning(this.getI18nText("textbtnHome"), {
+				actions: [this.getI18nText("acceptText"), this.getI18nText("cancelText")],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+					if (sAction === that.getI18nText("acceptText")) {
+                        var aplicacion = "#";
+                        var accion = "";
+                        if(!that.isEmpty(sap.ushell.Container)){
+                            var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
+                            oCrossAppNavigator.toExternal({
+                                target: {
+                                    semanticObject: aplicacion,
+                                    action: accion
+                                }
+                            });
+                        }
+					}
+				}
+			});
+        },
+        isEmpty: function (inputStr) {
+
+			var flag = false;
+			if (inputStr === '') {
+				flag = true;
+			}
+			if (inputStr === null) {
+				flag = true;
+			}
+			if (inputStr === undefined) {
+				flag = true;
+			}
+			if (inputStr == null) {
+				flag = true;
+			}
+
+			return flag;
+		},
+        validateInternet: function () {
+			var bValidate = false;
+			if (!window.navigator.onLine) {
+				bValidate = true;
+				MessageToast.show(this.getI18nText("warningInternet"));
+			}
+			return bValidate;
 		},
 		showErrorMessage: function (sError, sDetail) {
 			var sDetail2 = String(sDetail);
@@ -502,6 +560,107 @@ sap.ui.define([
 			var oNavCon = Fragment.byId(sFragmentId, sNavId);
 			var oDetailPage = Fragment.byId(sFragmentId, sPageId);
 			oNavCon.to(oDetailPage);
+		},
+        _groupByKey: function (array, groups, valueKey) {
+            var map = new Map;
+            groups = [].concat(groups);
+            return array.reduce((r, o) => {
+                groups.reduce((m, k, i, {
+                    length
+                }) => {
+                    var child;
+                    if (m.has(o[k])) return m.get(o[k]);
+                    if (i + 1 === length) {
+                        child = Object.assign(...groups.map(k => ({
+                            [k]: o[k]
+                        })), {
+                            [valueKey]: 0
+                        });
+                        r.push(child);
+                    } else {
+                        child = new Map;
+                    }
+                    m.set(o[k], child);
+                    return child;
+                }, map)[valueKey] += +o[valueKey];
+                return r;
+            }, [])
+        },
+        _groupBy: function (array, param) {
+            return array.reduce(function (groups, item) {
+                const val = item[param]
+                groups[val] = groups[val] || []
+                groups[val].push(item)
+                return groups
+            }, {});
+        },
+        onInvoiceDateChange: function(oEvent){
+            var oSource = oEvent.getSource();
+            var sValue = oSource.getValue();
+			var booleanFormatDate = this.formatValidateDate(sValue);
+			if (!booleanFormatDate) {
+                this.getMessageBox('error', this.getI18nText("sErrorChangeDatePicker") + sValue);
+                oSource.setValue("");
+                return;
+			}
+			
+			var booleanDate = this.ValidateDate(sValue);
+			if (!booleanDate) {
+				this.getMessageBox('error', this.getI18nText("sErrorChangeDatePicker") + sValue);
+                oSource.setValue("");
+                return;
+			}
+			
+			var dateReverseToString = this.reverseStringForParameter(sValue,"/");
+			var booleanValidateDate = Date.parse(dateReverseToString);
+			
+			if (isNaN(booleanValidateDate)) {
+				this.getMessageBox('error', this.getI18nText("errorChangeDatePicker") + sValue);
+                oSource.setValue("");
+                return;
+			}
+			
+			oSource.setValue(sValue);
+		},
+        ValidateFormatDate: function(sValue){
+			var booleanFormatDate = this.formatValidateDate(sValue);
+			if (!booleanFormatDate) {
+				return false;
+			}
+			
+			var booleanDate = this.ValidateDate(sValue);
+			if (!booleanDate) {
+				return false;
+			}
+			
+			var dateReverseToString = this.reverseStringForParameter(sValue,"/");
+			var booleanValidateDate = Date.parse(dateReverseToString);
+			
+			if (isNaN(booleanValidateDate)) {
+				return false;
+			}
+			
+			return true;
+		},
+        formatValidateDate:function(campo){
+			var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+			if ((campo.match(RegExPattern)) && (campo!='')) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		
+		ValidateDate:function(fecha){
+			var fechaf = fecha.split("/");
+			var day = fechaf[0];
+			var month = fechaf[1];
+			var year = fechaf[2];
+			var date = new Date(year,month,'0');
+			if((day-0)>(date.getDate()-0)){
+				return false;
+			}
+			return true;
 		},
 
 	});

@@ -2,7 +2,8 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "tomapedido/controller/BaseController",
     "tomapedido/model/models",
-], function (Controller, BaseController, models) {
+    "tomapedido/controller/Service",
+], function (Controller, BaseController, models, Service) {
     "use strict";
 
     var that, bValueHelpEquipment = false;
@@ -19,20 +20,173 @@ sap.ui.define([
             console.log("init")
         },
         handleRouteMatched: function(){
-            Promise.all([]).then(async values => {
-				this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
-                this.oModelPedidoVenta.setProperty("/AddSelectUser", models.JsonUser());
-                this.oModelPedidoVenta.setProperty("/User", models.JsonUserLoged());
-                this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
-                this.oModelPedidoVenta.setProperty("/DetailSelectFuerzaVenta", models.JsonFuerzaVenta());
-                this.oModelPedidoVenta.setProperty("/DetailSelectPuntoVenta", models.JsonPuntoVenta());
-                this.oModelPedidoVenta.setProperty("/DetailSelectDireccion", models.JsonDirecciones());
-                this.oModelPedidoVenta.setProperty("/DetailSelectCondPago", models.JsonCondPago());
-                this.oModelPedidoVenta.setProperty("/DescSelect", models.JsonDescuento());
+            this.oModel = this.getModel("oModelMainService");
+            this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+            this.oModelPedidoVenta.setProperty("/DataGeneral", models.createDataGeneralModel());
+            Promise.all([this._getCliente()]).then(async values => {
+                // this.oModelPedidoVenta.setProperty("/AddSelectUser", models.JsonCliente());
+                // this.oModelPedidoVenta.setProperty("/User", models.JsonUserLoged());
+                // this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
+                // this.oModelPedidoVenta.setProperty("/DetailSelectFuerzaVenta", models.JsonFuerzaVenta());
+                // this.oModelPedidoVenta.setProperty("/DetailSelectPuntoVenta", models.JsonPuntoVenta());
+                // this.oModelPedidoVenta.setProperty("/DetailSelectDireccion", models.JsonDirecciones());
+                // this.oModelPedidoVenta.setProperty("/DetailSelectCondPago", models.JsonCondPago());
+                // this.oModelPedidoVenta.setProperty("/DescSelect", models.JsonDescuento());
 			}).catch(function (oError) {
 				sap.ui.core.BusyIndicator.hide(0);
 			});
         },
+
+        //Llamada de data
+        _getUsers: function () {
+			try {
+                var sMail = this.getUserLoged();
+                var sPath = 'scimApi/Users?filter=emails eq "' + sMail + '"';
+                const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
+                return new Promise(function (resolve, reject) {
+					var model = new sap.ui.model.json.JSONModel(),
+						arrayUsers;
+					model.loadData(sUrl, null, true, "GET", null, null, {
+                        "Content-Type": "application/scim+json"
+                    }).then(() => {
+                        var oDataTemp = model.getData();
+						resolve(oDataTemp.Resources[0].userName);
+                    }).catch(err => {
+                        console.log("Error:" + err.message);
+                        reject(oError);
+                    });
+                });
+                
+            } catch (oError) {
+                that.getMessageBox("error", that.getI18nText("sErrorTry"));
+            }	
+		},
+        _getCliente: function (sUser) {
+			try{
+				var user = sUser;
+				return new Promise(function (resolve, reject) {
+		        	this.oModel.read("/usuario_contratoSet", {
+						async: false,
+						filters: [new Filter("Usuario", FilterOperator.Contains, user)],
+						success: function (data) {
+							// resolve(data.results);
+						},
+						error: function (error) {
+							sap.ui.core.BusyIndicator.hide(0);
+							reject(error);
+						}
+					});
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        //Llamada de data
+        
+        //Limpiar
+        _onClear: function (oEvent) {
+			var oFilterBar = that._byId("idFilterBar");
+			var oItems = oFilterBar.getAllFilterItems(true);
+			that
+				._byId("cbFilterCliente")
+				.clearSelection();
+			that
+				._byId("cbFilterCliente")
+				.clearSelection();
+			
+			for (var i = 0; i < oItems.length; i++) {
+				var oControl = oFilterBar.determineControlByFilterItem(oItems[i]);
+				if (oControl) {
+					if (!oControl.getId().toString().includes("button"))
+						oControl.setValue("");
+
+				}
+			}
+		},
+        //Limpiar
+        
+        //Buscar
+        _onSearchFB: function () {
+            var sPath = "/EquipmentSearchAdvancedSet";
+            var cbCliente = this._byId("cbFilterCliente").getSelectedKey();
+            var cbEstado = this._byId("cbFilterEstado").getSelectedKey();
+            var sDesde = this._byId("dpDateFilterDesde").getDateValue();
+            var sHasta = this._byId("dpDateFilterHasta").getDateValue();
+                
+            var aFilter = [];
+            if (!this.isEmpty(cbCliente)) {
+                aFilter.push(new Filter("Cliente", "EQ", cbCliente));
+            }
+            if (!this.isEmpty(cbEstado)) {
+                aFilter.push(new Filter("Estado", "EQ", cbEstado));
+            }
+            if (!this.isEmpty(sDesde)) {
+                aFilter.push(new Filter("Desde", "EQ", sDesde));
+            }
+            if (!this.isEmpty(sHasta)) {
+                aFilter.push(new Filter("Hasta", "EQ", sHasta));
+            }
+
+            sap.ui.core.BusyIndicator.show();
+            //moment
+            if (!navigator.onLine) {
+                this.getValuesPedidoAS(sPath, aFilter, that);
+            } else {
+                this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
+                that.getMessageBox("error", that.getI18nText("warningInternet"));
+                sap.ui.core.BusyIndicator.hide();
+            }
+        },
+        getValuesPedidoAS: function (sPath, aFilter, that) {
+            return new Promise(function (resolve, reject) {
+                if (navigator.onLine) {
+                    var urlParameters = {
+                        "$expand": "EquipmentContentASearchSet,MessageSet"
+                    }
+                    Service.oDataConsult("read", sPath, "", aFilter, "1", that, urlParameters)
+                        .then(function (result) {
+                            sap.ui.core.BusyIndicator.hide();
+                            resolve(result);
+                        }, function (error) {
+                            sap.ui.core.BusyIndicator.hide();
+                            reject(error);
+                        });
+                } else {
+                    that.oModel.read(sPath, {
+                        filters: aFilter,
+                        success: function (result) {
+                            sap.ui.core.BusyIndicator.hide();
+                            resolve(result);
+                        },
+                        error: function (error) {
+                            sap.ui.core.BusyIndicator.hide();
+                            reject(error);
+                        }
+                    });
+                }
+            }).then(function (resolve) {
+
+                if (navigator.onLine) {
+                    resolve = resolve.results[0];
+                } else {
+
+                }
+
+                sap.ui.core.BusyIndicator.hide();
+            }, function (error) {
+                sap.ui.core.BusyIndicator.hide();
+                var bValidate = that.validateInternet();
+                if (!bValidate) {
+                    that.getMessageBox("error", JSON.stringify(error));
+                }
+                // $.oLog.push({
+                //     error: reject,
+                //     date: new Date()
+                // });
+            });
+        },
+        //Buscar
+        
         _onPressAddPedido: function(){
             this.setFragment("_dialogAddPedido", this.frgIdAddPedido, "AddPedido", this);
         },

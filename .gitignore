@@ -1,3 +1,8 @@
 /mta_archives/
 /node_modules/
 /resources/
+
+# auto generated wildcard
+approuter/.env
+# auto generated wildcard
+tomapedido/.env

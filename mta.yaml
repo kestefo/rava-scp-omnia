@@ -2,6 +2,15 @@ _schema-version: "3.2"
 ID: Omnia
 version: 0.0.1
 modules:
+- name: approuterOmnia
+  type: javascript.nodejs
+  path: approuter
+  parameters:
+    disk-quota: 256M    
+    memory: 256M
+  requires:
+    - name: Omnia-repo-host
+    - name: uaa_Omnia
 - name: Omnia-app-content
   type: com.sap.application.content
   path: .
@@ -12,10 +21,6 @@ modules:
   build-parameters:
     build-result: resources
     requires:
-    - artifacts:
-      - comravapedidopedidoventa.zip
-      name: comravapedidopedidoventa
-      target-path: resources/
     - artifacts:
       - Cobranzaomnia.zip
       name: Cobranzaomnia
@@ -32,16 +37,6 @@ modules:
       - reportecartera.zip
       name: reportecartera
       target-path: resources/
-- name: comravapedidopedidoventa
-  type: html5
-  path: pedidoventa
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
 - name: Cobranzaomnia
   type: html5
   path: omnia

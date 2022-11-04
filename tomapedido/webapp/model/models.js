@@ -19,7 +19,24 @@ sap.ui.define([
                 oModel.setDefaultBindingMode("OneWay");
                 return oModel;
             },
-            JsonUser: function () {
+
+            createDataGeneralModel: function(){
+                var oModel = {
+                    filter: {
+                        sDesde: "",
+                        sHasta: "",
+                        sCliente: "",
+                        sEstado: "",
+                    },
+                    objects:{
+                        oCliente:[],
+                        oEstado:[]
+                    }
+                };
+                return oModel;
+            },
+
+            JsonCliente: function () {
                 var oModel = [
                     {
                         "RUC": "20604890617",

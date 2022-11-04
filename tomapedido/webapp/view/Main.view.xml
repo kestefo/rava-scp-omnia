@@ -1,54 +1,53 @@
 <mvc:View controllerName="tomapedido.controller.Main" xmlns:core="sap.ui.core"
-    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns:fb="sap.ui.comp.filterbar"
     xmlns="sap.m">
     <Shell >
         <Page id="page" title="{i18n>title}">
-            <ObjectHeader
-                id="objheaderMain"
-                responsive="true"
-                title="{oModelPedidoVenta>/User/nameDescription}"
-                numberState="Success"
-                backgroundDesign="Translucent">
-                <headerContainer>
-                    <HeaderContainer scrollStep="200" id="headerContainer" scroll="onScroll" content="{/ContentData/}">
-                        <NumericContent size="S" scale="M" value="{value}" valueColor="{color}" indicator="{growth}" press="press" />
-                    </HeaderContainer>
-                </headerContainer>
-            </ObjectHeader>
             <headerContent>
-                <Button text="" press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
-                <Button text="" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
+                <Button text="{i18n>textRefresh}" press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
+                <Button text="{i18n>textHome}" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
             </headerContent>
             <content>
+                <fb:FilterBar id="idFilterBar" filterContainerWidth="15rem" reset="onReset" search="_onSearchFB" showFilterConfiguration="true"
+                    showRestoreButton="false" showClearOnFB="true" clear="_onClear">
+                    <fb:filterItems>
+                        <fb:FilterItem name="A" label="{i18n>lblDesde}">
+                            <fb:control>
+                                <DatePicker id="dpDateFilterDesde" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy"
+                                    value="{oModelPedidoVenta>/DataGeneral/filter/sDesde}" change="onInvoiceDateChange"/>
+                            </fb:control>
+                        </fb:FilterItem>
+                        
+                        <fb:FilterItem name="B" label="{i18n>lblHasta}">
+                            <fb:control>
+                                <DatePicker id="dpDateFilterHasta" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy"
+                                    value="{oModelPedidoVenta>/DataGeneral/filter/sHasta}" change="onInvoiceDateChange"/>
+                            </fb:control>
+                        </fb:FilterItem>
+                        
+                        <fb:FilterItem name="D" label="{i18n>lblCliente}">
+                            <fb:control>
+                                <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" 
+                                    items="{oModelPedidoVenta>/DataGeneral/objects/oCliente}" change="onValidateChange">
+                                    <core:ListItem key="{oModelPedidoVenta>Objnrtrg}" text="{oModelPedidoVenta>Objnrtrg}"/>
+                                </ComboBox>
+                            </fb:control>
+                        </fb:FilterItem>
+
+                        <fb:FilterItem name="E" label="{i18n>lblEstado}">
+                            <fb:control>
+                                <ComboBox id="cbFilterEstado" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sEstado}" 
+                                    items="{oModelPedidoVenta>/DataGeneral/objects/oEstado}" change="onValidateChange">
+                                    <core:ListItem key="{oModelPedidoVenta>Objnrtrg}" text="{oModelPedidoVenta>Objnrtrg}"/>
+                                </ComboBox>
+                            </fb:control>
+                        </fb:FilterItem>
+                    </fb:filterItems>
+                </fb:FilterBar>
                 <VBox >
-                    <IconTabBar
-                        id="idIconTabBarMain"
-                        headerMode="Inline"
-                        expanded="{device>/isNoPhone}">
-                        <items>
-                            <IconTabFilter key="keyMain" text="{i18n>textIconTabPedido}">
-                                <VBox id="vbTableDetalle">
-                                    <core:Fragment fragmentName="tomapedido.view.fragments.TableMain" type="XML"/>
-                                </VBox>
-                            </IconTabFilter>
-                            <IconTabFilter key="keyDesc" text="{i18n>textIconTabDesc}" visible="false">
-                                <VBox width="100%" wrap="Wrap">
-                                    <VBox width="auto" class="sapUiSmallMargin">
-                                        <ComboBox selectedKey="01" id="slDescuento" items="{oModelPedidoVenta>/DescSelect}" width="100%" change="">
-                                            <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
-                                        </ComboBox>
-                                    </VBox>
-                                    <VBox width="auto" class="sapUiSmallMargin">
-                                        <MessageStrip
-                                            text="{i18n>textErrorDescuento}"
-                                            type="Error">
-                                        </MessageStrip>
-                                    </VBox>
-                                </VBox>
-                            </IconTabFilter>
-                        </items>
-                    </IconTabBar>
-                    
+                    <VBox id="vbTableDetalle">
+                        <core:Fragment fragmentName="tomapedido.view.fragments.TableMain" type="XML"/>
+                    </VBox>
                 </VBox>
             </content>
         </Page>
