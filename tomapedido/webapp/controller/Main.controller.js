@@ -6,7 +6,9 @@ sap.ui.define([
 ], function (Controller, BaseController, models, Service) {
     "use strict";
 
-    var that, bValueHelpEquipment = false;
+    var that, 
+        bValueHelpEquipment = false,
+        clouconnector = true;
     return BaseController.extend("tomapedido.controller.Main", {
         onInit: function () {
             that = this;
@@ -18,6 +20,8 @@ sap.ui.define([
             this.frgIdEditContact = "frgIdEditContact";
             this.frgIdLoadData = "frgIdLoadData";
             
+            this.oModel = this.getModel("oModelMainService");
+            this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
             // jQuery.ajax({
             //     method: 'GET',
             //     headers: {
@@ -29,45 +33,83 @@ sap.ui.define([
             //     console.log(result)
             // }, function errorCallback(xhr, readyState) {
             // });
-
-            console.log("init")
         },
         _onbtnRefresh: function(){
             this.onAfterRendering();
         },
-        //Primera carga de data
+
         onAfterRendering: function(){
             this.setFragment("_dialogLoadData", this.frgIdLoadData, "LoadData", this);
-
-            this.oModel = this.getModel("oModelMainService");
-            this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
-
-            var sPorcentajeTotal = "100",
-                sCantServicios="1";
             
-            var SPorcentajeParcial=parseInt(sPorcentajeTotal)/parseInt(sCantServicios);
-            // sap.ui.core.BusyIndicator.show(0);
-            Promise.all([this._getCliente()]).then(async values => {
+            var iPorcentajeTotal = 100,
+                iCantSuccess = 0,
+                iCantTotal = 0,
+                iCantPorcentageSuccess = 0,
+                iCantError = 0,
+                sCantPorcentageSuccess = iCantPorcentageSuccess.toString(),
+                oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
+                
+            
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([this._getCliente(), this._getEstado(), this._getEstado2()]).then(async values => {
+                iCantTotal = values.length;
+                iCantSuccess = this.validateService(values);
+                iCantError = iCantTotal-iCantSuccess;
 
+                iCantPorcentageSuccess = (iCantSuccess * 100) / iCantTotal;
+                sCantPorcentageSuccess = parseInt(iCantPorcentageSuccess).toString();
+
+                oProgressIndicator.setDisplayValue(sCantPorcentageSuccess + '%');
+			    oProgressIndicator.setPercentValue(+sCantPorcentageSuccess);
+
+                var oCliente = values[0].oResults;
+                var oEstado = values[1].oResults;
+
+                this.oModelPedidoVenta.setProperty("/oSelectUser", oCliente);
+                this.oModelPedidoVenta.setProperty("/oEstado", oEstado);
+                
+                sap.ui.core.BusyIndicator.hide(0);
+                console.log(values);
             }).catch(function (oError) {
+                console.log(oError);
 				sap.ui.core.BusyIndicator.hide(0);
 			});
         },
+        validateService: function(oServices){
+            var iCantSuccess = 0;
+            oServices.forEach(function(value, index){
+                if(value.sEstado == "S"){
+                    iCantSuccess++;
+                }
+            });
+            return iCantSuccess;
+        },
         _onPressAcceptLoadData : function (oEvent) {
+            var oSource = oEvent.getSource();
 			var sValue = "100",
 				oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
+            
+            oProgressIndicator.setDisplayValue('0%');
+            oProgressIndicator.setPercentValue(-"0");
 
-			oProgressIndicator.setDisplayValue(sValue + '%');
-			oProgressIndicator.setPercentValue(+sValue);
+            if(oProgressIndicator.getPercentValue() < 100){
+                that.getMessageBox("warning", that.getI18nText("warningProgress"));
+            }
+
+            if(oSource.sParentAggregationName === "buttons"){
+                oSource.getParent().close();
+            }else{
+                oSource.close();
+            }
 		},
-        //Primera carga de data
+
         handleRouteMatched: function(){
             this.oModel = this.getModel("oModelMainService");
             this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
             this.oModelPedidoVenta.setProperty("/DataGeneral", models.createDataGeneralModel());
             // Promise.all([this._getCliente()]).then(async values => {
                 // this.oModelPedidoVenta.setProperty("/User", models.JsonUserLoged());
-                // this.oModelPedidoVenta.setProperty("/AddSelectUser", models.JsonCliente());
+                // this.oModelPedidoVenta.setProperty("/oSelectUser", models.JsonCliente());
                 // this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
                 // this.oModelPedidoVenta.setProperty("/DetailSelectFuerzaVenta", models.JsonFuerzaVenta());
                 // this.oModelPedidoVenta.setProperty("/DetailSelectPuntoVenta", models.JsonPuntoVenta());
@@ -106,20 +148,96 @@ sap.ui.define([
         _getCliente: function (sUser) {
 			try{
 				var user = sUser;
+                var oResp = {
+                    "sEstado": "E",
+                    "oResults": []
+                };
 				return new Promise(function (resolve, reject) {
-                    if (!navigator.onLine) {
-                        this.oModel.read("/usuario_contratoSet", {
+                    if(clouconnector){
+                        that.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDORType", {
                             async: false,
-                            filters: [new Filter("Usuario", FilterOperator.Contains, user)],
+                            // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
                             success: function (data) {
-                                resolve(data.results);
+                                oResp.sEstado = "S";
+                                oResp.oResults = data.results;
+                                resolve(oResp);
                             },
                             error: function (error) {
-                                reject(error);
+                                oResp.sEstado = "S";
+                                oResp.oResults = models.JsonCliente();
+                                resolve(oResp);
                             }
                         });
                     }else{
-                        resolve(models.JsonCliente());
+                        oResp.sEstado = "S";
+                        oResp.oResults = models.JsonCliente();
+                        resolve(oResp);
+                    }
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        _getEstado: function (sUser) {
+			try{
+				var user = sUser;
+                var oResp = {
+                    "sEstado": "E",
+                    "oResults": []
+                };
+				return new Promise(function (resolve, reject) {
+                    if(clouconnector){
+                        that.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDORType", {
+                            async: false,
+                            // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
+                            success: function (data) {
+                                oResp.sEstado = "S";
+                                oResp.oResults = data.results;
+                                resolve(oResp);
+                            },
+                            error: function (error) {
+                                oResp.sEstado = "S";
+                                oResp.oResults = models.JsonEstado();
+                                resolve(oResp);
+                            }
+                        });
+                    }else{
+                        oResp.sEstado = "S";
+                        oResp.oResults = models.JsonEstado();
+                        resolve(oResp);
+                    }
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        _getEstado2: function (sUser) {
+			try{
+				var user = sUser;
+                var oResp = {
+                    "sEstado": "E",
+                    "oResults": []
+                };
+				return new Promise(function (resolve, reject) {
+                    if(clouconnector){
+                        that.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDORType", {
+                            async: false,
+                            // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
+                            success: function (data) {
+                                oResp.sEstado = "S";
+                                oResp.oResults = data.results;
+                                resolve(oResp);
+                            },
+                            error: function (error) {
+                                oResp.sEstado = "E";
+                                oResp.oResults = models.JsonEstado();
+                                resolve(oResp);
+                            }
+                        });
+                    }else{
+                        oResp.sEstado = "E";
+                        oResp.oResults = models.JsonEstado();
+                        resolve(oResp);
                     }
 				});
 			}catch(oError){

@@ -28,8 +28,8 @@
                         <fb:FilterItem name="D" label="{i18n>lblCliente}">
                             <fb:control>
                                 <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" 
-                                    items="{oModelPedidoVenta>/DataGeneral/objects/oCliente}" change="onValidateChange">
-                                    <core:ListItem key="{oModelPedidoVenta>Objnrtrg}" text="{oModelPedidoVenta>Objnrtrg}"/>
+                                    items="{oModelPedidoVenta>/oSelectUser}" change="onValidateChange">
+                                    <core:ListItem key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
                                 </ComboBox>
                             </fb:control>
                         </fb:FilterItem>
@@ -37,8 +37,8 @@
                         <fb:FilterItem name="E" label="{i18n>lblEstado}">
                             <fb:control>
                                 <ComboBox id="cbFilterEstado" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sEstado}" 
-                                    items="{oModelPedidoVenta>/DataGeneral/objects/oEstado}" change="onValidateChange">
-                                    <core:ListItem key="{oModelPedidoVenta>Objnrtrg}" text="{oModelPedidoVenta>Objnrtrg}"/>
+                                    items="{oModelPedidoVenta>/oEstado}" change="onValidateChange">
+                                    <core:ListItem key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
                                 </ComboBox>
                             </fb:control>
                         </fb:FilterItem>
