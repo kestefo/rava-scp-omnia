@@ -39,16 +39,34 @@ sap.ui.define([
             JsonCliente: function () {
                 var oModel = [
                     {
-                        "RUC": "20604890617",
-                        "Descripcion": "DROGUERIA INRETAIL PHARMA - DROGUERIA INRETAIL PHARMA SAC"
+                        "key": "20604890617",
+                        "desc": "DROGUERIA INRETAIL PHARMA - DROGUERIA INRETAIL PHARMA SAC"
                     },
                     {
-                        "RUC": "20508565934",
-                        "Descripcion": "HIPERMERCADO TOTTUS SA.- HIPERMERCADO TOTTUS SA"
+                        "key": "20508565934",
+                        "desc": "HIPERMERCADO TOTTUS SA.- HIPERMERCADO TOTTUS SA"
                     }
                 ]
                 return oModel;
             },
+            JsonEstado: function () {
+                var oModel = [
+                    {
+                        "key": "01",
+                        "desc": "Pendiente Creación"
+                    },
+                    {
+                        "key": "02",
+                        "desc": "Creado"
+                    },
+                    {
+                        "key": "03",
+                        "desc": "Cerrado"
+                    }
+                ]
+                return oModel;
+            },
+
             JsonUserLoged: function () {
                 var oModel = {
                     "name": "kestefo",
