@@ -6,14 +6,14 @@
                     <VBox width="auto">
                     <items>
                     <Title xmlns="sap.m" text="{i18n>textMarca}" level="H4"/>
-                    <ComboBox id="slMarca" items="{oModelDevolucion>/AddSelectMarca}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyMarca}">
+                    <ComboBox id="slMarca" items="{oModelDevolucion>/AddSelectMarca}" width="100%" change="_onChangeMarca" selectedKey="{oModelDevolucion>/keyMarca}">
                             <core:Item key="{oModelDevolucion>Id}" text="{oModelDevolucion>Descripcion}"/>
                         </ComboBox>
                     </items>
                     </VBox>
                     <VBox width="auto" class="sapUiSmallMarginTop">
                         <Title text="{i18n>textNombreProducto}" level="H4"/>
-                        <ComboBox id="slProducto" items="{oModelDevolucion>/AddSelectProducto}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyNombProduct}">
+                        <ComboBox id="slProducto" items="{oModelDevolucion>/AddSelectProducto}" width="100%" change="_onChangeProductoBol" selectedKey="{oModelDevolucion>/keyNombProduct}">
                             <core:Item key="{oModelDevolucion>Id}" text="{oModelDevolucion>NombreProducto}"/>
                         </ComboBox>
                     </VBox>
