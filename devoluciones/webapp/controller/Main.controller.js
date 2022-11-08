@@ -99,6 +99,8 @@ sap.ui.define([
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var FechaComprobante1 = oView.byId("formatFecha").getValue();
                 var FechaComprobante = oView.byId("sfechaComprobante20").getValue();
+                var formatoDesde= FechaComprobante1.substring(6,10)+FechaComprobante1.substring(3,5)+FechaComprobante1.substring(0,2);
+                var formatoHasta= FechaComprobante.substring(6,10)+FechaComprobante.substring(3,5)+FechaComprobante.substring(0,2);
                 var KeyCliente = oModelDevolucion.getProperty("/KeyCliente");
                 var contador = 0;
                 var that = this;
@@ -171,8 +173,31 @@ sap.ui.define([
                 this.setFragment("_dialogAAddClient", this.frgIdAddClient, "AddClient", this);
                 // this.setFragment("_dialogAAddClient", this.frgaddConsultaFact, "AddClient", this);//nuevo 11.10.2022
             },
-            _onChangeUser: function () {
-                //this.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
+            _onChangeFactBol: function (oEvent) {
+            var kSelected=oEvent.getSource().getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}
+            },
+            _onChangeProducto:function(oEvent){
+
+                var kSelected=oEvent.getSource().getSelectedKey();
+                var sSelected=oEvent.getSource().getValue();
+                if (kSelected !== '') {
+                    oEvent.getSource().setValue(sSelected);
+                }else{
+                    if(oEvent.getSource().getValue()){
+                        this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+                    }
+                    oEvent.getSource().setValue("");
+                }
+
             },
 
             BusquedaFactBol: function () {

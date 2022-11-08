@@ -4,7 +4,7 @@
             <Page id="IdClienteCenter03" showHeader="true" showNavButton="false" title="{i18n>titleDialogAddCliente}">
                 <VBox width="auto" class="sapUiSmallMargin">
                     <Text text="{i18n>textDetailAddCliente}" />
-                    <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/KeyAddUser}">
+                    <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeFactBol" selectedKey="{oModelDevolucion>/KeyAddUser}">
                         <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}" />
                     </ComboBox>
 

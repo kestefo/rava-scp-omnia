@@ -72,8 +72,43 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             // this.setFragment("_dialogDetalleFact", this.fragaddDetalleFact, "DetalleDoc", this);//CRomero
         },
         _onPressCloseDetalleDoc:function(){
-            
-            this.AddFactBol.close();
+          var that = this;
+
+            var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+            jQuery.ajax({
+                type: "GET",
+                cache: false,
+                headers: {
+                    "Accept": "application/json"
+                },
+                contentType: "application/json",
+                url: url,
+                async: true,
+                success: function (data, textStatus, jqXHR) {
+                    var datos = data.d;
+                    that.AddFactBol.close();
+
+                },
+                error: function () {
+                    MessageBox.error("Ocurrio un error al obtener los datos");
+                }
+            });
+
+                       
+        },
+        onChangeMotivoFact:function(oEvent){
+            var that = this;
+            var kSelected=oEvent.getSource().getSelectedKey();
+            var sSelected=oEvent.getSource().getValue();
+            if (kSelected !== '') {
+                oEvent.getSource().setValue(sSelected);
+            }else{
+                if(oEvent.getSource().getValue()){
+                    MessageBox.error(that.getI18nText("sErrorSelect"));
+                }
+                oEvent.getSource().setValue("");
+            }
+
         },
         _onPressCloseDetalle: function (oEvent) {//corregir
             var oSource = oEvent.getSource();
@@ -86,26 +121,45 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var KeyMotivo  = oModelDevolucion.getProperty("/KeyMotivo");
             
             if(KeyMotivo === undefined || KeyMotivo === "" ){
-             MessageBox.warning(this.getI18nText("txtMensajeDevolucion"));
+             MessageBox.warning(that.getI18nText("txtMensajeDevolucion"));
              return;   
             }
 
-            oModelDevolucion.setProperty("/KeyAddUser", "");
-            tablaCliente02.removeSelections(true);
+            var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+            jQuery.ajax({
+                type: "GET",
+                cache: false,
+                headers: {
+                    "Accept": "application/json"
+                },
+                contentType: "application/json",
+                url: url,
+                async: true,
+                success: function (data, textStatus, jqXHR) {
+                    var datos = data.d;
+                    oModelDevolucion.setProperty("/KeyAddUser", "");
+                     tablaCliente02.removeSelections(true);
 
-            MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
-                actions: [this.getI18nText("acceptText")],
-                emphasizedAction: "",
-                onClose: function (sAction) {
-                    if (sAction === that.getI18nText("acceptText")) {
-                        
-                    }
-                    oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
-                    oModelDevolucion.setProperty("/KeyMotivo", "");
-                    that.AddFactBol.close();
-                    
+                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar"), {
+                        actions: [that.getI18nText("acceptText")],
+                        emphasizedAction: "",
+                        onClose: function (sAction) {
+                            if (sAction === that.getI18nText("acceptText")) {
+                                
+                            }
+                            oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
+                            oModelDevolucion.setProperty("/KeyMotivo", "");
+                            that.AddFactBol.close();
+                            
+                        }
+                    });
+
+                },
+                error: function () {
+                    MessageBox.error("Ocurrio un error al obtener los datos");
                 }
             });
+
             
         },
         getI18nText: function (sText) {

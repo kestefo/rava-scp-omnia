@@ -157,8 +157,6 @@ sap.ui.define([
 
         },
        
-
-
 		getBlobFromFile: function (sFile) {
 			var contentType = sFile.substring(5, sFile.indexOf(";base64,"));
 
