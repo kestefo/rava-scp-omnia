@@ -83,6 +83,43 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             });
 
         },
+        _onChangeMarca:function(oEvent){
+            var kSelected=oEvent.getSource().getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					MessageBox.error( this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}
+        },
+        _onChangeProductoBol:function(oEvent){
+            var kSelected=oEvent.getSource().getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					MessageBox.error(this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}  
+        },
+        changeMotivoProduct:function(oEvent){
+            var kSelected=oEvent.getSource().getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					MessageBox.error(this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}   
+        },
+       
         _onPressCloseProduct:function(){
             this.AbrirProducto.close();
         },
@@ -94,9 +131,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var contMonto       =0;
             var oModelDevolucion = oView.getModel("oModelDevolucion");
 
-            
-
-          
             oModelDevolucion.setProperty("/AddProductoDetail", models.JsonFacturaDetail());
 
             models.JsonFacturaDetail().forEach(function(items){

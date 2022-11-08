@@ -519,6 +519,7 @@ sap.ui.define([
 				oEvent.getSource().setValue("");
 			}
 		},
+		
 		liveChangeFormatInteger: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var values = oSource.getValue();

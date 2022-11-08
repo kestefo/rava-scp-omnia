@@ -13,7 +13,7 @@
                             </HBox>
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textMotivo}:" />
-                                <ComboBox id="slMotivo01" items="{oModelDevolucion>/AddMotivo}" width="100%" change="" placeholder="Seleccionar Motivo" selectedKey="{oModelDevolucion>/KeyMotivoProd}">
+                                <ComboBox id="slMotivo01" items="{oModelDevolucion>/AddMotivo}" width="100%" change="changeMotivoProduct" placeholder="Seleccionar Motivo" selectedKey="{oModelDevolucion>/KeyMotivoProd}">
                                     <core:Item key="{oModelDevolucion>key}" text="{oModelDevolucion>descripcion}" />
                                 </ComboBox>
                             </HBox>
