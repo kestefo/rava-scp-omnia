@@ -42,20 +42,59 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
         _SearchPedido:function(){
             var oView = this.getView();
             var oModelDevolucion = oView.getModel("oModelDevolucion");
+            var keyMarca  =oModelDevolucion.getProperty("/keyMarca");
+            var keyNombProduct = oModelDevolucion.getProperty("/keyNombProduct");
+            var datosLote     =oModelDevolucion.getProperty("/datosLote");
+            var contValidacion= 0;
 
-            oModelDevolucion.setProperty("/AddProducto", models.JsonFactura());
-            
+            if(keyMarca === undefined || keyMarca === ""){
+                contValidacion++;
+            }
+            if(keyNombProduct === undefined || keyNombProduct === ""){
+                contValidacion++;
+            }
+            if(datosLote === undefined || datosLote === ""){
+                contValidacion++; 
+            }
+
+            if(contValidacion > 0){
+                MessageBox.warning(this.getI18nText("txtMensBuscarProduct"));
+                return;
+            }
+
+            var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+            jQuery.ajax({
+                type: "GET",
+                cache: false,
+                headers: {
+                    "Accept": "application/json"
+                },
+                contentType: "application/json",
+                url: url,
+                async: true,
+                success: function (data, textStatus, jqXHR) {
+                    var datos = data.d;
+                    oModelDevolucion.setProperty("/AddProducto", models.JsonFactura());
+
+                },
+                error: function () {
+                    MessageBox.error("Ocurrio un error al obtener los datos");
+                }
+            });
+
         },
         _onPressCloseProduct:function(){
             this.AbrirProducto.close();
         },
         onDetalleDocFact:function(){
-            var oView = this.getView();
-            var that = this;
-            var contCantidad=0;
-            var contTotal=0;
-            var contMonto=0;
+            var oView           = this.getView();
+            var that            = this;
+            var contCantidad    =0;
+            var contTotal       =0;
+            var contMonto       =0;
             var oModelDevolucion = oView.getModel("oModelDevolucion");
+
+            
 
           
             oModelDevolucion.setProperty("/AddProductoDetail", models.JsonFacturaDetail());
@@ -80,40 +119,38 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
         },
         _onPressCloseDetalleProducto: function (oEvent) {
-            var oSource = oEvent.getSource();
-            var sCustom = oSource.data("custom");
-            var that = this;
-            var vista = this.getView();
+            var oSource         = oEvent.getSource();
+            var sCustom         = oSource.data("custom");
+            var that            = this;
+            var vista           = this.getView();
             var oModelDevolucion = vista.getModel("oModelDevolucion");
-            var tablaCliente = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
-            var tablaCliente02 = sap.ui.getCore().byId("IdTablaProducts");
-            // _byId("frgIdAddClient--IdClienteDetail");
+            var tablaCliente    = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
+            var tablaCliente02  = sap.ui.getCore().byId("IdTablaProducts");
+            var KeyMotivoProd   = oModelDevolucion.getProperty("/KeyMotivoProd");
 
-
-            // oModelDevolucion.setProperty("/AddFacturaBoleta", []);
-            oModelDevolucion.setProperty("/KeyAddUser", "");
-        //   oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
-            // oModelDevolucion.setProperty("/KeyMotivo", "");
-            // vista.byId("idTablaPrincipal").removeSelections(true);
-
-            tablaCliente02.removeSelections(true);
-
-            
-            MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
-                actions: [this.getI18nText("acceptText")],
-                 emphasizedAction: "",
-                onClose: function (sAction) {
-                    if (sAction === that.getI18nText("acceptText")) {
-                        
+            if(KeyMotivoProd !== "" && KeyMotivoProd !== undefined){
+                oModelDevolucion.setProperty("/KeyAddUser", "");
+        
+                tablaCliente02.removeSelections(true);
+    
+                
+                MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
+                    actions: [this.getI18nText("acceptText")],
+                     emphasizedAction: "",
+                    onClose: function (sAction) {
+                        if (sAction === that.getI18nText("acceptText")) {
+                            
+                        }
+                        oModelDevolucion.setProperty("/AddProductoDetail", []);
+                        oModelDevolucion.setProperty("/KeyMotivo", "");
+                        that.AbrirProducto.close();
                     }
-                    oModelDevolucion.setProperty("/AddProductoDetail", []);
-                    oModelDevolucion.setProperty("/KeyMotivo", "");
-                    that.AbrirProducto.close();
-                }
-            });
-            
-
-
+                });
+            }else{
+                MessageBox.warning(this.getI18nText("txtMensajeDevolucion"));
+                return;
+            }
+           
         },
         getI18nText: function (sText) {
 			return this.oView.getModel("i18n") === undefined ? false : this.oView.getModel("i18n").getResourceBundle().getText(sText);

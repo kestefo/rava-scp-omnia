@@ -12,7 +12,7 @@
     xmlns:u="sap.ui.unified"
     xmlns="sap.m"
 >
-    <Page id="DetalleDev" showHeader="true" showNavButton="false" title="Detalle de Nota de Crédito">
+    <Page id="DetalleDev" showHeader="true" showNavButton="false" title="Detalle de Nota de Crédito" >
         <content>
             <fb:FilterBar id="filter" showClearOnFB="false" clear="onClear" showFilterConfiguration="false" search="onBuscar" useToolbar="false" showGoOnFB="false" showRestoreButton="false">
                 <fb:filterGroupItems>

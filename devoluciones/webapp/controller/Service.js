@@ -22,7 +22,7 @@ sap.ui.define([
 				};
 				var iEnd = "";
 				var sFilters = "";
-				url = "/drizzle/DRIZZLE_GLOBAL_SRV" + sUrl;
+				url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS" + sUrl;
 
 				var promise = new Promise(function (resolve, reject) {
 					switch (sType) {

@@ -1,42 +1,29 @@
-<mvc:View
-    controllerName="devoluciones.controller.ConsultaFactura"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true"
-    xmlns:f="sap.f"
-    xmlns:form="sap.ui.layout.form"
-    xmlns:fb="sap.ui.comp.filterbar"
-    xmlns:l="sap.ui.layout"
-    xmlns:ui="sap.ui.table"
-    xmlns:core="sap.ui.core"
-    xmlns:u="sap.ui.unified"
-    xmlns="sap.m"
->
+<mvc:View xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m" controllerName="devoluciones.controller.ConsultaFactura" displayBlock="true">
     <Page id="IdClienteCenter02" showHeader="true" showNavButton="false" title="Detalle Factura - Boleta">
         <VBox width="auto" class="sapUiSmallMargin">
             <Table id="id1" items="{oModelDevolucion>/AddFacturaBoleta}" growingThreshold="20">
                 <headerToolbar>
                     <OverflowToolbar>
                         <content>
-                            <ToolbarSpacer width="1%" />
-                            <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseConsulta" type="Default" />
+                            <ToolbarSpacer width="1%"/>
+                            <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseConsulta" type="Default" icon="sap-icon://slim-arrow-left"/>
                         </content>
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                         <header>
-                            <Text text="{i18n>titleColCliente}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            <Text text="{i18n>titleColCliente}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                         </header>
                     </Column>
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                         <header>
-                            <Text text="{i18n>titleAddColDocumento}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            <Text text="{i18n>titleAddColDocumento}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                         </header>
                     </Column>
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                         <header>
-                            <Text text="{i18n>titleAddColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            <Text text="{i18n>titleAddColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                         </header>
                     </Column>
                     <!-- <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -52,7 +39,7 @@
                         </Column> -->
                     <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                         <header>
-                            <Text text="{i18n>titleAddColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            <Text text="{i18n>titleAddColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                         </header>
                     </Column>
                     <!-- <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -62,22 +49,22 @@
                         </Column> -->
                     <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                         <header>
-                            <Text text="{i18n>titledetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            <Text text="{i18n>titledetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                         </header>
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Inactive" press="_onNavDetalleFacturaBoleta">
                         <cells>
-                            <Text text="{oModelDevolucion>Cliente}" />
-                            <Text text="{oModelDevolucion>documento}" />
-                            <Text text="{oModelDevolucion>fecha}" />
+                            <Text text="{oModelDevolucion>Cliente}"/>
+                            <Text text="{oModelDevolucion>documento}"/>
+                            <Text text="{oModelDevolucion>fecha}"/>
                             <!-- <Text text="{oModelDevolucion>lote}" /> -->
 
                             <!-- <Text text="{oModelDevolucion>cantidad}" /> -->
-                            <Text text="{oModelDevolucion>importe}" />
+                            <Text text="{oModelDevolucion>importe}"/>
                             <!-- <Text text="{oModelDevolucion>tipo}" /> -->
-                            <Button icon="sap-icon://show" press="onDetalleDocFact" />
+                            <Button icon="sap-icon://show" press="onDetalleDocFact"/>
                         </cells>
                     </ColumnListItem>
                 </items>

@@ -4,27 +4,18 @@
             <Page id="IdProductoCenter" showHeader="true" showNavButton="false" title="{i18n>titleDialogAddCliente}">
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
-                        <VBox class="sapUiSmallMargin">
-                            <VBox width="auto">
-                                <Title text="{i18n>titleAddDescripcionRuc}" level="H4" />
-                                <ComboBox id="slRuc" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyProducto}">
-                                    <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}" />
-                                </ComboBox>
-                            </VBox>
-                       
-                            <VBox width="auto">
-                                
-                                <Button text="{i18n>txtbtnBuscar}" visible="true" press="BusquedaProducto" custom:custom="closeClient" type="Emphasized" />
-                            </VBox>
-                            
-                        </VBox>
+                        <Text text="{i18n>titleAddDescripcionRuc}" />
+                        <ComboBox id="slRuc" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeUser" selectedKey="{oModelDevolucion>/keyProducto}">
+                            <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}" />
+                        </ComboBox>
+
+                        <Button text="{i18n>txtbtnBuscar}" visible="true" press="BusquedaProducto" custom:custom="closeClient" type="Emphasized"  icon="sap-icon://search"/>
                     </VBox>
                 </content>
                 <headerContent>
                     <Button text="" press="onGoHome" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
                 </headerContent>
             </Page>
-            
         </NavContainer>
         <buttons>
             <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" custom:custom="default" type="Accept" />

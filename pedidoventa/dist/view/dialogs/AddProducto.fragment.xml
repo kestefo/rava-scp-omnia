@@ -1,0 +1,62 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog title="{i18n>titleDialogAddProducto}" contentHeight="auto" contentWidth="90%" afterOpen="_afterOpenAddPedido">
+        <content>
+            <VBox>
+                <HBox width="auto" class="sapUiSmallMargin" alignItems="Center" justifyContent="Center">
+                    <Text text="{i18n>textFamilia}"/>
+                    <ComboBox selectedKey="01" id="slFamilia" items="{oModelPedidoVenta>/AddSelectFamilia}" width="100%" change="_onChangeFamilia">
+                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    </ComboBox>
+                </HBox>
+                <Table items="{oModelPedidoVenta>/ProductoFamilia}" visible="{oModelPedidoVenta>/visibleTable}" mode="MultiSelect" growingThreshold="20">
+                    <columns>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColPrecio}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColStock}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColUniCaja}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="10%" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColCant}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive">
+                            <cells>
+                                <Text text="{oModelPedidoVenta>producto}"/>
+                                <Text text="{oModelPedidoVenta>precio}"/>
+                                <Text text="{oModelPedidoVenta>stock}"/>
+                                <HBox>
+                                    <ObjectStatus icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>state}" />
+                                    <Text text="{oModelPedidoVenta>unicaja}"/>
+                                </HBox>
+                                <Input value="{oModelPedidoVenta>cantidad}" width="auto" liveChange="_onLiveChangeCantidad"></Input>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+		<buttons>
+			<Button text="{i18n>accpetText}" press="_onAcceptPedido" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

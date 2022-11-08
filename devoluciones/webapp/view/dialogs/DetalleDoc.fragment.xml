@@ -4,27 +4,20 @@
             <Page id="IdClienteDetail03" showHeader="false" showNavButton="true" navButtonPress="_onNavBack">
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
-                        <HBox wrap="Wrap" width="auto">
+                        <ToolbarSpacer width="15px" />
+                        <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseDetalleDoc" type="Default" icon="sap-icon://navigation-left-arrow" />
+                        <HBox wrap="Wrap" width="auto" height="auto">
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textDocumento}:{i18n>textDataDocumento}" />
                             </HBox>
-                            <HBox wrap="NoWrap" width="50%" alignItems="Center">
+                            <HBox wrap="NoWrap" width="50%" alignItems="Center" height="auto">
                                 <Text text="{i18n>textMotivo}:" />
-                                <ComboBox id="slMotivo02" items="{oModelDevolucion>/AddMotivo}" width="100%"  placeholder="Seleccionar el motivo"
-                                change="onChamp" selectedKey="{oModelDevolucion>/KeyMotivo}">
+                                <ComboBox id="slMotivo02" items="{oModelDevolucion>/AddMotivo}" width="100%" placeholder="Seleccionar el motivo" change="onChamp" selectedKey="{oModelDevolucion>/KeyMotivo}">
                                     <core:Item key="{oModelDevolucion>key}" text="{oModelDevolucion>descripcion}" />
                                 </ComboBox>
                             </HBox>
                         </HBox>
                         <Table id="IdTablaClients01" items="{oModelDevolucion>/AddFacturaBoletaDetail}" mode="MultiSelect" growingThreshold="20">
-                            <headerToolbar>
-                                <OverflowToolbar>
-                                    <content>
-                                        <ToolbarSpacer width="1%" />
-                                        <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseDetalleDoc" type="Default" />
-                                    </content>
-                                </OverflowToolbar>
-                            </headerToolbar>
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>

@@ -4,26 +4,21 @@
             <Page id="IdProductoDetail" showHeader="false" showNavButton="true" navButtonPress="_onNavBack">
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
+                        <ToolbarSpacer width="15px" />
+                        <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseProduct" type="Default" icon="sap-icon://navigation-left-arrow"/>
+
                         <HBox wrap="Wrap" width="auto">
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textDocumento}:{i18n>textDataDocumento}" />
                             </HBox>
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textMotivo}:" />
-                                <ComboBox id="slMotivo01" items="{oModelDevolucion>/AddMotivo}" width="100%" change="" placeholder="SeLeccionar Motivo">
+                                <ComboBox id="slMotivo01" items="{oModelDevolucion>/AddMotivo}" width="100%" change="" placeholder="Seleccionar Motivo" selectedKey="{oModelDevolucion>/KeyMotivoProd}">
                                     <core:Item key="{oModelDevolucion>key}" text="{oModelDevolucion>descripcion}" />
                                 </ComboBox>
                             </HBox>
                         </HBox>
                         <Table id="IdTablaProducts" items="{oModelDevolucion>/AddProductoDetail}" mode="MultiSelect" growingThreshold="20">
-                            <headerToolbar>
-                                <OverflowToolbar>
-                                    <content>
-                                        <ToolbarSpacer width="1%" />
-                                        <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseProduct" type="Default" />
-                                    </content>
-                                </OverflowToolbar>
-                            </headerToolbar>
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>

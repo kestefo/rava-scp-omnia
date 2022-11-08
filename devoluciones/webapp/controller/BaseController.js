@@ -25,7 +25,7 @@ sap.ui.define([
         _onbtnHome:function(){
             that = this;
             MessageBox.warning(this.getI18nText("textbtnHome"), {
-				actions: [this.getI18nText("acceptText"), this.getI18nText("cancelText")],
+				actions: [this.getI18nText("acceptText"), this.getI18nText("cancelText2")],
 				emphasizedAction: MessageBox.Action.OK,
 				onClose: function (sAction) {
 					if (sAction === that.getI18nText("acceptText")) {
@@ -143,6 +143,22 @@ sap.ui.define([
 				alert(error.code)
 			}
 		},
+        changeFormatoFecha:function(oEvent){
+            var Fecha = oEvent.getParameters().value;
+            var RegExPattern	= /^(?:(?:(?:0?[1-9]|1\d|2[0-8])[/](?:0?[1-9]|1[0-2])|(?:29|30)[/](?:0?[13-9]|1[0-2])|31[/](?:0?[13578]|1[02]))[/](?:0{2,3}[1-9]|0{1,2}[1-9]\d|0?[1-9]\d{2}|[1-9]\d{3})|29[/]0?2[/](?:\d{1,2}(?:0[48]|[2468][048]|[13579][26])|(?:0?[48]|[13579][26]|[2468][048])00))$/;   
+            if ((Fecha.match(RegExPattern)) && (Fecha != '')) {
+
+            }else{
+                MessageBox.error(this.getI18nText("txtValidacionFecha"));
+				
+				return; 
+            }
+
+
+        },
+       
+
+
 		getBlobFromFile: function (sFile) {
 			var contentType = sFile.substring(5, sFile.indexOf(";base64,"));
 
@@ -492,7 +508,8 @@ sap.ui.define([
 			var joinArray = reverseArray.join(variable); 
 			return joinArray;
 		},
-		onValidateChange: function(oEvent){
+
+		onPressSelect: function(oEvent){
 			var kSelected=oEvent.getSource().getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
 			if (kSelected !== '') {
@@ -542,23 +559,20 @@ sap.ui.define([
         },
        
         _onPressClose: function (oEvent) {
-			var oSource = oEvent.getSource();
-			var sCustom = oSource.data("custom");
-            var vista  = this.getView();
-            var tablaCliente = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
-            var tablaCliente02 = sap.ui.getCore().byId("frgAddDetalleFact--IdTablaClients01");
-            // _byId("frgIdAddClient--IdClienteDetail");
-  
+			var oSource 			= oEvent.getSource();
+			var sCustom 			= oSource.data("custom");
+            var vista  				= this.getView();
+            var tablaCliente 		= sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
+            var tablaCliente02 		= sap.ui.getCore().byId("frgAddDetalleFact--IdTablaClients01");
+			
             switch (sCustom) {
 				case "closeClient":
-					// this.goNavConTo("frgIdAddClient", "navcIdGroupFacturaBoleta", "IdClienteCenter")
+					
                     this.oModelDevolucion.setProperty("/AddFacturaBoleta", []);
                     this.oModelDevolucion.setProperty("/KeyAddUser" ,"");
-                    // this.oModelDevolucion.setProperty("/AddFacturaBoletaDetail" ,[]);
                     this.oModelDevolucion.setProperty("/KeyMotivo","");
                     vista.byId("idTablaPrincipal").removeSelections(true);
                    
-                    
 					break;
                 case "closeProduct":
                     this.goNavConTo("frgIdAddProduct", "navcIdGroupProducto", "IdProductoCenter")
@@ -569,8 +583,6 @@ sap.ui.define([
             }
             oSource.getParent().close();
             
-            
-
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);

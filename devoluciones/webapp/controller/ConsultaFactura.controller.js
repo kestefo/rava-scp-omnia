@@ -72,6 +72,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             // this.setFragment("_dialogDetalleFact", this.fragaddDetalleFact, "DetalleDoc", this);//CRomero
         },
         _onPressCloseDetalleDoc:function(){
+            
             this.AddFactBol.close();
         },
         _onPressCloseDetalle: function (oEvent) {//corregir
@@ -82,18 +83,16 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var oModelDevolucion = vista.getModel("oModelDevolucion");
             var tablaCliente = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
             var tablaCliente02 = sap.ui.getCore().byId("IdTablaClients01");
-            // _byId("frgIdAddClient--IdClienteDetail");
+            var KeyMotivo  = oModelDevolucion.getProperty("/KeyMotivo");
+            
+            if(KeyMotivo === undefined || KeyMotivo === "" ){
+             MessageBox.warning(this.getI18nText("txtMensajeDevolucion"));
+             return;   
+            }
 
-
-            // oModelDevolucion.setProperty("/AddFacturaBoleta", []);
             oModelDevolucion.setProperty("/KeyAddUser", "");
-        //   oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
-            // oModelDevolucion.setProperty("/KeyMotivo", "");
-            //vista.byId("idTablaPrincipal").removeSelections(true);
-
             tablaCliente02.removeSelections(true);
 
-            
             MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
                 actions: [this.getI18nText("acceptText")],
                 emphasizedAction: "",
@@ -104,11 +103,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                     oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
                     oModelDevolucion.setProperty("/KeyMotivo", "");
                     that.AddFactBol.close();
+                    
                 }
             });
             
-
-
         },
         getI18nText: function (sText) {
 			return this.oView.getModel("i18n") === undefined ? false : this.oView.getModel("i18n").getResourceBundle().getText(sText);

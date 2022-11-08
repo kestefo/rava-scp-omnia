@@ -4,8 +4,8 @@
     <Shell >
         <Page id="page" title="{i18n>title}">
             <headerContent>
-                <Button press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
-                <Button press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
+                <Button press="_onbtnRefresh" type="Transparent" text="{i18n>textRefresh}"  icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
+                <Button press="_onbtnHome" type="Transparent" text="{i18n>textHome}" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
             </headerContent>
             <content>
              <fb:FilterBar id="filter" showClearOnFB="false" clear="onClear" showFilterConfiguration="false" search="onBuscar" useToolbar="false" showGoOnFB="false" showRestoreButton="true">
@@ -15,19 +15,19 @@
             <items>
                 <VBox height="100%" alignItems="Center">
                     <items>
-                    <Label text="{i18n>txtDesde}"/>
+                    <Label text="{i18n>txtDesde}" required="true"/>
                         <DatePicker
-                        id="sfechaComprobante10"
-                        change="fnChangeFechaComprobante"
+                        id="formatFecha"
+                        change="changeFormatoFecha"
                         placeholder="DD/MM/YYYY"
                         width="auto"
-                        value="{Proyect>/fecha_Comprobante}"
                         valueState="{Proyect>/fecCompValState}"
                         editable="{Proyect>/HABILI_CAMPO}"
                         valueStateText="{Proyect>/fecCompValStateText}"
                         visible="true"
                         valueFormat="dd/MM/yyyy"
                         displayFormat="dd/MM/yyyy"
+                        
                     />
                     </items>
                 </VBox>
@@ -43,19 +43,19 @@
                
                 <VBox height="100%">
                     <items>
-                    <Label text="{i18n>txtHasta}"/>
+                    <Label text="{i18n>txtHasta}" required="true"/>
                          <DatePicker
                         id="sfechaComprobante20"
-                        change="fnChangeFechaComprobante"
+                        change="changeFormatoFecha"
                         placeholder="DD/MM/YYYY"
                         width="auto"
-                        value="{Proyect>/fecha_Comprobante}"
                         valueState="{Proyect>/fecCompValState}"
                         editable="{Proyect>/HABILI_CAMPO}"
                         valueStateText="{Proyect>/fecCompValStateText}"
                         visible="true"
                         valueFormat="dd/MM/yyyy"
                         displayFormat="dd/MM/yyyy"
+                        
                     />
                     </items>
                 </VBox>
@@ -69,8 +69,8 @@
                
                 <VBox height="100%">
                     <items>
-                    <Label text="{i18n>txtSelectCliente}"/>
-                        <ComboBox id="selectCajadER01" width="" selectedKey="" items="{oModelDevolucion>/FiltroCliente}" placeholder="---Seleccionar---" change="onPressSelect">
+                    <Label text="{i18n>txtSelectCliente}" required="true"/>
+                        <ComboBox id="selectCajadER01" width="" selectedKey="{oModelDevolucion>/KeyCliente}" items="{oModelDevolucion>/FiltroCliente}"  placeholder="---Seleccionar---" change="onPressSelect">
                         <core:Item key="{oModelDevolucion>id}" text="{oModelDevolucion>cliente}" />
                     </ComboBox>
                     </items>
@@ -140,7 +140,7 @@
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleColReFechaEm}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                    <Text text="{i18n>titleColReFechaEm}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                 </header>
             </Column>
             <!-- <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
