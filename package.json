@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/kestefo/rava-scp-omnia#readme",
   "dependencies": {
-    "@sap/approuter": "^11.6.1"
+    "@sap/approuter": "^11.6.1",
+    "html2canvas": "^1.4.1"
   }
 }

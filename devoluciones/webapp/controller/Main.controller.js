@@ -3,12 +3,14 @@ sap.ui.define([
     "devoluciones/controller/BaseController",
     "devoluciones/model/models",
     "sap/ui/core/Fragment",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "../libs/html2canvas",
+
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, BaseController, models, Fragment, MessageBox) {
+    function (Controller, BaseController, models, Fragment, MessageBox, html2canvas) {
         "use strict";
 
         var that, bValueHelpEquipment = false;
@@ -94,13 +96,37 @@ sap.ui.define([
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
                 });
             },
+            onpresPrint: function () {
+                window.print()
+            },
+            onpressCaptura: function (evt) {
+                document.body.innerHTML = '<video style="width: 100%; height: 100%; border: 1px black solid;"/>';
+
+                navigator.mediaDevices.getDisplayMedia()
+                    .then(mediaStream => {
+                        const video = document.querySelector('video');
+                        video.srcObject = mediaStream;
+                        video.onloadedmetadata = e => {
+                            video.play();
+                            video.pause();
+                        };
+                    })
+                    .catch(err => console.log(`${err.name}: ${err.message}`));
+
+                //var captura = stopCapture(evt);
+                // const videoElem = document.getElementById("video");
+                // let tracks = videoElem.srcObject.getTracks();
+
+                // tracks.forEach((track) => track.stop());
+                // videoElem.srcObject = null;
+            },
             onBuscar: function () {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var FechaComprobante1 = oView.byId("formatFecha").getValue();
                 var FechaComprobante = oView.byId("sfechaComprobante20").getValue();
-                var formatoDesde= FechaComprobante1.substring(6,10)+FechaComprobante1.substring(3,5)+FechaComprobante1.substring(0,2);
-                var formatoHasta= FechaComprobante.substring(6,10)+FechaComprobante.substring(3,5)+FechaComprobante.substring(0,2);
+                var formatoDesde = FechaComprobante1.substring(6, 10) + FechaComprobante1.substring(3, 5) + FechaComprobante1.substring(0, 2);
+                var formatoHasta = FechaComprobante.substring(6, 10) + FechaComprobante.substring(3, 5) + FechaComprobante.substring(0, 2);
                 var KeyCliente = oModelDevolucion.getProperty("/KeyCliente");
                 var contador = 0;
                 var that = this;
@@ -134,28 +160,32 @@ sap.ui.define([
                     return;
                 }
 
-                var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
-                jQuery.ajax({
-                    type: "GET",
-                    cache: false,
-                    headers: {
-                        "Accept": "application/json"
-                    },
-                    contentType: "application/json",
-                    url: url,
-                    async: true,
-                    success: function (data, textStatus, jqXHR) {
-                        var datos = data.d;
-                        that.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
-                        oModelDevolucion.setProperty("/KeyCliente", "");
-                        oView.byId("formatFecha").setValue("");
-                        oView.byId("sfechaComprobante20").setValue("");
+                // var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+                // jQuery.ajax({
+                //     type: "GET",
+                //     cache: false,
+                //     headers: {
+                //         "Accept": "application/json"
+                //     },
+                //     contentType: "application/json",
+                //     url: url,
+                //     async: true,
+                //     success: function (data, textStatus, jqXHR) {
+                //         var datos = data.d;
+                //         that.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
+                //         oModelDevolucion.setProperty("/KeyCliente", "");
+                //         oView.byId("formatFecha").setValue("");
+                //         oView.byId("sfechaComprobante20").setValue("");
 
-                    },
-                    error: function () {
-                        MessageBox.error("Ocurrio un error al obtener los datos");
-                    }
-                });
+                //     },
+                //     error: function () {
+                //         MessageBox.error("Ocurrio un error al obtener los datos");
+                //     }
+                // });
+                this.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
+                oModelDevolucion.setProperty("/KeyCliente", "");
+                oView.byId("formatFecha").setValue("");
+                oView.byId("sfechaComprobante20").setValue("");
 
             },
 
@@ -174,25 +204,25 @@ sap.ui.define([
                 // this.setFragment("_dialogAAddClient", this.frgaddConsultaFact, "AddClient", this);//nuevo 11.10.2022
             },
             _onChangeFactBol: function (oEvent) {
-            var kSelected=oEvent.getSource().getSelectedKey();
-			var sSelected=oEvent.getSource().getValue();
-			if (kSelected !== '') {
-				oEvent.getSource().setValue(sSelected);
-			}else{
-				if(oEvent.getSource().getValue()){
-					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
-				}
-				oEvent.getSource().setValue("");
-			}
-            },
-            _onChangeProducto:function(oEvent){
-
-                var kSelected=oEvent.getSource().getSelectedKey();
-                var sSelected=oEvent.getSource().getValue();
+                var kSelected = oEvent.getSource().getSelectedKey();
+                var sSelected = oEvent.getSource().getValue();
                 if (kSelected !== '') {
                     oEvent.getSource().setValue(sSelected);
-                }else{
-                    if(oEvent.getSource().getValue()){
+                } else {
+                    if (oEvent.getSource().getValue()) {
+                        this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+                    }
+                    oEvent.getSource().setValue("");
+                }
+            },
+            _onChangeProducto: function (oEvent) {
+
+                var kSelected = oEvent.getSource().getSelectedKey();
+                var sSelected = oEvent.getSource().getValue();
+                if (kSelected !== '') {
+                    oEvent.getSource().setValue(sSelected);
+                } else {
+                    if (oEvent.getSource().getValue()) {
                         this.getMessageBox("error", this.getI18nText("sErrorSelect"));
                     }
                     oEvent.getSource().setValue("");
@@ -270,79 +300,79 @@ sap.ui.define([
                 this.getOwnerComponent().getRouter().navTo("DetalleDevolucion");
             },
             BusquedaProducto: function () {
-                var that    = this;
+                var that = this;
                 var keyProducto = this.oModelDevolucion.getProperty("/keyProducto");
                 if (keyProducto !== undefined && keyProducto !== "") {
 
-                        var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
-                        jQuery.ajax({
-                            type: "GET",
-                            cache: false,
-                            headers: {
-                                "Accept": "application/json"
-                            },
-                            contentType: "application/json",
-                            url: url,
-                            async: true,
-                            success: function (data, textStatus, jqXHR) {
-                                var datos = data.d;
-                                that.getOwnerComponent().getRouter().navTo("ConsultaProducto");
-                                that.oModelDevolucion.setProperty("/keyProducto", "");
+                    var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+                    jQuery.ajax({
+                        type: "GET",
+                        cache: false,
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        contentType: "application/json",
+                        url: url,
+                        async: true,
+                        success: function (data, textStatus, jqXHR) {
+                            var datos = data.d;
+                            that.getOwnerComponent().getRouter().navTo("ConsultaProducto");
+                            that.oModelDevolucion.setProperty("/keyProducto", "");
 
-                            },
-                            error: function () {
-                                MessageBox.error("Ocurrio un error al obtener los datos");
-                            }
-                        });
+                        },
+                        error: function () {
+                            MessageBox.error("Ocurrio un error al obtener los datos");
+                        }
+                    });
 
-                    } else {
+                } else {
 
-                        MessageBox.warning(this.getI18nText("txtMensajeProduct"));
-                        return;
-                    }
+                    MessageBox.warning(this.getI18nText("txtMensajeProduct"));
+                    return;
+                }
 
-                },
+            },
 
-                consultaDatosMarca: function () {
-                    var oView = this.getView();
-                    var oModelDevolucion = oView.getModel("oModelDevolucion");
-                    oModelDevolucion.setProperty("/AddSelectMarca", models.JsonMarcaProduct());
-                    oModelDevolucion.setProperty("/AddSelectProducto", models.JsonMarcaProduct());//CRomero
-                },
-                consultaProduct: function () {
-                    var oView = this.getView();
-                    var oModelDevolucion = oView.getModel("oModelDevolucion");
-                    oModelDevolucion.setProperty("/AddNombreProduct", models.JsonUser());//CRomero
-                },
-                // _onNavDetalleFacturaBoleta: function(){
-                //     var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
-                //     var sFragment = this._byId("frgIdAddClient--IdClienteDetail");
-                //     this.oModelDevolucion.setProperty("/addClientVisible", true);
-                //     this.oModelDevolucion.setProperty("/AddFacturaBoletaDetail", models.JsonFacturaDetail());
-                //     navCon.to(sFragment);
-                // },
-                _onNavBack: function () {
-                    var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
-                    this.oModelDevolucion.setProperty("/addClientVisible", false);
-                    navCon.back();
-                },
+            consultaDatosMarca: function () {
+                var oView = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
+                oModelDevolucion.setProperty("/AddSelectMarca", models.JsonMarcaProduct());
+                oModelDevolucion.setProperty("/AddSelectProducto", models.JsonMarcaProduct());//CRomero
+            },
+            consultaProduct: function () {
+                var oView = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
+                oModelDevolucion.setProperty("/AddNombreProduct", models.JsonUser());//CRomero
+            },
+            // _onNavDetalleFacturaBoleta: function(){
+            //     var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
+            //     var sFragment = this._byId("frgIdAddClient--IdClienteDetail");
+            //     this.oModelDevolucion.setProperty("/addClientVisible", true);
+            //     this.oModelDevolucion.setProperty("/AddFacturaBoletaDetail", models.JsonFacturaDetail());
+            //     navCon.to(sFragment);
+            // },
+            _onNavBack: function () {
+                var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
+                this.oModelDevolucion.setProperty("/addClientVisible", false);
+                navCon.back();
+            },
 
-                _onPressAddProducto: function () {
-                    this.oModelDevolucion.setProperty("/keyProducto", "");
-                    this.oModelDevolucion.setProperty("/addClientVisible", false);
-                    this.setFragment("_dialogAAddProduct", this.frgIdAddProduct, "AddProduct", this);
+            _onPressAddProducto: function () {
+                this.oModelDevolucion.setProperty("/keyProducto", "");
+                this.oModelDevolucion.setProperty("/addClientVisible", false);
+                this.setFragment("_dialogAAddProduct", this.frgIdAddProduct, "AddProduct", this);
 
-                },
-                _onPressSearch: function () {
-                    this.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
+            },
+            _onPressSearch: function () {
+                this.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
 
-                },
-                _onNavDetalleProducto: function () {
-                    var navCon = this._byId("frgIdAddProduct--navcIdGroupProducto");
-                    var sFragment = this._byId("frgIdAddProduct--IdProductoDetail");
-                    this.oModelDevolucion.setProperty("/addClientVisible", true);
-                    this.oModelDevolucion.setProperty("/AddProductoDetail", models.JsonFacturaDetail());
-                    navCon.to(sFragment);
-                },
-            });
+            },
+            _onNavDetalleProducto: function () {
+                var navCon = this._byId("frgIdAddProduct--navcIdGroupProducto");
+                var sFragment = this._byId("frgIdAddProduct--IdProductoDetail");
+                this.oModelDevolucion.setProperty("/addClientVisible", true);
+                this.oModelDevolucion.setProperty("/AddProductoDetail", models.JsonFacturaDetail());
+                navCon.to(sFragment);
+            },
+        });
     });
