@@ -76,18 +76,6 @@ sap.ui.define([
                     console.log("Error:" + err.message);
                 });
 
-                var sPath2 = "service/scim/Users?filter=emails eq 'liderdeproyecto1@omniasolution.com'";
-                const sUrl2 = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
-
-                model.loadData(sUrl, null, true, "GET", null, null, {
-                    "Content-Type": "application/scim+json"
-                }).then(() => {
-                    var oDataTemp = model.getData();
-                    console.log(oDataTemp);
-                }).catch(err => {
-                    console.log("Error:" + err.message);
-                });
-
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([this._getCliente(), this._getEstado(), this._getEstado2()]).then(async values => {
                 iCantTotal = values.length;
