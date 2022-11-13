@@ -10,7 +10,7 @@
             <content>
              <fb:FilterBar id="filter" showClearOnFB="false" clear="onClear" showFilterConfiguration="false" search="onBuscar" useToolbar="false" showGoOnFB="false" showRestoreButton="true">
      
-         <HBox wrap="Wrap" alignItems="Center" direction="Row" fitContainer="false" width="auto" height="auto"
+         <HBox   wrap="Wrap" alignItems="Center" direction="Row" fitContainer="false" width="auto" height="auto"
 						justifyContent="Center" renderType="Div" visible="true" displayInline="false">
             <items>
                 <VBox height="100%" alignItems="Center">
@@ -98,7 +98,9 @@
                 <ToolbarSpacer />
                 <Button text="{i18n>txtbtnFacturaBoleta}" press="_onPressAddFacturaBoleta" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}" />
                 <Button text="{i18n>txtbtnProducto}" press="_onPressAddProducto" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}" />
-                <Button press="_onPressDeletePedido" type="Reject" icon="sap-icon://delete" tooltip="{i18n>tooltipbtnDelete}" />
+                <Button press="_onPressDeletePedido" type="Reject" icon="sap-icon://delete"  tooltip="{i18n>tooltipbtnDelete}" />
+                <Button press="onpresPrint" type="Default" icon="" text="{i18n>tooltipbtnImprimir}" />
+                <Button press="onpressCaptura" type="Default" icon="" text="{i18n>tooltipbtnCaptura}" />
             </Toolbar>
         </headerToolbar>
         <columns>
