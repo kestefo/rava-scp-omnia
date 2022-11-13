@@ -19,30 +19,30 @@ sap.ui.define([
             this.frgIdDetailPedido = "frgIdDetailPedido";
             this.frgIdEditContact = "frgIdEditContact";
             this.frgIdLoadData = "frgIdLoadData";
-            
-            this.oModel = this.getModel("oModelMainService");
-            this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
-            // jQuery.ajax({
-            //     method: 'GET',
-            //     url: "/service/scim/Users?filter=emails eq 'liderdeproyecto1@omniasolution.com'"
-            // }).then(function successCallback(result, xhr, data) {
-            //     console.log(result)
-            // }, function errorCallback(xhr, readyState) {
-            // });
-
-            // jQuery.ajax({
-            //     method: 'GET',
-            //     url: "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set?$format=json"
-            // }).then(function successCallback(result, xhr, data) {
-            //     console.log(result)
-            // }, function errorCallback(xhr, readyState) {
-            // });
         },
         _onbtnRefresh: function(){
             this.onAfterRendering();
         },
 
         onAfterRendering: function(){
+
+            Promise.all([that._getUsers()]).then((values) => {
+                that.oModel = this.getModel("oModelMainService");
+                that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+                var sCodeUser = values[0].value;
+                if(!that.isEmpty(sCodeUser)){
+                    that.getCargaData(sCodeUser);
+                }else{
+                    that.getMessageBox("warning", that.getI18nText("errorUserNoCode"));
+                }
+            }).catch(function (oError) {
+                console.log(oError);
+                that.getMessageBox("warning", that.getI18nText("errorUserData"));
+				sap.ui.core.BusyIndicator.hide(0);
+			});
+                
+        },
+        getCargaData: function(sCodeUser){
             this.setFragment("_dialogLoadData", this.frgIdLoadData, "LoadData", this);
             
             var iPorcentajeTotal = 100,
@@ -52,32 +52,9 @@ sap.ui.define([
                 iCantError = 0,
                 sCantPorcentageSuccess = iCantPorcentageSuccess.toString(),
                 oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
-                
-                this.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set?$format=json", {
-                    success: function (data) {
-                        console.log(data)
-                    },
-                    error: function (error) {
-                        sap.ui.core.BusyIndicator.hide(0);
-                        console.log("error")
-                    }
-                });
-
-                var sPath = "/service/scim/Users?filter=emails eq 'liderdeproyecto1@omniasolution.com'";
-                const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
-
-                var model = new sap.ui.model.json.JSONModel();
-                model.loadData(sUrl, null, true, "GET", null, null, {
-                    "Content-Type": "application/scim+json"
-                }).then(() => {
-                    var oDataTemp = model.getData();
-                    console.log(oDataTemp);
-                }).catch(err => {
-                    console.log("Error:" + err.message);
-                });
 
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([this._getCliente(), this._getEstado(), this._getEstado2()]).then(async values => {
+            Promise.all([this._getCliente(sCodeUser), this._getEstado(sCodeUser), this._getEstado2(sCodeUser)]).then(async values => {
                 iCantTotal = values.length;
                 iCantSuccess = this.validateService(values);
                 iCantError = iCantTotal-iCantSuccess;
@@ -151,38 +128,55 @@ sap.ui.define([
         _getUsers: function () {
 			try {
                 var sMail = this.getUserLoged();
-                var sPath = 'scimApi/Users?filter=emails eq "' + sMail + '"';
+                var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
                 const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
                 return new Promise(function (resolve, reject) {
-					var model = new sap.ui.model.json.JSONModel(),
-						arrayUsers;
-					model.loadData(sUrl, null, true, "GET", null, null, {
-                        "Content-Type": "application/scim+json"
-                    }).then(() => {
-                        var oDataTemp = model.getData();
-						resolve(oDataTemp.Resources[0].userName);
-                    }).catch(err => {
-                        console.log("Error:" + err.message);
-                        reject(oError);
-                    });
+					var model = new sap.ui.model.json.JSONModel();
+                    //momentaneo
+                    if(!that.local){
+                        var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
+                        const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
+                        model.loadData(sUrl, null, true, "GET", null, null, {
+                            "Content-Type": "application/scim+json"
+                        }).then(() => {
+                            var oDataTemp = model.getData();
+                            that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                            resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                        }).catch(err => {
+                            console.log("Error:" + err.message);
+                            reject(oError);
+                        });
+                    }else{
+                        var sPath = jQuery.sap.getModulePath("tomapedido") +'/API-USER-IAS/service/scim/Users?filter=emails eq "' + sMail + '"';
+                        model.loadData(sPath, null, true, "GET", null, null, {
+                            "Content-Type": "application/scim+json"
+                        }).then(() => {
+                            var oDataTemp = model.getData();
+                            that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                            resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                        }).catch(err => {
+                            console.log("Error:" + err.message);
+                            reject(oError);
+                        });
+                    }
                 });
                 
             } catch (oError) {
                 that.getMessageBox("error", that.getI18nText("sErrorTry"));
             }	
 		},
-        _getCliente: function (sUser) {
+        _getCliente: function (sCodeUser) {
 			try{
-				var user = sUser;
+				var user = sCodeUser;
                 var oResp = {
                     "sEstado": "E",
                     "oResults": []
                 };
 				return new Promise(function (resolve, reject) {
                     if(clouconnector){
-                        that.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDORType", {
+                        var sPath = "/ZOSDD_CUSTOM_VENDOR(p_vende='"+sCodeUser+"')/Set?$format=json";
+                        that.getModel("oModelMainService").read(sPath, {
                             async: false,
-                            // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
                             success: function (data) {
                                 oResp.sEstado = "S";
                                 oResp.oResults = data.results;
@@ -195,7 +189,7 @@ sap.ui.define([
                             }
                         });
                     }else{
-                        oResp.sEstado = "S";
+                        oResp.sEstado = "E";
                         oResp.oResults = models.JsonCliente();
                         resolve(oResp);
                     }
@@ -228,7 +222,7 @@ sap.ui.define([
                             }
                         });
                     }else{
-                        oResp.sEstado = "S";
+                        oResp.sEstado = "E";
                         oResp.oResults = models.JsonEstado();
                         resolve(oResp);
                     }

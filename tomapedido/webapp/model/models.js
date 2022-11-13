@@ -36,6 +36,68 @@ sap.ui.define([
                 return oModel;
             },
 
+            JsonUserLoged: function () {
+                var oModel = {
+                    "schemas":[
+                       "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                    ],
+                    "totalResults":1,
+                    "itemsPerPage":100,
+                    "Resources":[
+                       {
+                          "id":"P000004",
+                          "userUuid":"5dc2c547-b645-4068-afca-9a53ccc98f34",
+                          "userName":"OSMALTAMIRAN",
+                          "displayName":"",
+                          "userType":"employee",
+                          "sourceSystem":"0",
+                          "passwordStatus":"enabled",
+                          "mailVerified":"TRUE",
+                          "passwordPolicy":"https://accounts.sap.com/policy/passwords/sap/enterprise/1.0",
+                          "passwordFailedLoginAttempts":"0",
+                          "passwordLoginTime":"2022-11-13T14:33:39Z",
+                          "loginTime":"2022-11-13T02:52:12Z",
+                          "passwordSetTime":"2022-11-07T19:13:09Z",
+                          "schemas":[
+                             "urn:ietf:params:scim:schemas:core:2.0:User",
+                             "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
+                             "urn:sap:cloud:scim:schemas:extension:custom:2.0:User"
+                          ],
+                          "active":true,
+                          "meta":{
+                             "location":"https://aijy7d89l.accounts.ondemand.com/service/scim/Users/P000004",
+                             "resourceType":"User",
+                             "version":"1.0",
+                             "created":"2022-11-07T19:11:20Z",
+                             "lastModified":"2022-11-13T19:23:52Z"
+                          },
+                          "emails":[
+                             {
+                                "value":"liderdeproyecto1@omniasolution.com",
+                                "primary":true
+                             }
+                          ],
+                          "name":{
+                             "givenName":"Kassiel",
+                             "familyName":"Estefo"
+                          },
+                          "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User":{
+                             
+                          },
+                          "urn:sap:cloud:scim:schemas:extension:custom:2.0:User":{
+                             "attributes":[
+                                {
+                                   "name":"customAttribute1",
+                                   "value":"1000000000"
+                                }
+                             ]
+                          }
+                       }
+                    ]
+                 }
+                return oModel;
+            },
+
             JsonCliente: function () {
                 var oModel = [
                     {
@@ -66,14 +128,7 @@ sap.ui.define([
                 ]
                 return oModel;
             },
-
-            JsonUserLoged: function () {
-                var oModel = {
-                    "name": "kestefo",
-                    "nameDescription": "Kassiel Estefo Tume"
-                }
-                return oModel;
-            },
+            
             JsonPedidos: function () {
                 var oModel = [
                     {

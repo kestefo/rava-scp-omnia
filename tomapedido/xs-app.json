@@ -3,16 +3,17 @@
   "authenticationMethod": "route",
   "routes": [
     {
+      "source": "^/API-USER-IAS/(.*)$",
+      "target":"$1",
+      "destination": "API-USER-IAS",
       "authenticationType": "xsuaa",
-      "csrfProtection": false,
-      "source": "^/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/(.*)$",
-      "destination": "LIFE-DEV-110"
+      "csrfProtection": false
     },
     {
       "authenticationType": "xsuaa",
       "csrfProtection": false,
-      "source": "^/service/scim/(.*)$",
-      "destination": "API-USER-IAS"
+      "source": "^/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/(.*)$",
+      "destination": "LIFE-DEV-110"
     },
     {
       "source": "^/user-api(.*)",

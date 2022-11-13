@@ -89,6 +89,11 @@
         "preload": true,
         "settings": {}
       },
+      "oModelUser": {
+        "type": "sap.ui.model.json.JSONModel",
+        "preload": true,
+        "settings": {}
+      },
       "oModelPedidoVenta": {
         "type": "sap.ui.model.json.JSONModel",
         "preload": true,

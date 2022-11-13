@@ -29,7 +29,7 @@
                             <fb:control>
                                 <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" 
                                     items="{oModelPedidoVenta>/oSelectUser}" change="onValidateChange">
-                                    <core:ListItem key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                                    <core:ListItem key="{oModelPedidoVenta>kunnr}" text="{oModelPedidoVenta>kunnr} {oModelPedidoVenta>namec}-{oModelPedidoVenta>vtext}"/>
                                 </ComboBox>
                             </fb:control>
                         </fb:FilterItem>
