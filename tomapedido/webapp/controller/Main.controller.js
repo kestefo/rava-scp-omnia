@@ -133,7 +133,7 @@ sap.ui.define([
                 return new Promise(function (resolve, reject) {
 					var model = new sap.ui.model.json.JSONModel();
                     //momentaneo
-                    if(!that.local){
+                    if(that.local){
                         var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
                         const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
                         model.loadData(sUrl, null, true, "GET", null, null, {
