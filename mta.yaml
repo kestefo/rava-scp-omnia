@@ -1,134 +1,134 @@
-_schema-version: "3.2"
+_schema-version: '3.2'
 ID: Omnia
 version: 0.0.1
 modules:
-- name: Omnia-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: Omnia-repo-host
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
+  - name: Omnia-app-content
+    type: com.sap.application.content
+    path: .
     requires:
-    - artifacts:
-      - Cobranzaomnia.zip
-      name: Cobranzaomnia
-      target-path: resources/
-    - artifacts:
-      - tomapedido.zip
-      name: tomapedido
-      target-path: resources/
-    - artifacts:
-      - devoluciones.zip
-      name: devoluciones
-      target-path: resources/
-    - artifacts:
-      - reportecartera.zip
-      name: reportecartera
-      target-path: resources/
-- name: Cobranzaomnia
-  type: html5
-  path: omnia
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: Omnia-destination-content
-  type: com.sap.application.content
-  requires:
-  - name: Omnia-destination-service
+      - name: Omnia-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - Cobranzaomnia.zip
+          name: Cobranzaomnia
+          target-path: resources/
+        - artifacts:
+            - tomapedido.zip
+          name: tomapedido
+          target-path: resources/
+        - artifacts:
+            - devoluciones.zip
+          name: devoluciones
+          target-path: resources/
+        - artifacts:
+            - reportecartera.zip
+          name: reportecartera
+          target-path: resources/
+  - name: Cobranzaomnia
+    type: html5
+    path: omnia
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - 'npm run build:cf'
+      supported-platforms: []
+  - name: Omnia-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: Omnia-destination-service
+        parameters:
+          content-target: true
+      - name: Omnia-repo-host
+        parameters:
+          service-key:
+            name: Omnia-repo-host-key
+      - name: uaa_Omnia
+        parameters:
+          service-key:
+            name: uaa_Omnia-key
     parameters:
-      content-target: true
-  - name: Omnia-repo-host
-    parameters:
-      service-key:
-        name: Omnia-repo-host-key
-  - name: uaa_Omnia
-    parameters:
-      service-key:
-        name: uaa_Omnia-key
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Name: approuterOmnia_Omnia_repo_host
-          ServiceInstanceName: Omnia-html5-srv
-          ServiceKeyName: Omnia-repo-host-key
-          sap.cloud.service: approuterOmnia
-        - Authentication: OAuth2UserTokenExchange
-          Name: approuterOmnia_uaa_Omnia
-          ServiceInstanceName: Omnia-xsuaa-service
-          ServiceKeyName: uaa_Omnia-key
-          sap.cloud.service: approuterOmnia
-        existing_destinations_policy: ignore
-  build-parameters:
-    no-source: true
-- name: tomapedido
-  type: html5
-  path: tomapedido
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: devoluciones
-  type: html5
-  path: devoluciones
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: reportecartera
-  type: html5
-  path: reportecartera
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-resources:
-- name: Omnia-repo-host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: Omnia-html5-srv
-    service-plan: app-host
-- name: Omnia-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: true
-      init_data:
+      content:
         instance:
           destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          existing_destinations_policy: update
-      version: 1.0.0
-    service: destination
-    service-name: Omnia-destination-service
-    service-plan: lite
-- name: uaa_Omnia
-  type: org.cloudfoundry.managed-service
-  parameters:
-    path: ./xs-security.json
-    service: xsuaa
-    service-name: Omnia-xsuaa-service
-    service-plan: application
+            - Name: approuterOmnia_Omnia_repo_host
+              ServiceInstanceName: Omnia-html5-srv
+              ServiceKeyName: Omnia-repo-host-key
+              sap.cloud.service: approuterOmnia
+            - Authentication: OAuth2UserTokenExchange
+              Name: approuterOmnia_uaa_Omnia
+              ServiceInstanceName: Omnia-xsuaa-service
+              ServiceKeyName: uaa_Omnia-key
+              sap.cloud.service: approuterOmnia
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: tomapedido
+    type: html5
+    path: tomapedido
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - 'npm run build:cf'
+      supported-platforms: []
+  - name: devoluciones
+    type: html5
+    path: devoluciones
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - 'npm run build:cf'
+      supported-platforms: []
+  - name: reportecartera
+    type: html5
+    path: reportecartera
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - 'npm run build:cf'
+      supported-platforms: []
+resources:
+  - name: Omnia-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: Omnia-html5-srv
+      service-plan: app-host
+  - name: Omnia-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: 'https://ui5.sap.com'
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: Omnia-destination-service
+      service-plan: lite
+  - name: uaa_Omnia
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: Omnia-xsuaa-service
+      service-plan: application
 parameters:
   deploy_mode: html5-repo

@@ -24,11 +24,15 @@ sap.ui.define([
             this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
             // jQuery.ajax({
             //     method: 'GET',
-            //     headers: {
-            //         "X-CSRF-Token": "Fetch"
-            //     },
-            //     cache: false,
-            //     url: "/user-api/currentUser"
+            //     url: "/service/scim/Users?filter=emails eq 'liderdeproyecto1@omniasolution.com'"
+            // }).then(function successCallback(result, xhr, data) {
+            //     console.log(result)
+            // }, function errorCallback(xhr, readyState) {
+            // });
+
+            // jQuery.ajax({
+            //     method: 'GET',
+            //     url: "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set?$format=json"
             // }).then(function successCallback(result, xhr, data) {
             //     console.log(result)
             // }, function errorCallback(xhr, readyState) {
@@ -49,7 +53,41 @@ sap.ui.define([
                 sCantPorcentageSuccess = iCantPorcentageSuccess.toString(),
                 oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
                 
-            
+                this.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set?$format=json", {
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error: function (error) {
+                        sap.ui.core.BusyIndicator.hide(0);
+                        console.log("error")
+                    }
+                });
+
+                var sPath = "/service/scim/Users?filter=emails eq 'liderdeproyecto1@omniasolution.com'";
+                const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
+
+                var model = new sap.ui.model.json.JSONModel();
+                model.loadData(sUrl, null, true, "GET", null, null, {
+                    "Content-Type": "application/scim+json"
+                }).then(() => {
+                    var oDataTemp = model.getData();
+                    console.log(oDataTemp);
+                }).catch(err => {
+                    console.log("Error:" + err.message);
+                });
+
+                var sPath2 = "service/scim/Users?filter=emails eq 'liderdeproyecto1@omniasolution.com'";
+                const sUrl2 = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
+
+                model.loadData(sUrl, null, true, "GET", null, null, {
+                    "Content-Type": "application/scim+json"
+                }).then(() => {
+                    var oDataTemp = model.getData();
+                    console.log(oDataTemp);
+                }).catch(err => {
+                    console.log("Error:" + err.message);
+                });
+
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([this._getCliente(), this._getEstado(), this._getEstado2()]).then(async values => {
                 iCantTotal = values.length;

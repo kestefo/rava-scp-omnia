@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://life:44300/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZOSDD_CUSTOM_VENDOR_CDS" xml:lang="es" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <Annotation Term="Core.SchemaVersion" String="1.0.0"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+                <EntityType Name="ZOSDD_CUSTOM_VENDORType" sap:label="Clientes por vendedor" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="p_vende"/>
+                        <PropertyRef Name="kunnr"/>
+                    </Key>
+                    <Property Name="p_vende" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Cliente"/>
+                    <Property Name="kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Cliente" sap:quickinfo="Número de cliente"/>
+                    <Property Name="namec" Type="Edm.String" MaxLength="71"/>
+                    <Property Name="vtweg" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Canal distribución" sap:quickinfo="Canal de distribución"/>
+                    <Property Name="vtext" Type="Edm.String" MaxLength="20" sap:label="Descripción"/>
+                    <NavigationProperty Name="Parameters" Relationship="ZOSDD_CUSTOM_VENDOR_CDS.assoc_21731073089BED70B55F5A30B0465CA6" FromRole="ToRole_assoc_21731073089BED70B55F5A30B0465CA6" ToRole="FromRole_assoc_21731073089BED70B55F5A30B0465CA6" sap:filterable="false"/>
+                </EntityType>
+                <EntityType Name="ZOSDD_CUSTOM_VENDORParameters" sap:semantics="parameters" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="p_vende"/>
+                    </Key>
+                    <Property Name="p_vende" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:parameter="mandatory" sap:label="Cliente" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                    <NavigationProperty Name="Set" Relationship="ZOSDD_CUSTOM_VENDOR_CDS.assoc_21731073089BED70B55F5A30B0465CA6" FromRole="FromRole_assoc_21731073089BED70B55F5A30B0465CA6" ToRole="ToRole_assoc_21731073089BED70B55F5A30B0465CA6"/>
+                </EntityType>
+                <Association Name="assoc_21731073089BED70B55F5A30B0465CA6" sap:content-version="1">
+                    <End Type="ZOSDD_CUSTOM_VENDOR_CDS.ZOSDD_CUSTOM_VENDORParameters" Multiplicity="1" Role="FromRole_assoc_21731073089BED70B55F5A30B0465CA6"/>
+                    <End Type="ZOSDD_CUSTOM_VENDOR_CDS.ZOSDD_CUSTOM_VENDORType" Multiplicity="*" Role="ToRole_assoc_21731073089BED70B55F5A30B0465CA6"/>
+                </Association>
+                <EntityContainer Name="ZOSDD_CUSTOM_VENDOR_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                    <EntitySet Name="ZOSDD_CUSTOM_VENDORSet" EntityType="ZOSDD_CUSTOM_VENDOR_CDS.ZOSDD_CUSTOM_VENDORType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+                    <EntitySet Name="ZOSDD_CUSTOM_VENDOR" EntityType="ZOSDD_CUSTOM_VENDOR_CDS.ZOSDD_CUSTOM_VENDORParameters" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                    <AssociationSet Name="assoc_21731073089BED70B55F5A30B0465CA6" Association="ZOSDD_CUSTOM_VENDOR_CDS.assoc_21731073089BED70B55F5A30B0465CA6" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="ZOSDD_CUSTOM_VENDOR" Role="FromRole_assoc_21731073089BED70B55F5A30B0465CA6"/>
+                        <End EntitySet="ZOSDD_CUSTOM_VENDORSet" Role="ToRole_assoc_21731073089BED70B55F5A30B0465CA6"/>
+                    </AssociationSet>
+                </EntityContainer>
+                <Annotations Target="ZOSDD_CUSTOM_VENDOR_CDS.ZOSDD_CUSTOM_VENDOR_CDS_Entities"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                </Annotations>
+                <Annotations Target="ZOSDD_CUSTOM_VENDOR_CDS.ZOSDD_CUSTOM_VENDOR_CDS_Entities/ZOSDD_CUSTOM_VENDOR"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Capabilities.FilterRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonFilterableProperties">
+                                <Collection>
+                                    <PropertyPath>p_vende</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Parameters"/>
+                                        <PropertyValue Property="FilterRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Filterable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.SortRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonSortableProperties">
+                                <Collection>
+                                    <PropertyPath>p_vende</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <atom:link rel="self" href="https://life:44300/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    <atom:link rel="latest-version" href="https://life:44300/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/$metadata"
+                        xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

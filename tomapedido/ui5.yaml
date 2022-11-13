@@ -18,8 +18,11 @@ server:
         backend:
           - path: /sap
             url: http://life:44300
-            client: '100'
-            destination: LIFE-DEV-100
+            client: '110'
+            destination: LIFE-DEV-110
+          - path: /service/scim
+            url: https://aijy7d89l.accounts.ondemand.com
+            destination: API-USER-IAS
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -30,4 +33,4 @@ server:
       afterMiddleware: fiori-tools-appreload
       configuration:
         component: tomapedido
-        ui5Theme: sap_horizon
+        ui5Theme: sap_belize
