@@ -4,7 +4,7 @@
         <headerToolbar>
             <Toolbar>
                 <ToolbarSpacer/>
-                <Button text="{i18n>textbtnAddPedido}" press="_onPressAddPedido" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}"/>
+                <Button text="{i18n>textbtnAddPedido}" press="_onPressSelectClient" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}"/>
                 <!-- <Button press="_onPressDeletePedido" type="Reject" icon="sap-icon://delete" tooltip="{i18n>tooltipbtnDelete}"/> -->
             </Toolbar>
         </headerToolbar>

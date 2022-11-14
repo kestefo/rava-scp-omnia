@@ -19,7 +19,7 @@ sap.ui.define([
 	var sMessage = "";
 	return Controller.extend("tomapedido.controller.BaseController", {
 		formatter: Formatter,
-        local:true,
+        local: sap.ushell.Container === undefined ? true : false,
         getUserLoged: function(){
 			var user = "";
 			if(this.local){
@@ -553,7 +553,17 @@ sap.ui.define([
         _onPressClose: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sCustom = oSource.data("custom");
-            oSource.getParent().close();
+			switch (sCustom) {
+				case "SelectClient":
+					this._onClearSelectClient();
+					oSource.getParent().close();
+					break;
+				default:
+					oSource.getParent().close();
+			}
+		},
+		_onClearSelectClient: function(){
+			sap.ui.getCore().byId("frgIdSelectClient--slUsuario").setSelectedKey("");
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);

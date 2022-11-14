@@ -16,8 +16,17 @@
       "toolsId": "0ced8709-7e86-4956-9d34-7f036b77aa10"
     },
     "dataSources": {
-      "mainService": {
+      "serviceVendedor": {
         "uri": "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "serviceMaestro": {
+        "uri": "/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -84,8 +93,13 @@
           "bundleName": "tomapedido.i18n.i18n"
         }
       },
-      "oModelMainService": {
-        "dataSource": "mainService",
+      "oModelServiceVendedor": {
+        "dataSource": "serviceVendedor",
+        "preload": true,
+        "settings": {}
+      },
+      "oModelServiceMaestro": {
+        "dataSource": "serviceMaestro",
         "preload": true,
         "settings": {}
       },

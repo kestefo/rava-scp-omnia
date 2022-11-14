@@ -3,7 +3,9 @@ sap.ui.define([
     "tomapedido/controller/BaseController",
     "tomapedido/model/models",
     "tomapedido/controller/Service",
-], function (Controller, BaseController, models, Service) {
+    "sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator"
+], function (Controller, BaseController, models, Service, Filter, FilterOperator) {
     "use strict";
 
     var that, 
@@ -15,7 +17,7 @@ sap.ui.define([
             this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
 
-            this.frgIdAddPedido = "frgIdAddPedido";
+            this.frgIdSelectClient = "frgIdSelectClient";
             this.frgIdDetailPedido = "frgIdDetailPedido";
             this.frgIdEditContact = "frgIdEditContact";
             this.frgIdLoadData = "frgIdLoadData";
@@ -23,25 +25,63 @@ sap.ui.define([
         _onbtnRefresh: function(){
             this.onAfterRendering();
         },
-
         onAfterRendering: function(){
 
             Promise.all([that._getUsers()]).then((values) => {
-                that.oModel = this.getModel("oModelMainService");
+                that.oModelVendedor = this.getModel("oModelServiceVendedor");
+                that.oModelMaestro = this.getModel("oModelServiceMaestro");
                 that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
                 var sCodeUser = values[0].value;
                 if(!that.isEmpty(sCodeUser)){
                     that.getCargaData(sCodeUser);
                 }else{
-                    that.getMessageBox("warning", that.getI18nText("errorUserNoCode"));
+                    that.getMessageBox("error", that.getI18nText("errorUserNoCode"));
                 }
             }).catch(function (oError) {
                 console.log(oError);
-                that.getMessageBox("warning", that.getI18nText("errorUserData"));
+                that.getMessageBox("error", that.getI18nText("errorUserData"));
 				sap.ui.core.BusyIndicator.hide(0);
 			});
                 
         },
+        _getUsers: function () {
+			try {
+                var sMail = this.getUserLoged();
+                var model = new sap.ui.model.json.JSONModel();
+                return new Promise(function (resolve, reject) {
+                    //momentaneo
+                    if(that.local){
+                        var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
+                        const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
+                        model.loadData(sUrl, null, true, "GET", null, null, {
+                            "Content-Type": "application/scim+json"
+                        }).then(() => {
+                            var oDataTemp = model.getData();
+                            that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                            resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                        }).catch(err => {
+                            console.log("Error:" + err.message);
+                            reject(err);
+                        });
+                    }else{
+                        var sPath = jQuery.sap.getModulePath("tomapedido") +'/API-USER-IAS/service/scim/Users?filter=emails eq "' + sMail + '"';
+                        model.loadData(sPath, null, true, "GET", null, null, {
+                            "Content-Type": "application/scim+json"
+                        }).then(() => {
+                            var oDataTemp = model.getData();
+                            that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                            resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                        }).catch(err => {
+                            console.log("Error:" + err.message);
+                            reject(err);
+                        });
+                    }
+                });
+                
+            } catch (oError) {
+                that.getMessageBox("error", that.getI18nText("sErrorTry"));
+            }	
+		},
         getCargaData: function(sCodeUser){
             this.setFragment("_dialogLoadData", this.frgIdLoadData, "LoadData", this);
             
@@ -54,7 +94,7 @@ sap.ui.define([
                 oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
 
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([this._getCliente(sCodeUser), this._getEstado(sCodeUser), this._getEstado2(sCodeUser)]).then(async values => {
+            Promise.all([this._getClientes(sCodeUser)]).then(async values => {
                 iCantTotal = values.length;
                 iCantSuccess = this.validateService(values);
                 iCantError = iCantTotal-iCantSuccess;
@@ -66,10 +106,8 @@ sap.ui.define([
 			    oProgressIndicator.setPercentValue(+sCantPorcentageSuccess);
 
                 var oCliente = values[0].oResults;
-                var oEstado = values[1].oResults;
 
-                this.oModelPedidoVenta.setProperty("/oSelectUser", oCliente);
-                this.oModelPedidoVenta.setProperty("/oEstado", oEstado);
+                that.oModelPedidoVenta.setProperty("/oSelectUser", oCliente);
                 
                 sap.ui.core.BusyIndicator.hide(0);
                 console.log(values);
@@ -91,13 +129,13 @@ sap.ui.define([
             var oSource = oEvent.getSource();
 			var sValue = "100",
 				oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
-            
-            oProgressIndicator.setDisplayValue('0%');
-            oProgressIndicator.setPercentValue(-"0");
 
             if(oProgressIndicator.getPercentValue() < 100){
                 that.getMessageBox("warning", that.getI18nText("warningProgress"));
             }
+
+            oProgressIndicator.setDisplayValue('0%');
+            oProgressIndicator.setPercentValue(-"0");
 
             if(oSource.sParentAggregationName === "buttons"){
                 oSource.getParent().close();
@@ -107,92 +145,33 @@ sap.ui.define([
 		},
 
         handleRouteMatched: function(){
-            this.oModel = this.getModel("oModelMainService");
+            this.oModelVendedor = this.getModel("oModelServiceVendedor");
             this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
             this.oModelPedidoVenta.setProperty("/DataGeneral", models.createDataGeneralModel());
-            // Promise.all([this._getCliente()]).then(async values => {
-                // this.oModelPedidoVenta.setProperty("/User", models.JsonUserLoged());
-                // this.oModelPedidoVenta.setProperty("/oSelectUser", models.JsonCliente());
-                // this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
-                // this.oModelPedidoVenta.setProperty("/DetailSelectFuerzaVenta", models.JsonFuerzaVenta());
-                // this.oModelPedidoVenta.setProperty("/DetailSelectPuntoVenta", models.JsonPuntoVenta());
-                // this.oModelPedidoVenta.setProperty("/DetailSelectDireccion", models.JsonDirecciones());
-                // this.oModelPedidoVenta.setProperty("/DetailSelectCondPago", models.JsonCondPago());
-                // this.oModelPedidoVenta.setProperty("/DescSelect", models.JsonDescuento());
-			// }).catch(function (oError) {
-			// 	sap.ui.core.BusyIndicator.hide(0);
-			// });
         },
 
         //Llamada de data
-        _getUsers: function () {
-			try {
-                var sMail = this.getUserLoged();
-                var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
-                const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
-                return new Promise(function (resolve, reject) {
-					var model = new sap.ui.model.json.JSONModel();
-                    //momentaneo
-                    if(that.local){
-                        var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
-                        const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
-                        model.loadData(sUrl, null, true, "GET", null, null, {
-                            "Content-Type": "application/scim+json"
-                        }).then(() => {
-                            var oDataTemp = model.getData();
-                            that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
-                            resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
-                        }).catch(err => {
-                            console.log("Error:" + err.message);
-                            reject(oError);
-                        });
-                    }else{
-                        var sPath = jQuery.sap.getModulePath("tomapedido") +'/API-USER-IAS/service/scim/Users?filter=emails eq "' + sMail + '"';
-                        model.loadData(sPath, null, true, "GET", null, null, {
-                            "Content-Type": "application/scim+json"
-                        }).then(() => {
-                            var oDataTemp = model.getData();
-                            that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
-                            resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
-                        }).catch(err => {
-                            console.log("Error:" + err.message);
-                            reject(oError);
-                        });
-                    }
-                });
-                
-            } catch (oError) {
-                that.getMessageBox("error", that.getI18nText("sErrorTry"));
-            }	
-		},
-        _getCliente: function (sCodeUser) {
+        _getClientes: function (sCodeUser) {
 			try{
-				var user = sCodeUser;
                 var oResp = {
                     "sEstado": "E",
                     "oResults": []
                 };
 				return new Promise(function (resolve, reject) {
-                    if(clouconnector){
-                        var sPath = "/ZOSDD_CUSTOM_VENDOR(p_vende='"+sCodeUser+"')/Set?$format=json";
-                        that.getModel("oModelMainService").read(sPath, {
-                            async: false,
-                            success: function (data) {
-                                oResp.sEstado = "S";
-                                oResp.oResults = data.results;
-                                resolve(oResp);
-                            },
-                            error: function (error) {
-                                oResp.sEstado = "S";
-                                oResp.oResults = models.JsonCliente();
-                                resolve(oResp);
-                            }
-                        });
-                    }else{
-                        oResp.sEstado = "E";
-                        oResp.oResults = models.JsonCliente();
-                        resolve(oResp);
-                    }
+                    var sPath = "/ZOSDD_CUSTOM_VENDOR(p_vende='"+sCodeUser+"')/Set?$format=json";
+                    that.getModel("oModelServiceVendedor").read(sPath, {
+                        async: false,
+                        success: function (data) {
+                            oResp.sEstado = "S";
+                            oResp.oResults = data.results;
+                            resolve(oResp);
+                        },
+                        error: function (error) {
+                            oResp.sEstado = "S";
+                            oResp.oResults = models.JsonCliente();
+                            resolve(oResp);
+                        }
+                    });
 				});
 			}catch(oError){
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
@@ -207,7 +186,7 @@ sap.ui.define([
                 };
 				return new Promise(function (resolve, reject) {
                     if(clouconnector){
-                        that.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDORType", {
+                        that.getModel("oModelServiceVendedor").read("/ZOSDD_CUSTOM_DATA", {
                             async: false,
                             // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
                             success: function (data) {
@@ -240,7 +219,7 @@ sap.ui.define([
                 };
 				return new Promise(function (resolve, reject) {
                     if(clouconnector){
-                        that.getModel("oModelMainService").read("/ZOSDD_CUSTOM_VENDORType", {
+                        that.getModel("oModelServiceVendedor").read("/ZOSDD_CUSTOM_DATA", {
                             async: false,
                             // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
                             success: function (data) {
@@ -335,7 +314,7 @@ sap.ui.define([
                             reject(error);
                         });
                 } else {
-                    that.oModel.read(sPath, {
+                    that.oModelVendedor.read(sPath, {
                         filters: aFilter,
                         success: function (result) {
                             sap.ui.core.BusyIndicator.hide();
@@ -370,13 +349,68 @@ sap.ui.define([
         },
         //Buscar
         
-        _onPressAddPedido: function(){
-            this.setFragment("_dialogAddPedido", this.frgIdAddPedido, "AddPedido", this);
+        //Funcionalidades select cliente 
+        _onPressSelectClient: function(){
+            this.setFragment("_dialogSelectClient", this.frgIdSelectClient, "SelectClient", this);
         },
-        _onAcceptPedido: function(){
-            this._dialogAddPedido.close();
-            this.setFragment("_dialogDetailPedido", this.frgIdDetailPedido, "DetailPedido", this);
+        _onbtnUpdateClient:function(){
+            this._onClearSelectClient();
+            var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
+            var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([this._getClientes(sCodeUser)]).then((values) => {
+                var oCliente = values[0].oResults;
+                if(values[0].sEstado != "E"){
+                    that.oModelPedidoVenta.setProperty("/oSelectUser", oCliente);
+                    that.getMessageBox("success", that.getI18nText("successDataUpdate"));
+                }else{
+                    that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+                }
+                sap.ui.core.BusyIndicator.hide(0);
+            }).catch(function (oError) {
+                that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+				sap.ui.core.BusyIndicator.hide(0);
+			});
         },
+        _onDetailCliente: function(){
+            var sSelectedKey = sap.ui.getCore().byId("frgIdSelectClient--slUsuario").getSelectedKey();
+
+            if(this.isEmpty(sSelectedKey)){
+                that.getMessageBox("error", that.getI18nText("errorSelectClient"));
+                return;
+            }
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([that._getDetailClient(sSelectedKey)]).then((values) => {
+                sap.ui.core.BusyIndicator.hide(0);
+                that._dialogSelectClient.close();
+                that.setFragment("_dialogDetailPedido", this.frgIdDetailPedido, "DetailPedido", this);
+            }).catch(function (oError) {
+                console.log(oError);
+                that.getMessageBox("error", that.getI18nText("errorClientDetail"));
+				sap.ui.core.BusyIndicator.hide(0);
+			});
+
+            
+        },
+        _getDetailClient: function (sCodeClient) {
+			try{
+				return new Promise(function (resolve, reject) {
+                    that.getModel("oModelServiceMaestro").read("/ZOSDD_CUSTOM_DATA(p_kunnr='"+sCodeClient+"')/Set?$format=json", {
+                        async: false,
+                        success: function (data) {
+                            resolve(data);
+                        },
+                        error: function (error) {
+                            reject(error);
+                        }
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        //Funcionalidades select cliente
+
         _onPressEditPedido: function(){
             this.setFragment("_dialogDetailPedido", this.frgIdDetailPedido, "DetailPedido", this);
         },

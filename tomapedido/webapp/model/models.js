@@ -30,7 +30,8 @@ sap.ui.define([
                     },
                     objects:{
                         oCliente:[],
-                        oEstado:[]
+                        oEstado:[],
+                        oFuerzaVenta:[]
                     }
                 };
                 return oModel;
