@@ -18,8 +18,8 @@ server:
         backend:
           - path: /sap
             url: http://life:44300
-            client: '100'
-            destination: LIFE-DEV-100
+            client: '110'
+            destination: LIFE-DEV-110
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

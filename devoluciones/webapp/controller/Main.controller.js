@@ -68,7 +68,7 @@ sap.ui.define([
                 //     that.getMessageBox("error", that.getI18nText("sErrorTry"));
                 // }
 
-                var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/"; //
+                var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/"; 
                 jQuery.ajax({
                     type: "GET",
                     cache: false,
@@ -192,7 +192,76 @@ sap.ui.define([
             filtroCliente: function () {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
-                oModelDevolucion.setProperty("/FiltroCliente", models.jsonFiltroClient());
+                var model = new sap.ui.model.json.JSONModel();
+                ///sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/ZOSDD_CUSTOM_DATA(p_kunnr='1000000000')/Set?$format=json
+                //oModelDevolucion.setProperty("/FiltroCliente", models.jsonFiltroClient());
+
+                var sPath = "/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/ZOSDD_CUSTOM_DATA(p_kunnr='1000000000')/Set";
+                model.loadData(sPath, null, true, "GET", null, null, {
+                    "Content-Type": "application/json"
+                }).then(() => {
+                    var oDataTemp = model.getData();
+                    that.getModel("oModelUser").setProperty("/FiltroCliente", oDataTemp.d.results);
+                    // resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                }).catch(err => {
+                    console.log("Error:" + err.message);
+                    //reject(err);
+                });
+
+                var sPath = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set";
+                model.loadData(sPath, null, true, "GET", null, null, {
+                    "Content-Type": "application/json"
+                }).then(() => {
+                    var oDataTemp = model.getData();
+                    that.getModel("oModelUser").setProperty("/FiltroCliente", oDataTemp.d.results);
+                    // resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                }).catch(err => {
+                    console.log("Error:" + err.message);
+                    //reject(err);
+                });
+
+                // var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/ZOSDD_CUSTOM_DATA(p_kunnr='1000000000')/Set?$format=json";
+                // jQuery.ajax({
+                //     type: "GET",
+                //     cache: false,
+                //     headers: {
+                //         "Accept": "application/json"
+                //     },
+                //     contentType: "application/json",
+                //     url: url,
+                //     async: true,
+                //     success: function (data, textStatus, jqXHR) {
+                //         var datos = data.d;
+                //         that.oModelDevolucion.setProperty("/FiltroCliente",datos);
+                        
+
+                //     },
+                //     error: function () {
+                //         MessageBox.error("Ocurrio un error al obtener los datos");
+                //     }
+                // });
+
+                // var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set?$format=json";
+                // jQuery.ajax({
+                //     type: "GET",
+                //     cache: false,
+                //     headers: {
+                //         "Accept": "application/json"
+                //     },
+                //     contentType: "application/json",
+                //     url: url,
+                //     async: true,
+                //     success: function (data, textStatus, jqXHR) {
+                //         var datos = data.d;
+                //         //that.oModelDevolucion.setProperty("/FiltroCliente",datos);
+                        
+
+                //     },
+                //     error: function () {
+                //         MessageBox.error("Ocurrio un error al obtener los datos");
+                //     }
+                // });
+
 
             },
 
@@ -344,13 +413,7 @@ sap.ui.define([
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 oModelDevolucion.setProperty("/AddNombreProduct", models.JsonUser());//CRomero
             },
-            // _onNavDetalleFacturaBoleta: function(){
-            //     var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
-            //     var sFragment = this._byId("frgIdAddClient--IdClienteDetail");
-            //     this.oModelDevolucion.setProperty("/addClientVisible", true);
-            //     this.oModelDevolucion.setProperty("/AddFacturaBoletaDetail", models.JsonFacturaDetail());
-            //     navCon.to(sFragment);
-            // },
+          
             _onNavBack: function () {
                 var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
                 this.oModelDevolucion.setProperty("/addClientVisible", false);

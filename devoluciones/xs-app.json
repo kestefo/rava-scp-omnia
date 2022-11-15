@@ -3,6 +3,13 @@
   "authenticationMethod": "route",
   "routes": [
     {
+      "source": "^/API-USER-IAS/(.*)$",
+      "target":"$1",
+      "destination": "API-USER-IAS",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
       "source": "^/resources/(.*)$",
       "target": "/resources/$1",
       "authenticationType": "none",

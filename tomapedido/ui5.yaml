@@ -23,6 +23,7 @@ server:
           - path: /service/scim
             url: https://aijy7d89l.accounts.ondemand.com
             destination: API-USER-IAS
+            
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
