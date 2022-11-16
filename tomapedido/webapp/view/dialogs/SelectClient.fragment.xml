@@ -15,8 +15,8 @@
             <VBox width="auto" class="sapUiSmallMargin">
                 <Text text="{i18n>textDetailAddPedido}"/>
                 <ComboBox id="slUsuario" width="100%" 
-                    items="{oModelPedidoVenta>/oSelectUser}" change="onValidateChange">
-                    <core:Item key="{oModelPedidoVenta>kunnr}" text="{oModelPedidoVenta>kunnr} {oModelPedidoVenta>namec} - {oModelPedidoVenta>vtext}"/>
+                    items="{oModelGetPedidoVenta>/oClientePorVendedor}" change="onValidateChange">
+                    <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Kunnr} {oModelGetPedidoVenta>Namec}"/>
                 </ComboBox>
             </VBox>
         </content>

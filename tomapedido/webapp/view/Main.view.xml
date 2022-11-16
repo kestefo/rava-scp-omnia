@@ -28,8 +28,8 @@
                         <fb:FilterItem name="D" label="{i18n>lblCliente}">
                             <fb:control>
                                 <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" 
-                                    items="{oModelPedidoVenta>/oSelectUser}" change="onValidateChange">
-                                    <core:ListItem key="{oModelPedidoVenta>kunnr}" text="{oModelPedidoVenta>kunnr} {oModelPedidoVenta>namec}-{oModelPedidoVenta>vtext}"/>
+                                    items="{oModelGetPedidoVenta>/oClientePorVendedor}" change="onValidateChange">
+                                    <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Kunnr} {oModelGetPedidoVenta>Namec}"/>
                                 </ComboBox>
                             </fb:control>
                         </fb:FilterItem>

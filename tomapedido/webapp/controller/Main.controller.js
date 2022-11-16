@@ -2,10 +2,14 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "tomapedido/controller/BaseController",
     "tomapedido/model/models",
-    "tomapedido/controller/Service",
+    "tomapedido/services/ServiceOdata",
     "sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator"
-], function (Controller, BaseController, models, Service, Filter, FilterOperator) {
+	"sap/ui/model/FilterOperator",
+    '../util/util',
+    '../util/utilUI',
+    "../services/Services",
+    "../estructuras/Estructura"
+], function (Controller, BaseController, models, ServiceOdata, Filter, FilterOperator, util, utilUI, Services, Estructura) {
     "use strict";
 
     var that, 
@@ -15,22 +19,21 @@ sap.ui.define([
         onInit: function () {
             that = this;
             this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
+            // this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
 
             this.frgIdSelectClient = "frgIdSelectClient";
-            this.frgIdDetailPedido = "frgIdDetailPedido";
+            this.frgIdDetailCliente = "frgIdDetailCliente";
             this.frgIdEditContact = "frgIdEditContact";
             this.frgIdLoadData = "frgIdLoadData";
+            this.handleRouteMatched();
         },
-        _onbtnRefresh: function(){
-            this.onAfterRendering();
-        },
-        onAfterRendering: function(){
-
+        handleRouteMatched: function(oEvent){
             Promise.all([that._getUsers()]).then((values) => {
+                this.getModel("oModelPedidoVenta").setProperty("/DataGeneral", models.createDataGeneralModel());
                 that.oModelVendedor = this.getModel("oModelServiceVendedor");
                 that.oModelMaestro = this.getModel("oModelServiceMaestro");
                 that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+                that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
                 var sCodeUser = values[0].value;
                 if(!that.isEmpty(sCodeUser)){
                     that.getCargaData(sCodeUser);
@@ -42,6 +45,29 @@ sap.ui.define([
                 that.getMessageBox("error", that.getI18nText("errorUserData"));
 				sap.ui.core.BusyIndicator.hide(0);
 			});
+        },
+        _onbtnRefresh: function(){
+            this.onAfterRendering();
+        },
+        onAfterRendering: function(){
+
+            // Promise.all([that._getUsers()]).then((values) => {
+            //     this.getModel("oModelPedidoVenta").setProperty("/DataGeneral", models.createDataGeneralModel());
+            //     that.oModelVendedor = this.getModel("oModelServiceVendedor");
+            //     that.oModelMaestro = this.getModel("oModelServiceMaestro");
+            //     that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+            //     that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
+            //     var sCodeUser = values[0].value;
+            //     if(!that.isEmpty(sCodeUser)){
+            //         that.getCargaData(sCodeUser);
+            //     }else{
+            //         that.getMessageBox("error", that.getI18nText("errorUserNoCode"));
+            //     }
+            // }).catch(function (oError) {
+            //     console.log(oError);
+            //     that.getMessageBox("error", that.getI18nText("errorUserData"));
+			// 	sap.ui.core.BusyIndicator.hide(0);
+			// });
                 
         },
         _getUsers: function () {
@@ -49,7 +75,6 @@ sap.ui.define([
                 var sMail = this.getUserLoged();
                 var model = new sap.ui.model.json.JSONModel();
                 return new Promise(function (resolve, reject) {
-                    //momentaneo
                     if(that.local){
                         var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
                         const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
@@ -105,9 +130,11 @@ sap.ui.define([
                 oProgressIndicator.setDisplayValue(sCantPorcentageSuccess + '%');
 			    oProgressIndicator.setPercentValue(+sCantPorcentageSuccess);
 
-                var oCliente = values[0].oResults;
+                var oCliente = values[0].oResults[0].NAVCUSTO.results;
+                var oMateriales = values[0].oResults[0].NAVMATER.results;
 
-                that.oModelPedidoVenta.setProperty("/oSelectUser", oCliente);
+                that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
+                that.oModelGetPedidoVenta.setProperty("/oMaterialesPorVendedor", oMateriales);
                 
                 sap.ui.core.BusyIndicator.hide(0);
                 console.log(values);
@@ -144,12 +171,6 @@ sap.ui.define([
             }
 		},
 
-        handleRouteMatched: function(){
-            this.oModelVendedor = this.getModel("oModelServiceVendedor");
-            this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
-            this.oModelPedidoVenta.setProperty("/DataGeneral", models.createDataGeneralModel());
-        },
-
         //Llamada de data
         _getClientes: function (sCodeUser) {
 			try{
@@ -158,20 +179,34 @@ sap.ui.define([
                     "oResults": []
                 };
 				return new Promise(function (resolve, reject) {
-                    var sPath = "/ZOSDD_CUSTOM_VENDOR(p_vende='"+sCodeUser+"')/Set?$format=json";
-                    that.getModel("oModelServiceVendedor").read(sPath, {
-                        async: false,
-                        success: function (data) {
-                            oResp.sEstado = "S";
-                            oResp.oResults = data.results;
-                            resolve(oResp);
-                        },
-                        error: function (error) {
-                            oResp.sEstado = "S";
-                            oResp.oResults = models.JsonCliente();
-                            resolve(oResp);
-                        }
+                    var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
+                    Services.getoDataERP(that, sPath, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                oResp.sEstado = "S";
+                                oResp.oResults = oData.data;
+                                resolve(oResp);
+                            },
+                            error: function (message) {
+                                oResp.sEstado = "S";
+                                oResp.oResults = [];
+                                resolve(oResp);
+                            }
+                        });
                     });
+                    // that.getModel("oModelServiceVendedor").loadData(sPath, {
+                    //     async: false,
+                    //     success: function (data) {
+                    //         oResp.sEstado = "S";
+                    //         oResp.oResults = data.results;
+                    //         resolve(oResp);
+                    //     },
+                    //     error: function (error) {
+                    //         oResp.sEstado = "S";
+                    //         oResp.oResults = [];
+                    //         resolve(oResp);
+                    //     }
+                    // });
 				});
 			}catch(oError){
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
@@ -305,7 +340,7 @@ sap.ui.define([
                     var urlParameters = {
                         "$expand": "EquipmentContentASearchSet,MessageSet"
                     }
-                    Service.oDataConsult("read", sPath, "", aFilter, "1", that, urlParameters)
+                    ServiceOdata.oDataConsult("read", sPath, "", aFilter, "1", that, urlParameters)
                         .then(function (result) {
                             sap.ui.core.BusyIndicator.hide();
                             resolve(result);
@@ -359,9 +394,11 @@ sap.ui.define([
             var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([this._getClientes(sCodeUser)]).then((values) => {
-                var oCliente = values[0].oResults;
+                var oCliente = values[0].oResults[0].NAVCUSTO.results;
+                var oMateriales = values[0].oResults[0].NAVMATER.results;
                 if(values[0].sEstado != "E"){
-                    that.oModelPedidoVenta.setProperty("/oSelectUser", oCliente);
+                    that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
+                    that.oModelGetPedidoVenta.setProperty("/oMaterialesPorVendedor", oMateriales);
                     that.getMessageBox("success", that.getI18nText("successDataUpdate"));
                 }else{
                     that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
@@ -373,35 +410,89 @@ sap.ui.define([
 			});
         },
         _onDetailCliente: function(){
-            var sSelectedKey = sap.ui.getCore().byId("frgIdSelectClient--slUsuario").getSelectedKey();
+            var slUsuario = this._byId("frgIdSelectClient--slUsuario");
+
+            var sSelectedKey = slUsuario.getSelectedKey();
+            var sSelectedValue = slUsuario.getValue();
 
             if(this.isEmpty(sSelectedKey)){
                 that.getMessageBox("error", that.getI18nText("errorSelectClient"));
                 return;
             }
+
+            var oSelectedItem = slUsuario.getSelectedItem();
+            var oObjectSelected = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([that._getDetailClient(sSelectedKey)]).then((values) => {
-                sap.ui.core.BusyIndicator.hide(0);
+            Promise.all([]).then((values) => {
+                var oChangeParameterSelected = {
+                    "codeCliente": oObjectSelected.Kunnr,
+                    "nameCliente": oObjectSelected.Namec,
+                    "codeCanal": oObjectSelected.Vtweg,
+                    "TextCanal": oObjectSelected.Txtca,
+                    "codeFuerzaVenta": oObjectSelected.Vkgrp,
+                    "textFuerzaVenta": oObjectSelected.Txtfv,
+                    "codeDirecccion": "",
+                    "textDirecccion": oObjectSelected.Stras,
+                    "codePuntoVenta": oObjectSelected.Vkbur,
+                    "textPuntoVenta": oObjectSelected.Txtpv,
+                    "codeCondPago": oObjectSelected.Zterm,
+                    "textCondPago": oObjectSelected.Txtcp,
+                    "textFechaEntrega": "",
+                    "codeComprobante": 0,
+                    "textComprobante": "",
+                    "textOrdenCompra": "",
+                    "textObservacion": "",
+                };
+
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
+
+                // var oDetailCliente = values[0].oResults;
+                // var oDireccion = oDetailCliente;
+
+                // $.each(that._groupBy(oDetailCliente,'stras'), function (x, y) {
+				// 	var jDireccion = {
+				// 		"stras": y[0].stras,
+				// 		"Detail": []
+				// 	};
+                //     oDireccion.push(jDireccion);
+				// });
+
+                // that.oModelPedidoVenta.setProperty("/oDireccion", oDetailCliente);
+                // that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
+
                 that._dialogSelectClient.close();
-                that.setFragment("_dialogDetailPedido", this.frgIdDetailPedido, "DetailPedido", this);
+                that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
+                sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
                 console.log(oError);
                 that.getMessageBox("error", that.getI18nText("errorClientDetail"));
 				sap.ui.core.BusyIndicator.hide(0);
 			});
-
-            
         },
-        _getDetailClient: function (sCodeClient) {
+        _getFuerzaVentaCliente: function (sCodeClient) {
 			try{
+                var oResp = {
+                    "sEstado": "E",
+                    "oResults": []
+                };
+
 				return new Promise(function (resolve, reject) {
                     that.getModel("oModelServiceMaestro").read("/ZOSDD_CUSTOM_DATA(p_kunnr='"+sCodeClient+"')/Set?$format=json", {
                         async: false,
                         success: function (data) {
-                            resolve(data);
+                            var cont = 0;
+                            data.results.forEach(function(value, index){
+                                cont ++;
+                                value.codestras = cont.toString();
+                            });
+                            oResp.sEstado = "S";
+                            oResp.oResults = data.results;
+                            resolve(oResp);
                         },
                         error: function (error) {
-                            reject(error);
+                            oResp.sEstado = "S";
+                            oResp.oResults = [];
+                            resolve(oResp);
                         }
                     });
 				});
@@ -411,8 +502,101 @@ sap.ui.define([
 		},
         //Funcionalidades select cliente
 
+        //Funcionalidades Select direccion 
+        //moment
+        onChangeDireccion: function(oEvent){
+            console.log("ex")
+            var oSource = oEvent.getSource();
+            var oSelectedDireccion = that.oModelPedidoVenta.getProperty("/oSelectedDireccion");
+
+            var kSelected=oSource.getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+                oSelectedDireccion.codeFuerzaVenta = "";
+                oSelectedDireccion.textFuerzaVenta = "";
+                oSelectedDireccion.codePuntoVenta = "";
+                oSelectedDireccion.textPuntoVenta = "";
+                oSelectedDireccion.codeCondPago = "";
+                oSelectedDireccion.textCondPago = "";
+                that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
+                return;
+			}
+
+            var oSelectedItem = oSource.getSelectedItem();
+            var oObjectSelectedItem = oSelectedItem.getBindingContext("oModelPedidoVenta").getObject();
+
+            oSelectedDireccion.codeFuerzaVenta = oObjectSelectedItem.vkgrp;
+            oSelectedDireccion.textFuerzaVenta = oObjectSelectedItem.txtfv;
+            oSelectedDireccion.codePuntoVenta = oObjectSelectedItem.vkbur;
+            oSelectedDireccion.textPuntoVenta = oObjectSelectedItem.txtpv;
+            oSelectedDireccion.codeCondPago = oObjectSelectedItem.zterm;
+            oSelectedDireccion.textCondPago = oObjectSelectedItem.txtcp;
+
+            that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
+        },
+
+        _onPressCreatePedidoPrev: function(){
+            var inFuerzaVenta = this._byId("frgIdDetailCliente--inFuerzaVenta");
+            var slDirecciones = this._byId("frgIdDetailCliente--slDirecciones");
+            var inPuntoVenta = this._byId("frgIdDetailCliente--inPuntoVenta");
+            var inFlete = this._byId("frgIdDetailCliente--inFlete");
+            var inCondicionPago = this._byId("frgIdDetailCliente--inCondicionPago");
+            var dtFechaEntrega = this._byId("frgIdDetailCliente--dtFechaEntrega");
+			var rbgComprobante = this._byId("frgIdDetailCliente--rbgComprobante");
+            var inOrdenCompra = this._byId("frgIdDetailCliente--inOrdenCompra");
+            var tardenCompra = this._byId("frgIdDetailCliente--tardenCompra");
+
+            var sKeyDireccion = slDirecciones.getSelectedKey();
+            var sDireccion = slDirecciones.getValue();
+            var sFechaEntrega = dtFechaEntrega.getValue();
+            var iKeyComprobante = rbgComprobante.getSelectedIndex();
+            var sComprobante = rbgComprobante.getSelectedButton().getText();
+            var sOrdenCompra = inOrdenCompra.getValue();
+            var sObservacion = tardenCompra.getValue();
+            
+            // if(this.isEmpty(sKeyDireccion)){
+            //     that.getMessageBox("error", that.getI18nText("errorSelectDireccion"));
+            //     return;
+            // }
+
+            if(this.isEmpty(sFechaEntrega)){
+                this.getMessageBox("error", this.getI18nText("errorSelectFechaEntrega"));
+                return;
+            }
+
+            var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+
+            utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
+                if(value){
+                    Promise.all([that._getUsers()]).then((values) => {
+                        oSelectedCliente.codeDirecccion = sKeyDireccion;
+                        oSelectedCliente.textDirecccion = sDireccion;
+                        oSelectedCliente.textFechaEntrega = sFechaEntrega;
+                        oSelectedCliente.codeComprobante = iKeyComprobante;
+                        oSelectedCliente.textComprobante = sComprobante;
+                        oSelectedCliente.textOrdenCompra = sOrdenCompra;
+                        oSelectedCliente.textObservacion = sObservacion;
+            
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oSelectedCliente);
+                        that.oRouter.navTo("Detail", {
+                            app: "2"
+                        });
+                    }).catch(function (oError) {
+                        console.log(oError);
+                        that.getMessageBox("error", that.getI18nText("errorUserData"));
+                        sap.ui.core.BusyIndicator.hide(0);
+                    });
+                }
+            });
+        },
         _onPressEditPedido: function(){
-            this.setFragment("_dialogDetailPedido", this.frgIdDetailPedido, "DetailPedido", this);
+            this.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
         },
         _onPressEditContact: function(){
             this.setFragment("_dialogEditContact", this.frgIdEditContact, "EditContact", this);

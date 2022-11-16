@@ -17,16 +17,7 @@
     },
     "dataSources": {
       "serviceVendedor": {
-        "uri": "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/metadata.xml",
-          "odataVersion": "2.0"
-        }
-      },
-      "serviceMaestro": {
-        "uri": "/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/",
+        "uri": "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -98,17 +89,17 @@
         "preload": true,
         "settings": {}
       },
-      "oModelServiceMaestro": {
-        "dataSource": "serviceMaestro",
-        "preload": true,
-        "settings": {}
-      },
       "oModelUser": {
         "type": "sap.ui.model.json.JSONModel",
         "preload": true,
         "settings": {}
       },
       "oModelPedidoVenta": {
+        "type": "sap.ui.model.json.JSONModel",
+        "preload": true,
+        "settings": {}
+      },
+      "oModelGetPedidoVenta": {
         "type": "sap.ui.model.json.JSONModel",
         "preload": true,
         "settings": {}

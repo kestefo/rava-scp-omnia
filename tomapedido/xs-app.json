@@ -12,13 +12,7 @@
     {
       "authenticationType": "xsuaa",
       "csrfProtection": false,
-      "source": "^/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/(.*)$",
-      "destination": "LIFE-DEV-110"
-    },
-    {
-      "authenticationType": "xsuaa",
-      "csrfProtection": false,
-      "source": "^/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/(.*)$",
+      "source": "^/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/(.*)$",
       "destination": "LIFE-DEV-110"
     },
     {

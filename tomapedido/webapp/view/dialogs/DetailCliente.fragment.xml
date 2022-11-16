@@ -1,6 +1,7 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:uxap="sap.uxap">
-	<Dialog title="{i18n>titleDialogDetailPedido}" contentHeight="auto" contentWidth="auto" afterOpen="_afterOpenAddPedido">
+	<Dialog contentHeight="auto" contentWidth="auto" afterOpen="_afterOpenAddPedido"
+        title="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeCliente} {oModelPedidoVenta>/DataGeneral/oSelectedCliente/nameCliente}">
         <uxap:ObjectPageHeaderContent>
             <uxap:content>
                 <VBox width="auto">
@@ -22,17 +23,28 @@
                 singleContainerFullSize="false">
                 <f:content>
                     <Label text="{i18n>textFuerzaVenta}"/>
-                    <ComboBox selectedKey="01" id="slFuerzaVenta" items="{oModelPedidoVenta>/DetailSelectFuerzaVenta}" width="100%">
+                    <Input id="inFuerzaVenta" maxLength="40" enabled="false"
+                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFuerzaVenta}">
+                        <layoutData>
+                            <l:GridData span="L3 M5"/>
+                        </layoutData>
+                    </Input>
+                    <!-- <ComboBox id="slFuerzaVenta" selectedKey="01" width="100%"
+                        items="{oModelPedidoVenta>/oFuerzaVenta}">
                         <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    </ComboBox> -->
+                    <Label text="{i18n>textDirecciones}"/>
+                    <ComboBox id="slDirecciones" width="100%"
+                        items="{oModelPedidoVenta>/oDireccion}" change="onChangeDireccion">
+                        <core:Item key="{oModelPedidoVenta>codestras}" text="{oModelPedidoVenta>codestras}-{oModelPedidoVenta>stras}"/>
                     </ComboBox>
                     <Label text="{i18n>textPuntoVenta}"/>
-                    <ComboBox selectedKey="01" id="slPuntoVenta" items="{oModelPedidoVenta>/DetailSelectPuntoVenta}" width="100%">
-                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
-                    </ComboBox>
-                    <Label text="{i18n>textDirecciones}"/>
-                    <ComboBox selectedKey="01" id="slDirecciones" items="{oModelPedidoVenta>/DetailSelectDireccion}" width="100%">
-                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
-                    </ComboBox>
+                    <Input id="inPuntoVenta" maxLength="40" enabled="false"
+                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textPuntoVenta}">
+                        <layoutData>
+                            <l:GridData span="L3 M5"/>
+                        </layoutData>
+                    </Input>
                     <Label text="{i18n>textFlete}"/>
                     <Input id="inFlete" value="{i18n>textDataFlete}" maxLength="40" enabled="false">
                         <layoutData>
@@ -40,9 +52,15 @@
                         </layoutData>
                     </Input>
                     <Label text="{i18n>textCondicionPago}"/>
-                    <ComboBox selectedKey="01" id="slCondicionPago" items="{oModelPedidoVenta>/DetailSelectCondPago}" width="100%">
+                    <Input id="inCondicionPago" maxLength="40" enabled="false"
+                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textCondPago}">
+                        <layoutData>
+                            <l:GridData span="L3 M5"/>
+                        </layoutData>
+                    </Input>
+                    <!-- <ComboBox selectedKey="01" id="slCondicionPago" items="{oModelPedidoVenta>/DetailSelectCondPago}" width="100%">
                         <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
-                    </ComboBox>
+                    </ComboBox> -->
                     <Label text="{i18n>textFechaEntrega}"/>
                     <DatePicker id="dtFechaEntrega" value="{i18n>textDataFechaEntrega}" textAlign="Center" valueFormat="yyyy-MM-dd"
                         displayFormat="dd/MM/yyyy">
@@ -65,7 +83,8 @@
                         <Label text="{i18n>textFooterOrdenCompra}"/>
                     </VBox>
                     <Label text="{i18n>textObservaciones}"/>
-                    <TextArea value=""  placeholder="{i18n>phObservaciones}" showExceededText="true" maxLength="1000" rows="5" width="100%" valueLiveUpdate="false">
+                    <TextArea id="tardenCompra" value=""  placeholder="{i18n>phObservaciones}" showExceededText="true" 
+                        maxLength="1000" rows="5" width="100%" valueLiveUpdate="false">
 						<layoutData>
 				             <l:GridData span="L3 M5"/>
 				        </layoutData>
@@ -74,8 +93,8 @@
             </f:SimpleForm>
         </content>
 		<buttons>
-			<Button text="{i18n>accpetText}" press="_onAcceptDialog" custom:custom="default" type="Accept"/>
-			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+			<Button text="{i18n>continueText}" press="_onPressCreatePedidoPrev" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="DetailClient" type="Default"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

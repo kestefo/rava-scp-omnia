@@ -6,13 +6,13 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/ui/core/Fragment",
 	"sap/ndc/BarcodeScanner",
-	"tomapedido/controller/Service",
+	"tomapedido/services/ServiceOdata",
 	"sap/ui/core/BusyIndicator",
 	"sap/ui/model/json/JSONModel",
 	"tomapedido/model/models",
 	"sap/ui/model/Filter",
 	"tomapedido/model/formatter"
-], function (Controller, History, UIComponent, MessageBox, MessageToast, Fragment, BarcodeScanner, Service, BusyIndicator, JSONModel,
+], function (Controller, History, UIComponent, MessageBox, MessageToast, Fragment, BarcodeScanner, ServiceOdata, BusyIndicator, JSONModel,
 	models, Filter, Formatter) {
 	"use strict";
 	var that;
@@ -276,7 +276,7 @@ sap.ui.define([
 					}
 					if (oAction === sAction && sRoute === "ErrorUpload") {
 						BusyIndicator.show();
-						Service.oFTP("create", "/HeaderFileSet", that.aCreateFile, "", "1", that).then(function (resolve) {
+						ServiceOdata.oFTP("create", "/HeaderFileSet", that.aCreateFile, "", "1", that).then(function (resolve) {
 							BusyIndicator.hide();
 						}, function (error) {
 							BusyIndicator.hide();
@@ -558,12 +558,23 @@ sap.ui.define([
 					this._onClearSelectClient();
 					oSource.getParent().close();
 					break;
+				case "DetailClient":
+					this._onClearSelectClient();
+					this._onClearDetailClient();
+					oSource.getParent().close();
+					break;
 				default:
 					oSource.getParent().close();
 			}
 		},
 		_onClearSelectClient: function(){
-			sap.ui.getCore().byId("frgIdSelectClient--slUsuario").setSelectedKey("");
+			this._byId("frgIdSelectClient--slUsuario").setSelectedKey("");
+		},
+		_onClearDetailClient: function(){
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});
+			this._byId("frgIdDetailCliente--slDirecciones").setSelectedKey("");
+			this._byId("frgIdDetailCliente--rbgComprobante").setSelectedIndex(0);
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);
@@ -625,7 +636,7 @@ sap.ui.define([
 			var booleanValidateDate = Date.parse(dateReverseToString);
 			
 			if (isNaN(booleanValidateDate)) {
-				this.getMessageBox('error', this.getI18nText("errorChangeDatePicker") + sValue);
+				this.getMessageBox('error', this.getI18nText("sErrorChangeDatePicker") + sValue);
                 oSource.setValue("");
                 return;
 			}
@@ -672,6 +683,37 @@ sap.ui.define([
 			}
 			return true;
 		},
+
+		xmlToJson: function(xml) {
+			function parse(node, j) {
+			  var nodeName = node.nodeName.replace(/^.+:/, '').toLowerCase();
+			  var cur = null;
+			  var text = $(node).contents().filter(function(x) {
+				return this.nodeType === 3;
+			  });
+			  if (text[0] && text[0].nodeValue.trim()) {
+				cur = text[0].nodeValue;
+			  } else {
+				cur = {};
+				$.each(node.attributes, function() {
+				  if (this.name.indexOf('xmlns:') !== 0) {
+					cur[this.name.replace(/^.+:/, '')] = this.value;
+				  }
+				});
+				$.each(node.children, function() {
+				  parse(this, cur);
+				});
+			  }
+			  
+			  j[nodeName] = cur;
+			}
+		   
+			var roots = $(xml);
+			var root = roots[roots.length-1];
+			var json = {};
+			parse(root, json);
+			console.log(json);
+		  }
 
 	});
 
