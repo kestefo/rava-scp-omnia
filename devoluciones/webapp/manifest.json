@@ -115,7 +115,7 @@
             "routes": [
                 {
                     "name": "Main",
-                    "pattern": "Main/:app:",
+                    "pattern": ":?query:",
                     "target": [
                         "Main"
                     ]
@@ -137,23 +137,10 @@
                     "target": [
                         "DetalleDevolucion"
                     ]
-                },{
-                    "name": "PrimeraPantalla",
-                    "pattern": ":?query:",
-                    "target": [
-                        "PrimeraPantalla"
-                    ]
                 }
             ],
             "targets": {
-                "PrimeraPantalla": {
-                    "viewType": "XML",
-                    "transition": "slide",
-                    "clearControlAggregation": false,
-                    "viewId": "PrimeraPantalla",
-                    "viewName": "PrimeraPantalla",
-                    "viewLevel": 1
-                },
+                
                 "Main": {
                     "viewType": "XML",
                     "transition": "slide",
