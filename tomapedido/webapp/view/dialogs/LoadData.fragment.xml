@@ -8,7 +8,8 @@
                     id="piAnimationLoadData"
                     displayValue="0%"
                     state="Success"
-                    displayOnly="true"/>
+                    displayOnly="true"
+                    displayAnimation= "false"/>
             </VBox>
         </content>
 		<buttons>

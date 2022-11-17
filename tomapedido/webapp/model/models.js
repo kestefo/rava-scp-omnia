@@ -96,6 +96,28 @@ sap.ui.define([
                 return oModel;
             },
 
+            JsonEstado: function () {
+                var oModel = [
+                    {
+                        "key": "01",
+                        "desc": "PEDIDO"
+                    },
+                    {
+                        "key": "02",
+                        "desc": "ENTREGA"
+                    },
+                    {
+                        "key": "03",
+                        "desc": "DESPACHADO"
+                    },
+                    {
+                        "key": "04",
+                        "desc": "FACTURADO"
+                    }
+                ]
+                return oModel;
+            },
+
             JsonCliente: function () {
                 var oModel = [
                     {
@@ -109,23 +131,7 @@ sap.ui.define([
                 ]
                 return oModel;
             },
-            JsonEstado: function () {
-                var oModel = [
-                    {
-                        "key": "01",
-                        "desc": "Pendiente Creación"
-                    },
-                    {
-                        "key": "02",
-                        "desc": "Creado"
-                    },
-                    {
-                        "key": "03",
-                        "desc": "Cerrado"
-                    }
-                ]
-                return oModel;
-            },
+            
             
             JsonPedidos: function () {
                 var oModel = [

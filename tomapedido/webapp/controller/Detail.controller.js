@@ -21,6 +21,7 @@ sap.ui.define([
         handleRouteMatched: function(){
             Promise.all([]).then(async values => {
 				this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+                this.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
                 this.oModelPedidoVenta.setProperty("/AddSelectFamilia", models.JsonFamilia());
                 var oData = models.JsonProductos();
                 var iCounter = this._byId("siContador").getValue();
@@ -64,7 +65,24 @@ sap.ui.define([
             this.oModelPedidoVenta.setProperty("/visibleTable", false);
             this.setFragment("_dialogAddProducto", this.frgIdAddProducto, "AddProducto", this);
         },
-        _onChangeFamilia:function(){
+        _onChangeFamilia:function(oEvent){
+            var oSource = oEvent.getSource();
+            var oSelectedDireccion = that.oModelGetPedidoVenta.getProperty("/oSelectedDireccion");
+
+            var kSelected=oSource.getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+				}
+                return;
+			}
+
+            var oSelectedItem = oSource.getSelectedItem();
+            var oObjectSelectedItem = oSelectedItem.getBindingContext("oModelPedidoVenta").getObject();
+
             this.oModelPedidoVenta.setProperty("/visibleTable", true);
             this.oModelPedidoVenta.setProperty("/ProductoFamilia", models.JsonProductoFamilia());
         },

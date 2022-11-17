@@ -47,28 +47,9 @@ sap.ui.define([
 			});
         },
         _onbtnRefresh: function(){
-            this.onAfterRendering();
+            this.handleRouteMatched();
         },
         onAfterRendering: function(){
-
-            // Promise.all([that._getUsers()]).then((values) => {
-            //     this.getModel("oModelPedidoVenta").setProperty("/DataGeneral", models.createDataGeneralModel());
-            //     that.oModelVendedor = this.getModel("oModelServiceVendedor");
-            //     that.oModelMaestro = this.getModel("oModelServiceMaestro");
-            //     that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
-            //     that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
-            //     var sCodeUser = values[0].value;
-            //     if(!that.isEmpty(sCodeUser)){
-            //         that.getCargaData(sCodeUser);
-            //     }else{
-            //         that.getMessageBox("error", that.getI18nText("errorUserNoCode"));
-            //     }
-            // }).catch(function (oError) {
-            //     console.log(oError);
-            //     that.getMessageBox("error", that.getI18nText("errorUserData"));
-			// 	sap.ui.core.BusyIndicator.hide(0);
-			// });
-                
         },
         _getUsers: function () {
 			try {
@@ -115,11 +96,12 @@ sap.ui.define([
                 iCantTotal = 0,
                 iCantPorcentageSuccess = 0,
                 iCantError = 0,
+                oFamiliaMateriales = [],
                 sCantPorcentageSuccess = iCantPorcentageSuccess.toString(),
                 oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
 
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([this._getClientes(sCodeUser)]).then(async values => {
+            Promise.all([this._getClientes(sCodeUser), this._getEstado()]).then(async values => {
                 iCantTotal = values.length;
                 iCantSuccess = this.validateService(values);
                 iCantError = iCantTotal-iCantSuccess;
@@ -132,12 +114,23 @@ sap.ui.define([
 
                 var oCliente = values[0].oResults[0].NAVCUSTO.results;
                 var oMateriales = values[0].oResults[0].NAVMATER.results;
+                var oEstado = values[1].oResults;
 
                 that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
-                that.oModelGetPedidoVenta.setProperty("/oMaterialesPorVendedor", oMateriales);
-                
+                that.oModelGetPedidoVenta.setProperty("/oEstado", oEstado);
+
+                $.each(that._groupBy(oMateriales,'Codfa'), function (x, y) {
+					var jFamilia = {
+						"codeFamilia": y[0].Codfa,
+						"textFamilia": y[0].Txtfa,
+                        "materiales": y
+					};
+                    oFamiliaMateriales.push(jFamilia);
+				});
+
+                that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+                that.oModelGetPedidoVenta.setProperty("/oMaterialPorVendedor", oMateriales);
                 sap.ui.core.BusyIndicator.hide(0);
-                console.log(values);
             }).catch(function (oError) {
                 console.log(oError);
 				sap.ui.core.BusyIndicator.hide(0);
@@ -216,30 +209,11 @@ sap.ui.define([
 			try{
 				var user = sUser;
                 var oResp = {
-                    "sEstado": "E",
-                    "oResults": []
+                    "sEstado": "S",
+                    "oResults": models.JsonEstado()
                 };
 				return new Promise(function (resolve, reject) {
-                    if(clouconnector){
-                        that.getModel("oModelServiceVendedor").read("/ZOSDD_CUSTOM_DATA", {
-                            async: false,
-                            // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
-                            success: function (data) {
-                                oResp.sEstado = "S";
-                                oResp.oResults = data.results;
-                                resolve(oResp);
-                            },
-                            error: function (error) {
-                                oResp.sEstado = "S";
-                                oResp.oResults = models.JsonEstado();
-                                resolve(oResp);
-                            }
-                        });
-                    }else{
-                        oResp.sEstado = "E";
-                        oResp.oResults = models.JsonEstado();
-                        resolve(oResp);
-                    }
+                    resolve(oResp);
 				});
 			}catch(oError){
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
@@ -446,20 +420,6 @@ sap.ui.define([
 
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
 
-                // var oDetailCliente = values[0].oResults;
-                // var oDireccion = oDetailCliente;
-
-                // $.each(that._groupBy(oDetailCliente,'stras'), function (x, y) {
-				// 	var jDireccion = {
-				// 		"stras": y[0].stras,
-				// 		"Detail": []
-				// 	};
-                //     oDireccion.push(jDireccion);
-				// });
-
-                // that.oModelPedidoVenta.setProperty("/oDireccion", oDetailCliente);
-                // that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
-
                 that._dialogSelectClient.close();
                 that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
                 sap.ui.core.BusyIndicator.hide(0);
@@ -505,7 +465,6 @@ sap.ui.define([
         //Funcionalidades Select direccion 
         //moment
         onChangeDireccion: function(oEvent){
-            console.log("ex")
             var oSource = oEvent.getSource();
             var oSelectedDireccion = that.oModelPedidoVenta.getProperty("/oSelectedDireccion");
 
@@ -574,7 +533,7 @@ sap.ui.define([
 
             utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
                 if(value){
-                    Promise.all([that._getUsers()]).then((values) => {
+                    Promise.all([]).then((values) => {
                         oSelectedCliente.codeDirecccion = sKeyDireccion;
                         oSelectedCliente.textDirecccion = sDireccion;
                         oSelectedCliente.textFechaEntrega = sFechaEntrega;
@@ -584,6 +543,11 @@ sap.ui.define([
                         oSelectedCliente.textObservacion = sObservacion;
             
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oSelectedCliente);
+                        
+                        that._onClearSelectClient();
+					    that._onClearDetailClient();
+                        that["_dialogDetailCliente"].close()
+
                         that.oRouter.navTo("Detail", {
                             app: "2"
                         });

@@ -5,8 +5,9 @@
             <VBox>
                 <HBox width="auto" class="sapUiSmallMargin" alignItems="Center" justifyContent="Center">
                     <Text text="{i18n>textFamilia}"/>
-                    <ComboBox selectedKey="01" id="slFamilia" items="{oModelPedidoVenta>/AddSelectFamilia}" width="100%" change="_onChangeFamilia">
-                        <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                    <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia"
+                        items="{oModelGetPedidoVenta>/oFamiliaMaterial}">
+                        <core:Item key="{oModelGetPedidoVenta>codeFamilia}" text="{oModelGetPedidoVenta>textFamilia}"/>
                     </ComboBox>
                 </HBox>
                 <Table items="{oModelPedidoVenta>/ProductoFamilia}" visible="{oModelPedidoVenta>/visibleTable}" mode="MultiSelect" growingThreshold="20">
