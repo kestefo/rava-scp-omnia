@@ -12,7 +12,12 @@
     xmlns:u="sap.ui.unified"
     xmlns="sap.m"
 >
-    <Page id="DetalleDev" showHeader="true" showNavButton="false" title="Detalle de Nota de Crédito" >
+    <Page id="DetalleDev" showHeader="true" showNavButton="false" title="Detalle de Nota de Crédito">
+        <subHeader>
+            <OverflowToolbar>
+                <Button text="{i18n>VolverText}" visible="true" press="pressVolverDetalle" type="Default" icon="sap-icon://nav-back" />
+            </OverflowToolbar>
+        </subHeader>
         <content>
             <fb:FilterBar id="filter" showClearOnFB="false" clear="onClear" showFilterConfiguration="false" search="onBuscar" useToolbar="false" showGoOnFB="false" showRestoreButton="false">
                 <fb:filterGroupItems>
@@ -23,7 +28,7 @@
                     </fb:FilterGroupItem>
                     <fb:FilterGroupItem name="idMotivos01" groupName="Filters" label="{i18n>txtMotivo}" visibleInFilterBar="true">
                         <fb:control>
-                            <Input value="{oModelDevolucion>/DescripMotivo}" editable="{oModelDevolucion>/editableDescripMot}"/>
+                            <Input value="{oModelDevolucion>/DescripMotivo}" editable="{oModelDevolucion>/editableDescripMot}" />
                         </fb:control>
                     </fb:FilterGroupItem>
                 </fb:filterGroupItems>
@@ -63,25 +68,15 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-                <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto"
-			height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
-				<items>
-					<Text text="" width="" wrapping="false"/>
-					<Text text="{i18n>titleTotal}" wrapping="false" width="auto" textAlign="Initial"  />
-					<Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="auto" textAlign="Center"/>
-					<Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="auto" textAlign="Center" visible="true"/>
-					
-				</items>
-			</VBox>
+                <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
+                    <items>
+                        <Text text="" width="" wrapping="false" />
+                        <Text text="{i18n>titleTotal}" wrapping="false" width="auto" textAlign="Initial" />
+                        <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="auto" textAlign="Center" />
+                        <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="auto" textAlign="Center" visible="true" />
+                    </items>
+                </VBox>
             </VBox>
         </content>
-
-        <OverflowToolbar>
-            <content>
-                <ToolbarSpacer />
-                <!-- <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" type="Accept" /> -->
-                <Button text="{i18n>VolverText}" visible="true" press="pressVolverDetalle" type="Default" />
-            </content>
-        </OverflowToolbar>
     </Page>
 </mvc:View>
