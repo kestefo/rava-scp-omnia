@@ -30,13 +30,13 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
         onAfterRendering: function () {
             var oView			=this.getView();
 			var contadorGlobal	= oView.getModel("contadorGlobal").getProperty("/contador");
-            if (contadorGlobal === 1) {
-            oView.getModel("contadorGlobal").setProperty("/contador", 2);
+            // if (contadorGlobal === 1) {
+            // oView.getModel("contadorGlobal").setProperty("/contador", 2);
 
-            }else if (contadorGlobal === 0){
-                this.getOwnerComponent().getRouter().navTo("Main");
-				return;
-            }
+            // }else if (contadorGlobal === 0){
+            //     this.getOwnerComponent().getRouter().navTo("Main");
+			// 	return;
+            // }
             // this.getOwnerComponent().getRouter().navTo("Main");
         },
         _SearchPedido:function(){

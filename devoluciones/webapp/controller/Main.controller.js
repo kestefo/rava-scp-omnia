@@ -32,15 +32,14 @@ sap.ui.define([
 
             handleRouteMatched: function () {
                Promise.all([that._getUsers()]).then((values) => {
+                    sap.ui.core.BusyIndicator.show();
                     this.oModelDevolucion = this.getModel("oModelDevolucion");
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
                     var sCodeUser = values[0].value;
                     if(!that.isEmpty(sCodeUser)){
                         that.filtroCliente(sCodeUser);
-                        that.onFiltroFacturaBole(sCodeUser);
-                        that.consultaProduct();
-                        that.consultaDatosMarca();
-                        that._getUsers();
+                       
+                        
                     }else{
                         that.getMessageBox("error", that.getI18nText("errorUserNoCode"));
                     }
@@ -67,6 +66,10 @@ sap.ui.define([
             //     }
 
             // },
+
+            _onbtnRefresh:function(){
+                this.handleRouteMatched();
+            },
             _getUsers: function () {
                 try {
                     var sMail = this.getUserLoged();
@@ -123,7 +126,8 @@ sap.ui.define([
                         success: function (data, textStatus, jqXHR) {
                             var datos = data.d.results[0].NAVCUSTO;
                             oModelDevolucion.setProperty("/AddSelectUser", datos.results);
-                            sap.ui.core.BusyIndicator.hide(0);
+                            that.consultaProduct(sCodeUser);
+                            
     
                         },
                         error: function () {
@@ -239,11 +243,22 @@ sap.ui.define([
                
 
             },
+            onrefreshProduct:function(){
+
+                var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
+                var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+                sap.ui.core.BusyIndicator.show();
+               this.consultaProduct(sCodeUser);
+               MessageBox.success(that.getI18nText("sucessActualizacion"));
+               
+
+            },
 
             filtroCliente: function (sCodeUser) {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var model = new sap.ui.model.json.JSONModel();
+                var that = this;
                 sap.ui.core.BusyIndicator.show();
                 var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
                 jQuery.ajax({
@@ -258,7 +273,8 @@ sap.ui.define([
                         success: function (data, textStatus, jqXHR) {
                             var datos = data.d.results[0].NAVCUSTO;
                             oModelDevolucion.setProperty("/FiltroCliente", datos.results);
-                            sap.ui.core.BusyIndicator.hide(0);
+                            that.onFiltroFacturaBole(sCodeUser);
+                            
     
                         },
                         error: function () {
@@ -409,13 +425,37 @@ sap.ui.define([
             consultaDatosMarca: function () {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
+                sap.ui.core.BusyIndicator.show();
                 oModelDevolucion.setProperty("/AddSelectMarca", models.JsonMarcaProduct());
                 oModelDevolucion.setProperty("/AddSelectProducto", models.JsonMarcaProduct());//CRomero
+                sap.ui.core.BusyIndicator.hide(0);
             },
-            consultaProduct: function () {
+            consultaProduct: function (sCodeUser) {
+                sap.ui.core.BusyIndicator.show();
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
-                oModelDevolucion.setProperty("/AddNombreProduct", models.JsonUser());//CRomero
+                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
+                    jQuery.ajax({
+                        type: "GET",
+                        cache: false,
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        contentType: "application/json",
+                        url: url,
+                        async: true,
+                        success: function (data, textStatus, jqXHR) {
+                            var datos = data.d.results[0].NAVCUSTO;
+                            
+                            that.oModelDevolucion.setProperty("/AddNombreProduct", datos.results);
+                            that.consultaDatosMarca();
+
+                        },
+                        error: function () {
+                            MessageBox.error("Ocurrio un error al obtener los datos");
+                        }
+                    });
+                
             },
           
             _onNavBack: function () {

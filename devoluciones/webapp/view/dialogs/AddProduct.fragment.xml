@@ -6,14 +6,14 @@
                     <VBox width="auto" class="sapUiSmallMargin">
                         <Text text="{i18n>titleAddDescripcionRuc}" />
                         <ComboBox id="slRuc" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeProducto" selectedKey="{oModelDevolucion>/keyProducto}">
-                            <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}" />
+                            <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Kunnr} {oModelDevolucion>Namec}" />
                         </ComboBox>
 
                         <Button text="{i18n>txtbtnBuscar}" visible="true" press="BusquedaProducto" custom:custom="closeClient" type="Emphasized"  icon="sap-icon://search"/>
                     </VBox>
                 </content>
                 <headerContent>
-                    <Button text="" press="onGoHome" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
+                    <Button text="" press="onrefreshProduct" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
                 </headerContent>
             </Page>
         </NavContainer>
