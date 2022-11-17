@@ -21,7 +21,16 @@ sap.ui.define([
 	return Controller.extend("devoluciones.controller.BaseController", {
 		formatter: Formatter,
 
-        
+        local: sap.ushell.Container === undefined ? true : false,
+        getUserLoged: function(){
+			var user = "";
+			if(this.local){// cambio solo para la prueba en local
+				user = "liderdeproyecto1@omniasolution.com";
+			}else{
+				user = sap.ushell.Container.getService("UserInfo").getUser().getEmail();
+			}
+			return user;
+		},
         _onbtnHome:function(){
             that = this;
             MessageBox.warning(this.getI18nText("textbtnHome"), {

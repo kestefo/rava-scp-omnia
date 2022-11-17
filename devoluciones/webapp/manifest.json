@@ -93,7 +93,11 @@
                 "type": "sap.ui.model.json.JSONModel",
                 "preload": true,
                 "settings": {}
-            }
+            }, "oModelUser": {
+                "type": "sap.ui.model.json.JSONModel",
+                "preload": true,
+                "settings": {}
+              }
         },
         "resources": {
             "css": [

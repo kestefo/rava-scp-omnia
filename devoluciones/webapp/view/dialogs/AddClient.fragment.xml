@@ -5,21 +5,20 @@
                 <VBox width="auto" class="sapUiSmallMargin">
                     <Text text="{i18n>textDetailAddCliente}" />
                     <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeFactBol" selectedKey="{oModelDevolucion>/KeyAddUser}">
-                        <core:Item key="{oModelDevolucion>RUC}" text="{oModelDevolucion>Descripcion}" />
+                        <core:Item key="{oModelDevolucion>Kunnr}" text=" {oModelDevolucion>Kunnr} {oModelDevolucion>Namec}" />
                     </ComboBox>
 
-                    <Button text="{i18n>titlebtnBuscar}" type="Emphasized" class="sapUiMediumMarginEnd" press="BusquedaFactBol" icon="sap-icon://search"/>
+                    <Button text="{i18n>titlebtnBuscar}" type="Emphasized" class="sapUiMediumMarginEnd" press="BusquedaFactBol" icon="sap-icon://search" />
                 </VBox>
 
                 <headerContent>
-                    <Button text="" press="onGoHome" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
+                    <Button text="" press="onRefreshCliente" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
                 </headerContent>
             </Page>
         </NavContainer>
         <buttons>
             <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" custom:custom="default" type="Accept" />
             <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" custom:custom="closeClient" type="Default" />
-            
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

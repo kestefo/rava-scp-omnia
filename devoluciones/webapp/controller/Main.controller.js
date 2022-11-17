@@ -5,6 +5,7 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "../libs/html2canvas",
+    
 
 ],
     /**
@@ -18,84 +19,121 @@ sap.ui.define([
             onInit: function () {
                 that = this;
                 this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
+                // this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
 
                 this.frgIdAddClient = "frgIdAddClient";
                 this.frgIdAddProduct = "frgIdAddProduct";
                 this.frgaddConsultaFact = "frgAddconsultaFac";//CRomero
                 this.fragaddDetalleFact = "frgAddDetalleFact";//CRomero
+                this.handleRouteMatched();
 
-
-
-            },
-
-            onAfterRendering() {
-                var oView = this.getView();
-                var that = this;
-                var ModelProyect = oView.getModel("oModelDevolucion");
-                var contadorGlobal = oView.getModel("contadorGlobal").getProperty("/contador");
-                if (contadorGlobal === 0) {
-                    oView.getModel("contadorGlobal").setProperty("/contador", 1);
-
-                    this.filtroCliente();
-                    this.consultaProduct();
-                    this.consultaDatosMarca();
-                    this._getUsers();
-
-                }
-
-            },
-            _getUsers: function () {
-                // try {
-
-                //     var sPath = '/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/';
-                //     const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
-                //     return new Promise(function (resolve, reject) {
-                //         var model = new sap.ui.model.json.JSONModel(),
-                //             arrayUsers;
-                //         model.loadData(sUrl, null, true, "GET", null, null, {
-                //             "Content-Type": "application/scim+json"
-                //         }).then(() => {
-                //             var oDataTemp = model.getData();
-                //             resolve(oDataTemp);
-                //         }).catch(err => {
-                //             console.log("Error:" + err.message);
-                //             reject(oError);
-                //         });
-                //     });
-
-                // } catch (oError) {
-                //     that.getMessageBox("error", that.getI18nText("sErrorTry"));
-                // }
-
-                var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/"; 
-                jQuery.ajax({
-                    type: "GET",
-                    cache: false,
-                    headers: {
-                        "Accept": "application/json"
-                    },
-                    contentType: "application/json",
-                    url: url,
-                    async: true,
-                    success: function (data, textStatus, jqXHR) {
-                        var datos = data.d;
-
-                    },
-                    error: function () {
-                        MessageBox.error("Ocurrio un error al obtener los datos");
-                    }
-                });
 
             },
 
             handleRouteMatched: function () {
-                Promise.all([]).then(async values => {
+               Promise.all([that._getUsers()]).then((values) => {
                     this.oModelDevolucion = this.getModel("oModelDevolucion");
-                    this.oModelDevolucion.setProperty("/AddSelectUser", models.JsonUser());
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
+                    var sCodeUser = values[0].value;
+                    if(!that.isEmpty(sCodeUser)){
+                        that.filtroCliente(sCodeUser);
+                        that.onFiltroFacturaBole(sCodeUser);
+                        that.consultaProduct();
+                        that.consultaDatosMarca();
+                        that._getUsers();
+                    }else{
+                        that.getMessageBox("error", that.getI18nText("errorUserNoCode"));
+                    }
+                }).catch(function (oError) {
+                    console.log(oError);
+                    that.getMessageBox("error", that.getI18nText("errorUserData"));
+                    sap.ui.core.BusyIndicator.hide(0);
                 });
             },
+
+
+
+            // onAfterRendering() {
+            //     var oView = this.getView();
+            //     var that = this;
+            //     var ModelProyect = oView.getModel("oModelDevolucion");
+            //     var contadorGlobal = oView.getModel("contadorGlobal").getProperty("/contador");
+            //     if (contadorGlobal === 0) {
+            //         oView.getModel("contadorGlobal").setProperty("/contador", 1);
+
+            //         // this.filtroCliente();
+                    
+
+            //     }
+
+            // },
+            _getUsers: function () {
+                try {
+                    var sMail = this.getUserLoged();
+                    var model = new sap.ui.model.json.JSONModel();
+                    return new Promise(function (resolve, reject) {
+                        if(that.local){// cambio solo para la prueba en local
+                            var sPath = "/service/scim/Users?filter=emails eq '" + sMail + "'";
+                            const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);
+                            model.loadData(sUrl, null, true, "GET", null, null, {
+                                "Content-Type": "application/scim+json"
+                            }).then(() => {
+                                var oDataTemp = model.getData();
+                                that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                                resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                            }).catch(err => {
+                                console.log("Error:" + err.message);
+                                reject(err);
+                            });
+                        }else{
+                            var sPath = jQuery.sap.getModulePath("devoluciones") +"/API-USER-IAS/service/scim/Users?filter=emails eq '" + sMail + "'";
+                            model.loadData(sPath, null, true, "GET", null, null, {
+                                "Content-Type": "application/scim+json"
+                            }).then(() => {
+                                var oDataTemp = model.getData();
+                                that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                                resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
+                            }).catch(err => {
+                                console.log("Error:" + err.message);
+                                reject(err);
+                            });
+                        }
+                    });
+                    
+                } catch (oError) {
+                    that.getMessageBox("error", that.getI18nText("sErrorTry"));
+                }	
+            },
+
+            onFiltroFacturaBole:function(sCodeUser){
+                var oView = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
+                var model = new sap.ui.model.json.JSONModel();
+                sap.ui.core.BusyIndicator.show();
+                var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
+                jQuery.ajax({
+                        type: "GET",
+                        cache: false,
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        contentType: "application/json",
+                        url: sPath,
+                        async: true,
+                        success: function (data, textStatus, jqXHR) {
+                            var datos = data.d.results[0].NAVCUSTO;
+                            oModelDevolucion.setProperty("/AddSelectUser", datos.results);
+                            sap.ui.core.BusyIndicator.hide(0);
+    
+                        },
+                        error: function () {
+                            MessageBox.error("Ocurrio un error al obtener los datos");
+                            sap.ui.core.BusyIndicator.hide(0);
+                        }
+                    });
+               
+            },
+
             onpresPrint: function () {
                 window.print()
             },
@@ -132,10 +170,11 @@ sap.ui.define([
                 var that = this;
                 var mensaje = "";
                 var RegExPattern = /^(?:(?:(?:0?[1-9]|1\d|2[0-8])[/](?:0?[1-9]|1[0-2])|(?:29|30)[/](?:0?[13-9]|1[0-2])|31[/](?:0?[13578]|1[02]))[/](?:0{2,3}[1-9]|0{1,2}[1-9]\d|0?[1-9]\d{2}|[1-9]\d{3})|29[/]0?2[/](?:\d{1,2}(?:0[48]|[2468][048]|[13579][26])|(?:0?[48]|[13579][26]|[2468][048])00))$/;
-
+                sap.ui.core.BusyIndicator.show();
                 if ((FechaComprobante1.match(RegExPattern) === null)) {
                     contador++;
                     mensaje = this.getI18nText("txtValidacionFecha");
+                    
                 } else if (FechaComprobante1 === "" || FechaComprobante1 === undefined) {
                     contador++;
                     mensaje = this.getI18nText("txtValidacionBuscar");
@@ -157,6 +196,7 @@ sap.ui.define([
 
                 if (contador > 0) {
                     MessageBox.error(mensaje);
+                    sap.ui.core.BusyIndicator.hide(0);
                     return;
                 }
 
@@ -186,82 +226,46 @@ sap.ui.define([
                 oModelDevolucion.setProperty("/KeyCliente", "");
                 oView.byId("formatFecha").setValue("");
                 oView.byId("sfechaComprobante20").setValue("");
+                sap.ui.core.BusyIndicator.hide(0);
 
             },
 
-            filtroCliente: function () {
+            onRefreshCliente:function(){
+                var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
+                var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+                sap.ui.core.BusyIndicator.show();
+               this.onFiltroFacturaBole(sCodeUser);
+               MessageBox.success(that.getI18nText("sucessActualizacion"));
+               
+
+            },
+
+            filtroCliente: function (sCodeUser) {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var model = new sap.ui.model.json.JSONModel();
-                ///sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/ZOSDD_CUSTOM_DATA(p_kunnr='1000000000')/Set?$format=json
-                //oModelDevolucion.setProperty("/FiltroCliente", models.jsonFiltroClient());
-
-                var sPath = "/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/ZOSDD_CUSTOM_DATA(p_kunnr='1000000000')/Set";
-                model.loadData(sPath, null, true, "GET", null, null, {
-                    "Content-Type": "application/json"
-                }).then(() => {
-                    var oDataTemp = model.getData();
-                    that.getModel("oModelUser").setProperty("/FiltroCliente", oDataTemp.d.results);
-                    // resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
-                }).catch(err => {
-                    console.log("Error:" + err.message);
-                    //reject(err);
-                });
-
-                var sPath = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set";
-                model.loadData(sPath, null, true, "GET", null, null, {
-                    "Content-Type": "application/json"
-                }).then(() => {
-                    var oDataTemp = model.getData();
-                    that.getModel("oModelUser").setProperty("/FiltroCliente", oDataTemp.d.results);
-                    // resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
-                }).catch(err => {
-                    console.log("Error:" + err.message);
-                    //reject(err);
-                });
-
-                // var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_DATA_CDS/ZOSDD_CUSTOM_DATA(p_kunnr='1000000000')/Set?$format=json";
-                // jQuery.ajax({
-                //     type: "GET",
-                //     cache: false,
-                //     headers: {
-                //         "Accept": "application/json"
-                //     },
-                //     contentType: "application/json",
-                //     url: url,
-                //     async: true,
-                //     success: function (data, textStatus, jqXHR) {
-                //         var datos = data.d;
-                //         that.oModelDevolucion.setProperty("/FiltroCliente",datos);
-                        
-
-                //     },
-                //     error: function () {
-                //         MessageBox.error("Ocurrio un error al obtener los datos");
-                //     }
-                // });
-
-                // var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/ZOSDD_CUSTOM_VENDOR(p_vende='1000000000')/Set?$format=json";
-                // jQuery.ajax({
-                //     type: "GET",
-                //     cache: false,
-                //     headers: {
-                //         "Accept": "application/json"
-                //     },
-                //     contentType: "application/json",
-                //     url: url,
-                //     async: true,
-                //     success: function (data, textStatus, jqXHR) {
-                //         var datos = data.d;
-                //         //that.oModelDevolucion.setProperty("/FiltroCliente",datos);
-                        
-
-                //     },
-                //     error: function () {
-                //         MessageBox.error("Ocurrio un error al obtener los datos");
-                //     }
-                // });
-
+                sap.ui.core.BusyIndicator.show();
+                var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
+                jQuery.ajax({
+                        type: "GET",
+                        cache: false,
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        contentType: "application/json",
+                        url: sPath,
+                        async: true,
+                        success: function (data, textStatus, jqXHR) {
+                            var datos = data.d.results[0].NAVCUSTO;
+                            oModelDevolucion.setProperty("/FiltroCliente", datos.results);
+                            sap.ui.core.BusyIndicator.hide(0);
+    
+                        },
+                        error: function () {
+                            MessageBox.error("Ocurrio un error al obtener los datos");
+                            sap.ui.core.BusyIndicator.hide(0);
+                        }
+                    });
 
             },
 
