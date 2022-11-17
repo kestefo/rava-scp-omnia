@@ -37,8 +37,8 @@
                         <fb:FilterItem name="E" label="{i18n>lblEstado}">
                             <fb:control>
                                 <ComboBox id="cbFilterEstado" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sEstado}" 
-                                    items="{oModelPedidoVenta>/oEstado}" change="onValidateChange">
-                                    <core:ListItem key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
+                                    items="{oModelGetPedidoVenta>/oEstado}" change="onValidateChange">
+                                    <core:ListItem key="{oModelGetPedidoVenta>key}" text="{oModelGetPedidoVenta>desc}"/>
                                 </ComboBox>
                             </fb:control>
                         </fb:FilterItem>
