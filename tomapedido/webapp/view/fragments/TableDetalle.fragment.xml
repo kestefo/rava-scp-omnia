@@ -3,11 +3,11 @@
     <Table id="tbProductos" items="{oModelPedidoVenta>/ProductoCreados}"  mode="MultiSelect" growingThreshold="20">
         <headerToolbar>
             <Toolbar>
-                <Label text="{i18n>titleTableDetalle1}"/>
-                <StepInput id="siContador" change="_onChangeCounter" value="1" width="5rem" min="0" max="50"/>
+                <!-- <Label text="{i18n>titleTableDetalle1}"/>
+                <StepInput id="siContador" change="_onChangeCounter" value="1" width="5rem" min="0" max="50"/> -->
                 <ToolbarSpacer/>
                 <Text text="{i18n>titleTableBuscar}" width="auto"/>
-                <Input value="" width="6rem"></Input>
+                <Input value="" width="auto"></Input>
             </Toolbar>
         </headerToolbar>
         <columns>

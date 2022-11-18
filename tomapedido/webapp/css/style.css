@@ -1,1 +1,11 @@
 /* Enter your custom styles here */
+.MyTextHeaderSize {
+	font-size : 1.17rem;
+}
+.MyTextSize {
+	font-size : 1.12rem;
+}
+
+.MyTextLabelSize {
+	font-size : 1.15rem;
+}

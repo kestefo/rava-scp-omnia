@@ -7,7 +7,7 @@
                 <VBox width="auto">
                     <HBox width="auto" justifyContent="SpaceBetween">
                         <Title text="{i18n>textDatosContacto}" level="H1" />
-                        <Button press="_onPressEditContact" text="{i18n>txtbtnEditar}" icon="sap-icon://edit" tooltip="{i18n>tooltipbtnEditar}"/>
+                        <!-- <Button press="_onPressEditContact" text="{i18n>txtbtnEditar}" icon="sap-icon://edit" tooltip="{i18n>tooltipbtnEditar}"/> -->
                     </HBox>
                     <HBox>
                         <Text text="{i18n>textEmail}:{i18n>textDataEmail}"/>
@@ -22,9 +22,9 @@
                 adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"
                 singleContainerFullSize="false">
                 <f:content>
-                    <Label text="{i18n>textFuerzaVenta}"/>
-                    <Input id="inFuerzaVenta" maxLength="40" enabled="false"
-                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFuerzaVenta}">
+                    <Label text="{i18n>textGrupoCliente}"/>
+                    <Input id="inGrupoCliente" maxLength="40" enabled="false"
+                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textGrupoCliente}">
                         <layoutData>
                             <l:GridData span="L3 M5"/>
                         </layoutData>
@@ -34,9 +34,9 @@
                         <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
                     </ComboBox> -->
                     <Label text="{i18n>textDirecciones}"/>
-                    <ComboBox id="slDirecciones" width="100%"
-                        items="{oModelPedidoVenta>/oDireccion}" change="onChangeDireccion">
-                        <core:Item key="{oModelPedidoVenta>codestras}" text="{oModelPedidoVenta>codestras}-{oModelPedidoVenta>stras}"/>
+                    <ComboBox id="slDirecciones" width="100%" selectedKey="01"
+                        items="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/oDireccion}">
+                        <core:Item key="{oModelPedidoVenta>sKey}" text="{oModelPedidoVenta>sDireccion}"/>
                     </ComboBox>
                     <Label text="{i18n>textPuntoVenta}"/>
                     <Input id="inPuntoVenta" maxLength="40" enabled="false"

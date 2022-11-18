@@ -500,11 +500,27 @@ sap.ui.define([
 		_onCloseDialog: function (oEvent) {
 			oEvent.destroy();
 		},
+		formatInteger: function (num) {
+			if (num) {
+				var x = parseInt(num);
+				x = isNaN(x) ? '0' : x;
+				return x.toString();
+			}
+		},
 		reverseStringForParameter: function(str,variable) {
 			var splitString = str.split(variable); 
 			var reverseArray = splitString.reverse(); 
 			var joinArray = reverseArray.join(variable); 
 			return joinArray;
+		},
+		currencyFormat: function (value) {
+			if(value){
+				var sNumberReplace = value.replaceAll(",","");
+				var iNumber = parseFloat(sNumberReplace);
+				return iNumber.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			}else{
+				return "0.00";
+			}
 		},
 		onValidateChange: function(oEvent){
 			var kSelected=oEvent.getSource().getSelectedKey();
@@ -555,26 +571,45 @@ sap.ui.define([
 			var sCustom = oSource.data("custom");
 			switch (sCustom) {
 				case "SelectClient":
-					this._onClearSelectClient();
+					this._onClearComponentSelectClient();
 					oSource.getParent().close();
 					break;
 				case "DetailClient":
-					this._onClearSelectClient();
-					this._onClearDetailClient();
+					this._onClearComponentSelectClient();
+					this._onClearComponentDetailClient();
+					this._onClearDataDetailClient();
+					oSource.getParent().close();
+					break;
+				case "AddManualProduct":
+					this._onClearDataAddManualProduct();
+					this._onClearComponentAddManualProduct();
 					oSource.getParent().close();
 					break;
 				default:
 					oSource.getParent().close();
 			}
 		},
-		_onClearSelectClient: function(){
+		_onClearComponentSelectClient: function(){
 			this._byId("frgIdSelectClient--slUsuario").setSelectedKey("");
 		},
-		_onClearDetailClient: function(){
-			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
-			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});
+		_onClearComponentDetailClient: function(){
 			this._byId("frgIdDetailCliente--slDirecciones").setSelectedKey("");
 			this._byId("frgIdDetailCliente--rbgComprobante").setSelectedIndex(0);
+		},
+		_onClearDataDetailClient: function(){
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});
+		},
+		_onClearComponentAddManualProduct: function(){
+			this._byId("frgIdAddManualProduct--slFamilia").setSelectedKey("");
+			this._byId("frgIdAddManualProduct--tbMaterialesManual").removeSelections(true);
+            this._byId("frgIdAddManualProduct--tbMaterialesManual").setVisible(false);
+			this._byId("frgIdAddManualProduct--btnNextAddManualProduct").setVisible(true);
+			this._byId("frgIdAddManualProduct--btnAcceptAddManualProduct").setVisible(false);
+		},
+		_onClearDataAddManualProduct: function(){
+            this.oModelGetPedidoVenta.setProperty("/oMaterialFamiliaSelected", []);
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);

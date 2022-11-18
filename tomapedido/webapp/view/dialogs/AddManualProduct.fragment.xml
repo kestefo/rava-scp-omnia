@@ -5,12 +5,14 @@
             <VBox>
                 <HBox width="auto" class="sapUiSmallMargin" alignItems="Center" justifyContent="Center">
                     <Text text="{i18n>textFamilia}"/>
+                    <!-- <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia" -->
                     <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia"
                         items="{oModelGetPedidoVenta>/oFamiliaMaterial}">
                         <core:Item key="{oModelGetPedidoVenta>codeFamilia}" text="{oModelGetPedidoVenta>textFamilia}"/>
                     </ComboBox>
                 </HBox>
-                <Table items="{oModelPedidoVenta>/ProductoFamilia}" visible="{oModelPedidoVenta>/visibleTable}" mode="MultiSelect" growingThreshold="20">
+                <Table id="tbMaterialesManual" mode="MultiSelect" growingThreshold="20"
+                    items="{oModelGetPedidoVenta>/oMaterialFamiliaSelected}">
                     <columns>
                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
@@ -41,14 +43,14 @@
                     <items>
                         <ColumnListItem type="Inactive">
                             <cells>
-                                <Text text="{oModelPedidoVenta>producto}"/>
-                                <Text text="{oModelPedidoVenta>precio}"/>
-                                <Text text="{oModelPedidoVenta>stock}"/>
+                                <Text text="{oModelGetPedidoVenta>Maktg}"/>
+                                <Text text="{path:'oModelGetPedidoVenta>Kbetr', formatter:'.currencyFormat'}"/>
+                                <Text text="{path:'oModelGetPedidoVenta>Labst', formatter:'.formatInteger'}"/>
                                 <HBox>
-                                    <ObjectStatus icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>state}" />
-                                    <Text text="{oModelPedidoVenta>unicaja}"/>
+                                    <ObjectStatus icon="{oModelGetPedidoVenta>icon}" state="{oModelGetPedidoVenta>state}" />
+                                    <Text text="{oModelGetPedidoVenta>Meins}"/>
                                 </HBox>
-                                <Input value="{oModelPedidoVenta>cantidad}" width="auto" liveChange="_onLiveChangeCantidad"></Input>
+                                <Input value="{oModelGetPedidoVenta>cantidad}" width="auto" liveChange="_onLiveChangeCantidad"></Input>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -56,8 +58,9 @@
             </VBox>
         </content>
 		<buttons>
-			<Button text="{i18n>accpetText}" press="_onAcceptPedido" custom:custom="default" type="Accept"/>
-			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+			<Button id="btnNextAddManualProduct" text="{i18n>nextText}" press="_onSelectFamilia" custom:custom="default" type="Accept"/>
+            <Button id="btnAcceptAddManualProduct" text="{i18n>confirmProductText}" press="_onAcceptPedido" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>returnText}" press="_onPressClose" custom:custom="AddManualProduct" type="Default"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

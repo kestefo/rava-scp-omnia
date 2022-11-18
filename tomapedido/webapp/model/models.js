@@ -28,8 +28,11 @@ sap.ui.define([
                         sCliente: "",
                         sEstado: "",
                     },
-                    objects:{},
-                    oSelectedCliente:{}
+                    sNumPedido: "",
+                    sStatus: "",
+                    oSelectedCliente:{},
+                    oSelectedLineaCredito:{},
+                    öMaterial:[]
                 };
                 return oModel;
             },

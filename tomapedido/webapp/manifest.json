@@ -104,6 +104,11 @@
         "preload": true,
         "settings": {}
       },
+      "oModelSavePedidoVenta": {
+        "type": "sap.ui.model.json.JSONModel",
+        "preload": true,
+        "settings": {}
+      },
       "": {
         "preload": true,
         "settings": {

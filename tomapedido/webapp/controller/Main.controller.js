@@ -34,6 +34,9 @@ sap.ui.define([
                 that.oModelMaestro = this.getModel("oModelServiceMaestro");
                 that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
                 that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
+                that.oModelSavePedidoVenta = this.getModel("oModelSavePedidoVenta");
+
+                that.oModelSavePedidoVenta.setProperty("/", []);
                 var sCodeUser = values[0].value;
                 if(!that.isEmpty(sCodeUser)){
                     that.getCargaData(sCodeUser);
@@ -129,7 +132,6 @@ sap.ui.define([
 				});
 
                 that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
-                that.oModelGetPedidoVenta.setProperty("/oMaterialPorVendedor", oMateriales);
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
                 console.log(oError);
@@ -187,19 +189,6 @@ sap.ui.define([
                             }
                         });
                     });
-                    // that.getModel("oModelServiceVendedor").loadData(sPath, {
-                    //     async: false,
-                    //     success: function (data) {
-                    //         oResp.sEstado = "S";
-                    //         oResp.oResults = data.results;
-                    //         resolve(oResp);
-                    //     },
-                    //     error: function (error) {
-                    //         oResp.sEstado = "S";
-                    //         oResp.oResults = [];
-                    //         resolve(oResp);
-                    //     }
-                    // });
 				});
 			}catch(oError){
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
@@ -363,7 +352,7 @@ sap.ui.define([
             this.setFragment("_dialogSelectClient", this.frgIdSelectClient, "SelectClient", this);
         },
         _onbtnUpdateClient:function(){
-            this._onClearSelectClient();
+            this._onClearComponentSelectClient();
             var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
             var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value
             sap.ui.core.BusyIndicator.show(0);
@@ -399,14 +388,21 @@ sap.ui.define([
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([]).then((values) => {
                 var oChangeParameterSelected = {
+                    "sNumeroPedido": "",
                     "codeCliente": oObjectSelected.Kunnr,
                     "nameCliente": oObjectSelected.Namec,
                     "codeCanal": oObjectSelected.Vtweg,
                     "TextCanal": oObjectSelected.Txtca,
-                    "codeFuerzaVenta": oObjectSelected.Vkgrp,
-                    "textFuerzaVenta": oObjectSelected.Txtfv,
+                    "codeGrupoCliente": oObjectSelected.Vkgrp,
+                    "textGrupoCliente": oObjectSelected.Txtfv,
                     "codeDirecccion": "",
                     "textDirecccion": oObjectSelected.Stras,
+                    "oDireccion": [
+                        {
+                            "sKey": "01",
+                            "sDireccion": oObjectSelected.Stras,
+                        }
+                    ],
                     "codePuntoVenta": oObjectSelected.Vkbur,
                     "textPuntoVenta": oObjectSelected.Txtpv,
                     "codeCondPago": oObjectSelected.Zterm,
@@ -466,7 +462,7 @@ sap.ui.define([
         //moment
         onChangeDireccion: function(oEvent){
             var oSource = oEvent.getSource();
-            var oSelectedDireccion = that.oModelPedidoVenta.getProperty("/oSelectedDireccion");
+            
 
             var kSelected=oSource.getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
@@ -477,31 +473,24 @@ sap.ui.define([
 					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
 				}
 				oEvent.getSource().setValue("");
-                oSelectedDireccion.codeFuerzaVenta = "";
-                oSelectedDireccion.textFuerzaVenta = "";
-                oSelectedDireccion.codePuntoVenta = "";
-                oSelectedDireccion.textPuntoVenta = "";
-                oSelectedDireccion.codeCondPago = "";
-                oSelectedDireccion.textCondPago = "";
-                that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
                 return;
 			}
 
             var oSelectedItem = oSource.getSelectedItem();
             var oObjectSelectedItem = oSelectedItem.getBindingContext("oModelPedidoVenta").getObject();
-
-            oSelectedDireccion.codeFuerzaVenta = oObjectSelectedItem.vkgrp;
-            oSelectedDireccion.textFuerzaVenta = oObjectSelectedItem.txtfv;
-            oSelectedDireccion.codePuntoVenta = oObjectSelectedItem.vkbur;
-            oSelectedDireccion.textPuntoVenta = oObjectSelectedItem.txtpv;
-            oSelectedDireccion.codeCondPago = oObjectSelectedItem.zterm;
-            oSelectedDireccion.textCondPago = oObjectSelectedItem.txtcp;
-
-            that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
+            //moment
+            // var oSelectedDireccion = that.oModelPedidoVenta.getProperty("/oSelectedDireccion");
+            // oSelectedDireccion.codeGrupoCliente = oObjectSelectedItem.vkgrp;
+            // oSelectedDireccion.textGrupoCliente = oObjectSelectedItem.txtfv;
+            // oSelectedDireccion.codePuntoVenta = oObjectSelectedItem.vkbur;
+            // oSelectedDireccion.textPuntoVenta = oObjectSelectedItem.txtpv;
+            // oSelectedDireccion.codeCondPago = oObjectSelectedItem.zterm;
+            // oSelectedDireccion.textCondPago = oObjectSelectedItem.txtcp;
+            // that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
         },
 
         _onPressCreatePedidoPrev: function(){
-            var inFuerzaVenta = this._byId("frgIdDetailCliente--inFuerzaVenta");
+            var inGrupoCliente = this._byId("frgIdDetailCliente--inGrupoCliente");
             var slDirecciones = this._byId("frgIdDetailCliente--slDirecciones");
             var inPuntoVenta = this._byId("frgIdDetailCliente--inPuntoVenta");
             var inFlete = this._byId("frgIdDetailCliente--inFlete");
@@ -519,10 +508,10 @@ sap.ui.define([
             var sOrdenCompra = inOrdenCompra.getValue();
             var sObservacion = tardenCompra.getValue();
             
-            // if(this.isEmpty(sKeyDireccion)){
-            //     that.getMessageBox("error", that.getI18nText("errorSelectDireccion"));
-            //     return;
-            // }
+            if(this.isEmpty(sKeyDireccion)){
+                that.getMessageBox("error", that.getI18nText("errorSelectDireccion"));
+                return;
+            }
 
             if(this.isEmpty(sFechaEntrega)){
                 this.getMessageBox("error", this.getI18nText("errorSelectFechaEntrega"));
@@ -533,32 +522,71 @@ sap.ui.define([
 
             utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
                 if(value){
-                    Promise.all([]).then((values) => {
-                        oSelectedCliente.codeDirecccion = sKeyDireccion;
-                        oSelectedCliente.textDirecccion = sDireccion;
-                        oSelectedCliente.textFechaEntrega = sFechaEntrega;
-                        oSelectedCliente.codeComprobante = iKeyComprobante;
-                        oSelectedCliente.textComprobante = sComprobante;
-                        oSelectedCliente.textOrdenCompra = sOrdenCompra;
-                        oSelectedCliente.textObservacion = sObservacion;
-            
-                        that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oSelectedCliente);
+                    oSelectedCliente.codeDirecccion = sKeyDireccion;
+                    oSelectedCliente.textDirecccion = sDireccion;
+                    oSelectedCliente.textFechaEntrega = sFechaEntrega;
+                    oSelectedCliente.codeComprobante = iKeyComprobante;
+                    oSelectedCliente.textComprobante = sComprobante;
+                    oSelectedCliente.textOrdenCompra = sOrdenCompra;
+                    oSelectedCliente.textObservacion = sObservacion;
                         
-                        that._onClearSelectClient();
-					    that._onClearDetailClient();
-                        that["_dialogDetailCliente"].close()
+                    Promise.all([that._getLineaCredito(oSelectedCliente)]).then((values) => {
+                        var sNumPedido = "1";
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "C");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/sNumPedido", sNumPedido);
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oSelectedCliente);
+
+                        values[0].sCredito = values[0].Amount;
+                        values[0].sConsumo = "0.00";
+                        values[0].sSaldo = (parseFloat(values[0].Amount) - parseFloat(values[0].sConsumo)).toString();
+
+                        var oLineaCredito = values[0];
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
+
+                        var objCreado = {
+                            "sNumeroPedido": sNumPedido,
+                            "sStatus": "C",
+                            "oSelectedCliente": oSelectedCliente,
+                            "oSelectedLineaCredito": oLineaCredito,
+                            "oMateriales": []
+                        };
+                        that.oModelSavePedidoVenta.getData().push(objCreado);
+                        that.oModelSavePedidoVenta.refresh();
+
+                        that._onClearComponentSelectClient();
+					    that._onClearComponentDetailClient();
+                        that["_dialogDetailCliente"].close();
 
                         that.oRouter.navTo("Detail", {
                             app: "2"
                         });
                     }).catch(function (oError) {
                         console.log(oError);
-                        that.getMessageBox("error", that.getI18nText("errorUserData"));
+                        that.getMessageBox("error", that.getI18nText("errorData"));
                         sap.ui.core.BusyIndicator.hide(0);
                     });
                 }
             });
         },
+        _getLineaCredito: function (oValue) {
+			try{
+				return new Promise(function (resolve, reject) {
+                    var sPath = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/CreditoSet?$filter=(Kunnr eq '"+"1000000014"+"' and Segme eq 'ZCR01')";
+                    Services.getoDataERP(that, sPath, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                resolve(oData.data[0]);
+                            },
+                            error: function (message) {
+                                reject(message);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
         _onPressEditPedido: function(){
             this.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
         },

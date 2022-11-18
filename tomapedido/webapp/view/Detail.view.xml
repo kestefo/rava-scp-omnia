@@ -1,5 +1,6 @@
 <mvc:View controllerName="tomapedido.controller.Detail" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m" xmlns:f="sap.f" xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
     <Shell >
         <NavContainer id="navcIdGroupPromotions">
@@ -7,7 +8,8 @@
                 <f:title>
                     <f:DynamicPageTitle>
                         <f:heading>
-                            <Title text="{i18n>titlePageDetail}" wrapping="true" class="sapUiSmallMarginTop"/>
+                            <Title text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeCliente} {oModelPedidoVenta>/DataGeneral/oSelectedCliente/nameCliente}" 
+                                wrapping="true" class="sapUiSmallMarginTop" level="H2"/>
                         </f:heading>
                         <f:navigationActions>
                             <Button text="Regresar" icon="sap-icon://nav-back" press="_onPressNavButtonDetail"/>
@@ -18,16 +20,19 @@
                     <f:DynamicPageHeader pinnable="true">
                         <HBox width="100%" class="sapUiSmallMargin" justifyContent="SpaceBetween">
                             <VBox wrap="Wrap">
-                                <Text text="{i18n>textSubHeaderDetailCredito}"/>
-                                <ObjectStatus text="{i18n>textDataCredito}" state="Information" />
+                                <Text text="{i18n>textSubHeaderDetailCredito}" class="MyTextHeaderSize"/>
+                                <ObjectStatus text="{path: 'oModelPedidoVenta>/DataGeneral/oSelectedLineaCredito/sCredito', formatter: '.currencyFormat'} 
+                                    {oModelPedidoVenta>/DataGeneral/oSelectedLineaCredito/Waers}" state="Information" class="MyTextSize"/>
                             </VBox>
                             <VBox wrap="Wrap">
-                                <Text text="{i18n>textSubHeaderDetailConsumo}"/>
-                                <ObjectStatus text="{i18n>textDataConsumo}" state="Error" />
+                                <Text text="{i18n>textSubHeaderDetailConsumo}" class="MyTextHeaderSize"/>
+                                <ObjectStatus text="{path: 'oModelPedidoVenta>/DataGeneral/oSelectedLineaCredito/sConsumo', formatter: '.currencyFormat'} 
+                                    {oModelPedidoVenta>/DataGeneral/oSelectedLineaCredito/Waers}" state="Error" class="MyTextSize"/>
                             </VBox>
                             <VBox wrap="Wrap">
-                                <Text text="{i18n>textSubHeaderDetailSaldo}"/>
-                                <ObjectStatus text="{i18n>textDataSaldo}" state="Success" />
+                                <Text text="{i18n>textSubHeaderDetailSaldo}" class="MyTextHeaderSize"/>
+                                <ObjectStatus text="{path: 'oModelPedidoVenta>/DataGeneral/oSelectedLineaCredito/sSaldo', formatter: '.currencyFormat'}  
+                                    {oModelPedidoVenta>/DataGeneral/oSelectedLineaCredito/Waers}" state="Success" class="MyTextSize"/>
                             </VBox>
                         </HBox>
                     </f:DynamicPageHeader>
@@ -35,15 +40,13 @@
                 <f:content>
                     <VBox height="100%">
                         <HBox width="100%" justifyContent="SpaceBetween" wrap="Wrap">
-                            <HBox>
-                                <Label text="{i18n>textPedido}:"/>
-                                <ObjectStatus text="{i18n>textDataPedido}" state="Information" />
+                            <HBox alignItems="Center" alignContent="Center">
+                                <Label text="{i18n>textPedido}:" class="MyTextLabelSize"/>
+                                <ObjectStatus text="{oModelPedidoVenta>/DataGeneral/sNumPedido}" state="Information" class="MyTextLabelSize"/>
                             </HBox>
                             <HBox wrap="Wrap">
-                                <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProductPro"/>
+                                <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"/>
                                 <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"/>
-                                <Button text="{i18n>textbtnIngMasivo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressLoadMasive"/>
-                                <Button text="{i18n>textbtnEan}" type="Default" icon="sap-icon://add" press="_onPressAddEan"/>
                                 <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan"/>
                             </HBox>
                         </HBox>
@@ -59,9 +62,6 @@
                                 </IconTabFilter>
                                 <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">
                                     <Text text="Attachments go here ..." />
-                                </IconTabFilter>
-                                <IconTabFilter icon="sap-icon://form" key="keyResumen" text="{i18n>textIconTabResumen}">
-                                    <Text text="Notes go here ..." />
                                 </IconTabFilter>
                             </items>
                         </IconTabBar>
