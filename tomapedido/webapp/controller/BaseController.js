@@ -19,13 +19,18 @@ sap.ui.define([
 	var sMessage = "";
 	return Controller.extend("tomapedido.controller.BaseController", {
 		formatter: Formatter,
-        local: sap.ushell.Container === undefined ? true : false,
+        local: window.location.href.indexOf('launchpad') == -1 ? true : false,
+		userSet: "liderdeproyecto1@omniasolution.com",
         getUserLoged: function(){
 			var user = "";
-			if(this.local){
-				user = "liderdeproyecto1@omniasolution.com";
+			if(this.isEmpty(sap.ushell.Container)){
+				user = this.userSet;
 			}else{
-				user = sap.ushell.Container.getService("UserInfo").getUser().getEmail();
+				if(this.isEmpty(sap.ushell.Container.getService("UserInfo").getUser().getEmail())){
+					user = this.userSet;
+				}else{
+					user = sap.ushell.Container.getService("UserInfo").getUser().getEmail();
+				}
 			}
 			return user;
 		},
