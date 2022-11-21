@@ -536,9 +536,9 @@ sap.ui.define([
                         that.oModelPedidoVenta.setProperty("/DataGeneral/sNumPedido", sNumPedido);
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oSelectedCliente);
 
-                        values[0].sCredito = values[0].Amount;
-                        values[0].sConsumo = "0.00";
-                        values[0].sSaldo = (parseFloat(values[0].Amount) - parseFloat(values[0].sConsumo)).toString();
+                        values[0].sCredito = values[0].CreditLimit;
+                        values[0].sConsumo = values[0].Amount;
+                        values[0].sSaldo = (parseFloat(values[0].sCredito) - parseFloat(values[0].sConsumo)).toString();
 
                         var oLineaCredito = values[0];
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
