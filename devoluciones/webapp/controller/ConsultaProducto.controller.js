@@ -161,25 +161,82 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var tablaCliente    = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
             var tablaCliente02  = sap.ui.getCore().byId("IdTablaProducts");
             var KeyMotivoProd   = oModelDevolucion.getProperty("/KeyMotivoProd");
+            var AddProductoDetail = oModelDevolucion.getProperty("/AddProductoDetail");
+            var arraypedido          =[];
 
             if(KeyMotivoProd !== "" && KeyMotivoProd !== undefined){
-                oModelDevolucion.setProperty("/KeyAddUser", "");
+
+                AddProductoDetail.forEach(function(obj){
+  
+                    var detalleproducto={
+                        "Material": "",
+                        "Cantidad": "",
+                        "UnidadMed": ""
         
-                tablaCliente02.removeSelections(true);
-    
-                
-                MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
-                    actions: [this.getI18nText("acceptText")],
-                     emphasizedAction: "",
-                    onClose: function (sAction) {
-                        if (sAction === that.getI18nText("acceptText")) {
-                            
-                        }
-                        oModelDevolucion.setProperty("/AddProductoDetail", []);
-                        oModelDevolucion.setProperty("/KeyMotivo", "");
-                        that.AbrirProducto.close();
                     }
-                });
+                    arraypedido.push(detalleproducto);
+                  });
+        
+                    var datos= {
+                        "CodCli": "",
+                        "Tipo": "",
+                        "Canal": "",
+                        "Referencia": "",
+                        "NumDocMod": "",
+                        "CodVen": "",
+                        "MotivoPed": "",
+                        "DetallePedidosDevSet": arraypedido
+                        
+                        ,
+                        "ResultPedidosDevSet": [
+                        {
+                            "Pedido": "",
+                            "Type": "",
+                            "Msg": ""
+                        }
+                        ]
+                    }
+        
+                    $.ajax({
+                        url: "/sap/opu/odata/sap/ZFIOD_GESTION_ER_SRV",
+                        
+                        type: "GET",
+                        headers: {
+                            "x-CSRF-Token": "Fetch"
+                        }
+                    }).always(function (data, status, response) {
+                        var token = response.getResponseHeader("x-csrf-token");
+                        $.ajax({
+                            url: "/sap/opu/odata/sap/ZFIOD_GESTION_ER_SRV/ZET_HISTORIAL_RCH_CABSet",
+                            method: "POST",
+                            headers: {
+                                "x-CSRF-Token": token
+                            },
+                            async: true,
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: JSON.stringify(datos),
+                        }).always(async function (data, status, response) {
+                            
+                          var datos = data.d;
+                          oModelDevolucion.setProperty("/KeyAddUser", "");
+                        tablaCliente02.removeSelections(true);
+                        MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
+                            actions: [this.getI18nText("acceptText")],
+                            emphasizedAction: "",
+                            onClose: function (sAction) {
+                                if (sAction === that.getI18nText("acceptText")) {
+                                    
+                                }
+                                oModelDevolucion.setProperty("/AddProductoDetail", []);
+                                oModelDevolucion.setProperty("/KeyMotivo", "");
+                                that.AbrirProducto.close();
+                            }
+                        });
+                           
+                    });
+                  });
+
             }else{
                 MessageBox.warning(this.getI18nText("txtMensajeDevolucion"));
                 return;
