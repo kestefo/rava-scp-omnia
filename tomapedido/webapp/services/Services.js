@@ -19,8 +19,17 @@ sap.ui.define([
 		postoDataEstandar:function(context,oResults,callback){
 			utilHttp.Post(constantes.services.postoDataEstandar, oResults, callback, context);
 		},
-		getoDataERP:function(context, url, callback){
-			utilHttp.ERPGet( url, callback);
+		getoDataERPSync:function(context, url, callback){
+			utilHttp.ERPGetSync( url, callback);
+		},
+		getoDataERPAsync:function(context, url, callback){
+			utilHttp.ERPGetAsync( url, callback);
+		},
+		postoDataERPSync:function(context, urlget, urlpost, data, callback){
+			utilHttp.ERPPostTokenSync( urlget, urlpost, data, callback);
+		},
+		postoDataERPAsync:function(context, urlget, urlpost, data, callback){
+			utilHttp.ERPPostTokenAsync( urlget, urlpost, data, callback);
 		},
 	};
 });

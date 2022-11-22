@@ -1,8 +1,14 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "tomapedido/controller/BaseController",
-    "tomapedido/model/models"
-], function (Controller, BaseController, models) {
+    "tomapedido/model/models",
+    "sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+    '../util/util',
+    '../util/utilUI',
+    "../services/Services",
+    "../estructuras/Estructura"
+], function (Controller, BaseController, models, Filter, FilterOperator, util, utilUI, Services, Estructura) {
     "use strict";
 
     var that, bValueHelpEquipment = false;
@@ -103,15 +109,32 @@ sap.ui.define([
 				var oSelectedItem = oSource.getSelectedItem();
                 var oObjectSelectedItem = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
 
+                var oDetailStockSet = [];
                 oObjectSelectedItem.materiales.forEach(async function(value, index){
-                    var sStock = await that._getStockMateriales(value);
-                    value.Labst = sStock;
-                    value.icon = "sap-icon://outbox";
-                    value.state = "Information",
-                    value.cantidad = "0"; 
+                    var jValue = {
+                        "Type": "G",
+                        "Matnr": value.Matnr,
+                        "Meins": value.Meins,
+                        "Werks": "1020",
+                        "Lgort": "0201",
+                        "Labst": "0"
+                    }
+                    oDetailStockSet.push(jValue)
                 });
 
-                Promise.all([]).then((values) => {
+                Promise.all([that._getStockMateriales(oDetailStockSet)]).then((values) => {
+                    var oStock = values[0].DetailStockSet.results;
+                    oObjectSelectedItem.materiales.forEach(async function(value, index){
+                        var oFindStock = oStock.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins);
+                        value.Labst = "0";
+                        value.icon = "sap-icon://outbox";
+                        value.state = "Information",
+                        value.cantidad = "0";
+                        if(!that.isEmpty(oFindStock)){
+                            value.Labst = oFindStock.Labst;
+                        }
+                    });
+
                     that._byId("frgIdAddManualProduct--tbMaterialesManual").setVisible(true);
                     that._byId("frgIdAddManualProduct--btnNextAddManualProduct").setVisible(false);
                     that._byId("frgIdAddManualProduct--btnAcceptAddManualProduct").setVisible(true);
@@ -125,23 +148,30 @@ sap.ui.define([
                 });
 			}
         },
-        _getStockMateriales: function(oData){
-            var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/StockSet?$filter=(Matnr eq '"+oData.Matnr+"' and Meins eq '"+oData.Meins+"' and Werks eq '1020' and Lgort eq '0201')";
-            var data = "0";
-            $.ajax({
-                url: sPath,
-                method: "GET",
-                async: false,
-                contentType: 'application/json',
-                dataType: 'json',
-                success: function (oData) {
-                    data = oData.d.results[0].Labst;
-                },
-                error: function (xhr, status, error) {
-                    console.log("error")
-                }
-            });
-            return data;
+        _getStockMateriales: function(oDetailStockSet){
+            try{
+				return new Promise(function (resolve, reject) {
+                    var urlget = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/";
+				    var urlpost = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/OperationSet";
+                    var oData = {
+                        "Type": "G",
+                        "DetailStockSet": oDetailStockSet
+                    };
+
+                    Services.postoDataERPAsync(that, urlget, urlpost, oData, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                resolve(oData.data);
+                            },
+                            error: function (message) {
+                                reject(message);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
         },
         _onLiveChangeCantidad:function(oEvent){
             var oSource = oEvent.getSource();
@@ -173,6 +203,32 @@ sap.ui.define([
 
             this.getModel("oModelGetPedidoVenta").refresh();
 
+        },
+        _onAcceptProductManual: function(){
+            var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
+            var oMaterialesSelected = [];
+
+            var oSelectItems = tbMaterialesManual.getSelectedItems();
+            oSelectItems.forEach(function(value, index){
+                oMaterialesSelected.push(value.getBindingContext("oModelGetPedidoVenta").getObject());
+            });
+
+            var booleanNotCant = false;
+
+            oMaterialesSelected.forEach(function(value, index){
+                value.total = parseFloat(value.cantidad) * parseFloat(value.Kbetr);
+
+                if(parseFloat(value.cantidad) === 0){
+                    booleanNotCant = true
+                }
+            });
+
+            if(booleanNotCant){
+                that.getMessageBox("error", that.getI18nText("errorNotCant"));
+                return;
+            }
+            
+            this.oModelPedidoVenta.setProperty("/ProductoCreados", oMaterialesSelected);
         },
         _onChangeCounter: function(oEvent){
             var oSource = oEvent.getSource();

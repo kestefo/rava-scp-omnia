@@ -410,7 +410,7 @@ sap.ui.define([
 				}
 			});
 		},
-		ERPGet: function (url, callback) {
+		ERPGetAsync: function (url, callback) {
 			$.ajax({
 				url: url,
 				method: "GET",
@@ -432,6 +432,135 @@ sap.ui.define([
 						iCode:-1,
 						c: "ex",
 						u: url,
+						m: "Error HTTP - GET",
+						data: error
+					};
+					return callback(respuestaService);
+				}
+			});
+		},
+		ERPGetSync: function (url, callback) {
+			$.ajax({
+				url: url,
+				method: "GET",
+				async: false,
+				contentType: 'application/json',
+				dataType: 'json',
+				success: function (result) {
+					var respuestaService = {
+						iCode:1,
+						c: "suc",
+						u: url,
+						m: "Exito HTTP - GET",
+						data: result.d.results          
+					};
+					return callback(respuestaService);
+				},
+				error: function (xhr, status, error) {
+					var respuestaService = {
+						iCode:-1,
+						c: "ex",
+						u: url,
+						m: "Error HTTP - GET",
+						data: error
+					};
+					return callback(respuestaService);
+				}
+			});
+		},
+		ERPPostTokenSync: function (urlget, urlpost, data, callback) {
+			$.ajax({
+				url: urlget,
+				type: "GET",
+				async: false,
+				headers: {"x-CSRF-Token": "Fetch"},
+				success: function (oData, status, response) {
+					var token = response.getResponseHeader("x-csrf-token");
+					$.ajax({
+						url: urlpost,
+						method: "POST",
+						headers: {"x-CSRF-Token": token},
+						async: false,
+						contentType: "application/json",
+						dataType: "json",
+						data: JSON.stringify(data),
+						success: function (result) {
+							var respuestaService = {
+								iCode:1,
+								c: "suc",
+								u: urlpost,
+								m: "Exito HTTP - GET",
+								data: result.d
+							};
+							return callback(respuestaService);
+						},
+						error: function (xhr, status, error) {
+							var respuestaService = {
+								iCode:-1,
+								c: "ex",
+								u: urlpost,
+								m: "Error HTTP - GET",
+								data: error
+							};
+							return callback(respuestaService);
+						}
+					});
+				},
+				error: function (xhr, status, error) {
+					var respuestaService = {
+						iCode:-1,
+						c: "ex",
+						u: urlpost,
+						m: "Error HTTP - GET",
+						data: error
+					};
+					return callback(respuestaService);
+				}
+			});
+		},
+		ERPPostTokenAsync: function (urlget, urlpost, data, callback) {
+			$.ajax({
+				url: urlget,
+				type: "GET",
+				async: true,
+				headers: {"x-CSRF-Token": "Fetch"},
+				success: function (oData, status, response) {
+					var token = response.getResponseHeader("x-csrf-token");
+					$.ajax({
+						url: urlpost,
+						method: "POST",
+						headers: {"x-CSRF-Token": token},
+						async: true,
+						contentType: "application/json",
+						dataType: "json",
+						data: JSON.stringify(data),
+						success: function (result) {
+							var respuestaService = {
+								iCode:1,
+								c: "suc",
+								u: urlpost,
+								m: "Exito HTTP - GET",
+								data: result.d
+							};
+							return callback(respuestaService);
+						},
+						error: function (xhr, status, error) {
+							var respuestaService = {
+								iCode:-1,
+								c: "ex",
+								u: urlpost,
+								m: "Error HTTP - GET",
+								data: error
+							};
+							return callback(respuestaService);
+						}
+					});
+				},
+				error: function (xhr, status, error) {
+					var respuestaService = {
+						iCode:-1,
+						c: "ex",
+						u: urlpost,
 						m: "Error HTTP - GET",
 						data: error
 					};
