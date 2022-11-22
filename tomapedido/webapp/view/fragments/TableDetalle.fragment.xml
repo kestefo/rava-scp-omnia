@@ -54,10 +54,10 @@
         <items>
             <ColumnListItem type="Inactive">
                 <cells>
-                    <Text text="{oModelPedidoVenta>producto}"/>
+                    <Text text="{oModelPedidoVenta>Maktg}"/>
                     <Text text="{oModelPedidoVenta>cantidad}"/>
                     <Text text="{oModelPedidoVenta>tipo}"/>
-                    <Text text="{oModelPedidoVenta>total}"/>
+                    <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormat'}"/>
                     <Text text="{oModelPedidoVenta>descuentos}"/>
                     <Text text="{oModelPedidoVenta>descuentosVolumen}"/>
                 </cells>

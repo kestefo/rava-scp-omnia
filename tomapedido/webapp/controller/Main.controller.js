@@ -115,23 +115,31 @@ sap.ui.define([
                 oProgressIndicator.setDisplayValue(sCantPorcentageSuccess + '%');
 			    oProgressIndicator.setPercentValue(+sCantPorcentageSuccess);
 
-                var oCliente = values[0].oResults[0].NAVCUSTO.results;
-                var oMateriales = values[0].oResults[0].NAVMATER.results;
-                var oEstado = values[1].oResults;
+                if(!that.isEmpty(values[0].oResults[0])){
+                    var oCliente = values[0].oResults[0].NAVCUSTO.results;
+                    var oMateriales = values[0].oResults[0].NAVMATER.results;
+                    that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
+    
+                    $.each(that._groupBy(oMateriales,'Codfa'), function (x, y) {
+                        var jFamilia = {
+                            "codeFamilia": y[0].Codfa,
+                            "textFamilia": y[0].Txtfa,
+                            "materiales": y
+                        };
+                        oFamiliaMateriales.push(jFamilia);
+                    });
+                    that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+                }else{
+                    that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", []);
+                    that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", []);
+                }
 
-                that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
-                that.oModelGetPedidoVenta.setProperty("/oEstado", oEstado);
-
-                $.each(that._groupBy(oMateriales,'Codfa'), function (x, y) {
-					var jFamilia = {
-						"codeFamilia": y[0].Codfa,
-						"textFamilia": y[0].Txtfa,
-                        "materiales": y
-					};
-                    oFamiliaMateriales.push(jFamilia);
-				});
-
-                that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+                if(!that.isEmpty(values[1].oResults[0])){
+                    var oEstado = values[1].oResults;
+                    that.oModelGetPedidoVenta.setProperty("/oEstado", oEstado);
+                }else{
+                    that.oModelGetPedidoVenta.setProperty("/oEstado", []);
+                }
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
                 console.log(oError);
@@ -175,7 +183,7 @@ sap.ui.define([
                 };
 				return new Promise(function (resolve, reject) {
                     var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
-                    Services.getoDataERP(that, sPath, function (result) {
+                    Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
                             success: function (oData, message) {
                                 oResp.sEstado = "S";
@@ -183,7 +191,6 @@ sap.ui.define([
                                 resolve(oResp);
                             },
                             error: function (message) {
-                                oResp.sEstado = "S";
                                 oResp.oResults = [];
                                 resolve(oResp);
                             }
@@ -357,14 +364,19 @@ sap.ui.define([
             var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([this._getClientes(sCodeUser)]).then((values) => {
-                var oCliente = values[0].oResults[0].NAVCUSTO.results;
-                var oMateriales = values[0].oResults[0].NAVMATER.results;
-                if(values[0].sEstado != "E"){
-                    that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
-                    that.oModelGetPedidoVenta.setProperty("/oMaterialesPorVendedor", oMateriales);
-                    that.getMessageBox("success", that.getI18nText("successDataUpdate"));
+                if(!that.isEmpty(values[0].oResults[0])){
+                    var oCliente = values[0].oResults[0].NAVCUSTO.results;
+                    var oMateriales = values[0].oResults[0].NAVMATER.results;
+                    if(values[0].sEstado != "E"){
+                        that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oCliente);
+                        that.oModelGetPedidoVenta.setProperty("/oMaterialesPorVendedor", oMateriales);
+                        that.getMessageBox("success", that.getI18nText("successDataUpdate"));
+                    }else{
+                        that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+                    }
                 }else{
-                    that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+                    that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", []);
+                    that.oModelGetPedidoVenta.setProperty("/oMaterialesPorVendedor", []);
                 }
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
@@ -458,36 +470,7 @@ sap.ui.define([
 		},
         //Funcionalidades select cliente
 
-        //Funcionalidades Select direccion 
-        //moment
-        onChangeDireccion: function(oEvent){
-            var oSource = oEvent.getSource();
-            
-
-            var kSelected=oSource.getSelectedKey();
-			var sSelected=oEvent.getSource().getValue();
-			if (kSelected !== '') {
-				oEvent.getSource().setValue(sSelected);
-			}else{
-				if(oEvent.getSource().getValue()){
-					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
-				}
-				oEvent.getSource().setValue("");
-                return;
-			}
-
-            var oSelectedItem = oSource.getSelectedItem();
-            var oObjectSelectedItem = oSelectedItem.getBindingContext("oModelPedidoVenta").getObject();
-            //moment
-            // var oSelectedDireccion = that.oModelPedidoVenta.getProperty("/oSelectedDireccion");
-            // oSelectedDireccion.codeGrupoCliente = oObjectSelectedItem.vkgrp;
-            // oSelectedDireccion.textGrupoCliente = oObjectSelectedItem.txtfv;
-            // oSelectedDireccion.codePuntoVenta = oObjectSelectedItem.vkbur;
-            // oSelectedDireccion.textPuntoVenta = oObjectSelectedItem.txtpv;
-            // oSelectedDireccion.codeCondPago = oObjectSelectedItem.zterm;
-            // oSelectedDireccion.textCondPago = oObjectSelectedItem.txtcp;
-            // that.oModelPedidoVenta.setProperty("/oSelectedDireccion", oSelectedDireccion);
-        },
+        //Funcionalidades Select direccion
 
         _onPressCreatePedidoPrev: function(){
             var inGrupoCliente = this._byId("frgIdDetailCliente--inGrupoCliente");
@@ -572,7 +555,7 @@ sap.ui.define([
 			try{
 				return new Promise(function (resolve, reject) {
                     var sPath = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/CreditoSet?$filter=(Kunnr eq '"+"1000000014"+"' and Segme eq 'ZCR01')";
-                    Services.getoDataERP(that, sPath, function (result) {
+                    Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
                             success: function (oData, message) {
                                 resolve(oData.data[0]);
