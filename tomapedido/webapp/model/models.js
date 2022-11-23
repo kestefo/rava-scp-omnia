@@ -32,7 +32,7 @@ sap.ui.define([
                     sStatus: "",
                     oSelectedCliente:{},
                     oSelectedLineaCredito:{},
-                    öMaterial:[]
+                    oMaterial:[]
                 };
                 return oModel;
             },

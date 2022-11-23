@@ -26,8 +26,17 @@ sap.ui.define([
         },
         handleRouteMatched: function(){
             Promise.all([]).then(async values => {
-				this.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
-                this.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
+				that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
+                that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
+
+                var oProductosSave = values[0];
+                if(that.isEmpty(oProductosSave)){
+                    that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
+                    that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
+                }else{
+                    that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
+                    that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
+                }
                 // var oData = models.JsonProductos();
                 // var iCounter = this._byId("siContador").getValue();
                 // this.oModelPedidoVenta.setProperty("/ProductoCreados", oData.slice(0, iCounter));
@@ -204,11 +213,17 @@ sap.ui.define([
             this.getModel("oModelGetPedidoVenta").refresh();
 
         },
-        _onAcceptProductManual: function(){
+        _onAcceptProductManual: function(oEvent){
+            var oSource = oEvent.getSource();
             var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
             var oMaterialesSelected = [];
 
             var oSelectItems = tbMaterialesManual.getSelectedItems();
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+                return;
+            }
+
             oSelectItems.forEach(function(value, index){
                 oMaterialesSelected.push(value.getBindingContext("oModelGetPedidoVenta").getObject());
             });
@@ -216,8 +231,11 @@ sap.ui.define([
             var booleanNotCant = false;
 
             oMaterialesSelected.forEach(function(value, index){
-                value.total = parseFloat(value.cantidad) * parseFloat(value.Kbetr);
-
+                value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
+                value.tipo = "";
+                value.descuentos = "0%";
+                value.descuentosVolumen = "0%";
+                value.status = "S";
                 if(parseFloat(value.cantidad) === 0){
                     booleanNotCant = true
                 }
@@ -228,7 +246,36 @@ sap.ui.define([
                 return;
             }
             
-            this.oModelPedidoVenta.setProperty("/ProductoCreados", oMaterialesSelected);
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial", oMaterialesSelected);
+
+            this._onClearDataAddManualProduct();
+            this._onClearComponentAddManualProduct();
+            oSource.getParent().close();
+
+            this.onConteoMaterial(oMaterialesSelected);
+            // this.onUpdateMaterial(oMaterialesSelected);
+        },
+        onConteoMaterial: function(){
+            var tbProductos = this._byId("tbProductos");
+            var oItems = tbProductos.getItems();
+            var oProductosValidos = [];
+            oItems.forEach(function(value, index){
+                var jObject = value.getBindingContext('oModelPedidoVenta').getObject();
+                if(jObject.status === "S"){
+                    oProductosValidos.push(jObject);
+                }
+            });
+
+            var total = 0;
+            var cantidad = 0;
+
+            oProductosValidos.forEach(function(value, index){
+                cantidad += parseFloat(value.cantidad);
+                total += parseFloat(value.total);
+            });
+            
+            that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat(total.toString()));
+            that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat(cantidad.toString()));
         },
         _onChangeCounter: function(oEvent){
             var oSource = oEvent.getSource();

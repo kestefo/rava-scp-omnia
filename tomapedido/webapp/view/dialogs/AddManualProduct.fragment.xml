@@ -60,7 +60,7 @@
 		<buttons>
 			<Button id="btnNextAddManualProduct" text="{i18n>nextText}" press="_onSelectFamilia" custom:custom="default" type="Accept"/>
             <Button id="btnAcceptAddManualProduct" text="{i18n>confirmProductText}" press="_onAcceptProductManual" custom:custom="default" type="Accept"/>
-			<Button text="{i18n>returnText}" press="_onPressClose" custom:custom="AddManualProduct" type="Default"/>
+			<Button id="btnCloseAddManualProduct" text="{i18n>returnText}" press="_onPressClose" custom:custom="AddManualProduct" type="Default"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

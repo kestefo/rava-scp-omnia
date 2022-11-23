@@ -1,13 +1,14 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
-    <Table id="tbProductos" items="{oModelPedidoVenta>/ProductoCreados}"  mode="MultiSelect" growingThreshold="20">
+    <Table id="tbProductos" items="{oModelPedidoVenta>/DataGeneral/oMaterial}"  mode="MultiSelect" growingThreshold="20">
         <headerToolbar>
             <Toolbar>
-                <!-- <Label text="{i18n>titleTableDetalle1}"/>
-                <StepInput id="siContador" change="_onChangeCounter" value="1" width="5rem" min="0" max="50"/> -->
-                <ToolbarSpacer/>
-                <Text text="{i18n>titleTableBuscar}" width="auto"/>
-                <Input value="" width="auto"></Input>
+                <HBox justifyContent="SpaceBetween" alignItems="Center" width="100%">
+                    <Label id="lTotalProductos" visible="{=${device>/system/phone}?false:true}"/>
+                    <Label id="lCantidadProductos" visible="{=${device>/system/phone}?false:true}"/>
+                    <!-- <StepInput id="siContador" change="_onChangeCounter" value="1" width="5rem" min="0" max="50"/> -->
+                    <Input value="" placeholder="{i18n>titleTableBuscar}" width="auto"></Input>
+                </HBox>
             </Toolbar>
         </headerToolbar>
         <columns>
@@ -15,17 +16,17 @@
                 <header>
                     <Text text="{i18n>titleDetColProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
-                <footer>
+                <!-- <footer>
                     <Text text="{i18n>titleFooterColProducto}"/>
-                </footer>
+                </footer> -->
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleDetColCantidad}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
-                <footer>
+                <!-- <footer>
                     <Text text="{i18n>titleFooterColCantidad}"/>
-                </footer>
+                </footer> -->
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
@@ -36,9 +37,9 @@
                 <header>
                     <Text text="{i18n>titleDetColTotal}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
-                <footer>
+                <!-- <footer>
                     <Text text="{i18n>titleFooterColTotal}"/>
-                </footer>
+                </footer> -->
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
