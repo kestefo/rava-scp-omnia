@@ -293,10 +293,13 @@ sap.ui.define([
                 // this.setFragment("_dialogAAddClient", this.frgaddConsultaFact, "AddClient", this);//nuevo 11.10.2022
             },
             _onChangeFactBol: function (oEvent) {
+                var oView = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var kSelected = oEvent.getSource().getSelectedKey();
                 var sSelected = oEvent.getSource().getValue();
                 if (kSelected !== '') {
                     oEvent.getSource().setValue(sSelected);
+                    oModelDevolucion.setProperty("/KeyClientAdd" , kSelected);
                 } else {
                     if (oEvent.getSource().getValue()) {
                         this.getMessageBox("error", this.getI18nText("sErrorSelect"));
@@ -325,7 +328,7 @@ sap.ui.define([
 
                 if (KeyAddUser !== undefined && KeyAddUser !== "") {
 
-                    var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+                    var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '20221101' and FechaFact le '20221130') and CodCli eq '1234567890')&$expand=DetalleBuscaReceiptSet";
                     jQuery.ajax({
                         type: "GET",
                         cache: false,
@@ -336,7 +339,7 @@ sap.ui.define([
                         url: url,
                         async: true,
                         success: function (data, textStatus, jqXHR) {
-                            var datos = data.d;
+                            var datos = data.d.results;
                             that.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
                             that.getOwnerComponent().getRouter().navTo("ConsultaFactura");
                             that.oModelDevolucion.setProperty("/KeyAddUser", "");

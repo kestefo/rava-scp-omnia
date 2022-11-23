@@ -17,7 +17,7 @@
                                 </ComboBox>
                             </HBox>
                         </HBox>
-                        <Table id="IdTablaClients01" items="{oModelDevolucion>/AddFacturaBoletaDetail}" mode="MultiSelect" growingThreshold="20">
+                        <Table id="IdTablaClients01" items="{oModelDevolucion>/AddFacturaBoletaDetail}" mode="None" growingThreshold="20">
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>

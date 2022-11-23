@@ -72,7 +72,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             // this.setFragment("_dialogDetalleFact", this.fragaddDetalleFact, "DetalleDoc", this);//CRomero
         },
         _onPressCloseDetalleDoc: function () {
-            var that = this;
+            var that            = this;
+            var vista           = this.getView();
+            var oModelDevolucion = vista.getModel("oModelDevolucion");
+            oModelDevolucion.setProperty("/KeyMotivo", "");
             that.AddFactBol.close();
 
         },
@@ -91,17 +94,18 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
         },
         _onPressCloseDetalle: function (oEvent) {
-            var oSource = oEvent.getSource();
-            var sCustom = oSource.data("custom");
-            var that = this;
-            var vista = this.getView();
+            var oSource         = oEvent.getSource();
+            var sCustom         = oSource.data("custom");
+            var that            = this;
+            var vista           = this.getView();
             var oModelDevolucion = vista.getModel("oModelDevolucion");
-            var tablaCliente = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
-            var tablaCliente02 = sap.ui.getCore().byId("IdTablaClients01");
-            var KeyMotivo = oModelDevolucion.getProperty("/KeyMotivo");
+            var tablaCliente    = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
+            var tablaCliente02  = sap.ui.getCore().byId("IdTablaClients01");
+            var KeyMotivo           = oModelDevolucion.getProperty("/KeyMotivo");
             var facturaBolDetalle = oModelDevolucion.getProperty("/AddFacturaBoletaDetail");
-            var arrydetallePed = [];
-
+            var arraydetallePed      = [];
+            var datos                ="";
+            var KeyClientAdd          =oModelDevolucion.getProperty("/KeyClientAdd");
             if (KeyMotivo === undefined || KeyMotivo === "") {
                 MessageBox.warning(that.getI18nText("txtMensajeDevolucion"));
                 return;
@@ -110,25 +114,23 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             facturaBolDetalle.forEach(function (obj) {
 
                 var detalleproducto = {
-                    "Material": "Prueba",
-                    "Cantidad": "12",
-                    "UnidadMed": "kg"
+                    "Material": "",
+                    "Cantidad": "",
+                    "UnidadMed": ""
 
                 }
-                arrydetallePed.push(detalleproducto);
+                arraydetallePed.push(detalleproducto);
             });
 
-            var datos = {
-                "CodCli": "1000000012",
-                "Tipo": "02",
-                "Canal": "12",
-                "Referencia": "FV0024-1315",
-                "NumDocMod": "FV0024-1310",
-                "CodVen": "9600000012",
-                "MotivoPed": "102",
-                "DetallePedidosDevSet": arrydetallePed
-
-                ,
+             datos = {
+                "CodCli": KeyClientAdd,
+                "Tipo": "",
+                "Canal": "",
+                "Referencia": "",
+                "NumDocMod": "",
+                "CodVen": "",
+                "MotivoPed": "",
+                "DetallePedidosDevSet": arraydetallePed,
                 "ResultPedidosDevSet": [
                     {
                         "Pedido": "",
@@ -139,8 +141,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             }
 
             $.ajax({
-                url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV",
-
+                url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
                 type: "GET",
                 headers: {
                     "x-CSRF-Token": "Fetch"
@@ -151,19 +152,21 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                     url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
                     method: "POST",
                     headers: {
-                        "x-CSRF-Token": token
+                         "x-CSRF-Token": token
+                        
                     },
-                    async: true,
                     contentType: "application/json",
                     dataType: "json",
+                    async: true,
+                    
                     data: JSON.stringify(datos),
                 }).always(async function (data, status, response) {
 
-                    var datos = data.d;
+                    var datos = data.d.ResultPedidosDevSet.results[0];
                     oModelDevolucion.setProperty("/KeyAddUser", "");
                     tablaCliente02.removeSelections(true);
 
-                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar"), {
+                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") + datos.Pedido, {
                         actions: [that.getI18nText("acceptText")],
                         emphasizedAction: "",
                         onClose: function (sAction) {
@@ -179,6 +182,30 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
                 });
             });
+
+
+          
+                    // jQuery.ajax({
+                    //     type: "POST",
+                    //     cache: false,
+                    //     headers: {
+                    //         "Accept": "application/json"
+                    //     },
+                    //     contentType: "application/json",
+                    //     url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
+                    //     async: true,
+                    //     data: JSON.stringify(datos),
+                    //     success: function (data, textStatus, jqXHR) {
+                    //         var datos = data.d;
+                    //         that.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
+                    //         that.getOwnerComponent().getRouter().navTo("ConsultaFactura");
+                    //         that.oModelDevolucion.setProperty("/KeyAddUser", "");
+
+                    //     },
+                    //     error: function () {
+                    //         MessageBox.error("Ocurrio un error al obtener los datos");
+                    //     }
+                    // });
 
         },
         getI18nText: function (sText) {

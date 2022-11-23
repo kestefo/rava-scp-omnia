@@ -121,6 +121,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
         },
        
         _onPressCloseProduct:function(){
+            var that            = this;
+            var vista           = this.getView();
+            var oModelDevolucion = vista.getModel("oModelDevolucion");
+            oModelDevolucion.setProperty("/KeyMotivoProd", "");
             this.AbrirProducto.close();
         },
         onDetalleDocFact:function(){
@@ -198,7 +202,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                     }
         
                     $.ajax({
-                        url: "/sap/opu/odata/sap/ZFIOD_GESTION_ER_SRV",
+                        url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
                         
                         type: "GET",
                         headers: {
@@ -207,7 +211,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                     }).always(function (data, status, response) {
                         var token = response.getResponseHeader("x-csrf-token");
                         $.ajax({
-                            url: "/sap/opu/odata/sap/ZFIOD_GESTION_ER_SRV/ZET_HISTORIAL_RCH_CABSet",
+                            url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
                             method: "POST",
                             headers: {
                                 "x-CSRF-Token": token
@@ -218,11 +222,11 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                             data: JSON.stringify(datos),
                         }).always(async function (data, status, response) {
                             
-                          var datos = data.d;
+                          var datos = data.d.ResultPedidosDevSet.results[0];
                           oModelDevolucion.setProperty("/KeyAddUser", "");
                         tablaCliente02.removeSelections(true);
-                        MessageBox.success(this.getI18nText("txtbtnBuscarCancelar"), {
-                            actions: [this.getI18nText("acceptText")],
+                        MessageBox.success(that.getI18nText("txtbtnBuscarCancelar")+  datos.Pedido, {
+                            actions: [that.getI18nText("acceptText")],
                             emphasizedAction: "",
                             onClose: function (sAction) {
                                 if (sAction === that.getI18nText("acceptText")) {

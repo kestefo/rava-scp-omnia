@@ -18,7 +18,7 @@
                                 </ComboBox>
                             </HBox>
                         </HBox>
-                        <Table id="IdTablaProducts" items="{oModelDevolucion>/AddProductoDetail}" mode="MultiSelect" growingThreshold="20">
+                        <Table id="IdTablaProducts" items="{oModelDevolucion>/AddProductoDetail}" mode="None" growingThreshold="20">
                             <columns>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>
