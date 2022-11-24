@@ -7,7 +7,7 @@
                     <Label id="lTotalProductos" visible="{=${device>/system/phone}?false:true}"/>
                     <Label id="lCantidadProductos" visible="{=${device>/system/phone}?false:true}"/>
                     <!-- <StepInput id="siContador" change="_onChangeCounter" value="1" width="5rem" min="0" max="50"/> -->
-                    <Input value="" placeholder="{i18n>titleTableBuscar}" width="auto"></Input>
+                    <Input value="" placeholder="{i18n>titleTableBuscar}" width="auto" liveChange="_onLiveChangeBuscar"></Input>
                 </HBox>
             </Toolbar>
         </headerToolbar>

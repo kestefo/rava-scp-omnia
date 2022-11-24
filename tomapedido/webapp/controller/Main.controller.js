@@ -127,7 +127,7 @@ sap.ui.define([
                             "Smtp_addr":y[0].Smtp_addr,
                             "Telf1":y[0].Telf1,
                             "Stcd1":y[0].Stcd1,
-                            "Vkgrp":y[0].Vkgrp,
+                            "Kdgrp":y[0].Kdgrp,
                             "Txtfv":y[0].Txtfv,
                             "Vkbur":y[0].Vkbur,
                             "Txtpv":y[0].Txtpv,
@@ -455,6 +455,19 @@ sap.ui.define([
             var oObjectSelected = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([]).then((values) => {
+                that._dialogSelectClient.close();
+                that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
+                that._onClearComponentDetailClient();
+
+                var date = that.reformatDateString(that.getYYYYMMDD(new Date()));
+                var sFlete = "0";
+                if(oObjectSelected.Vtweg === "10"){
+                    if(oObjectSelected.Kdgrp === "12"){
+                        sFlete = "10";
+                    }else if(oObjectSelected.Kdgrp === "13"){ // falta poner menor a 450
+                        sFlete = "10 por monto menor a 450";
+                    }
+                }
                 var oChangeParameterSelected = {
                     "sNumeroPedido": "",
                     "sTextDescContacto": oObjectSelected.Smtp_addr,
@@ -464,7 +477,7 @@ sap.ui.define([
                     "nameCliente": oObjectSelected.Namec,
                     "codeCanal": oObjectSelected.Vtweg,
                     "TextCanal": oObjectSelected.Txtca,
-                    "codeGrupoCliente": oObjectSelected.Vkgrp,
+                    "codeGrupoCliente": oObjectSelected.Kdgrp,
                     "textGrupoCliente": oObjectSelected.Txtfv,
                     "codeDirecccion": "1",
                     "textDirecccion": oObjectSelected.Stras,
@@ -473,7 +486,8 @@ sap.ui.define([
                     "textPuntoVenta": oObjectSelected.Txtpv,
                     "codeCondPago": oObjectSelected.Zterm,
                     "textCondPago": oObjectSelected.Txtcp,
-                    "textFechaEntrega": "",
+                    "textFlete": sFlete,
+                    "textFechaEntrega": date,
                     "codeComprobante": 0,
                     "textComprobante": "",
                     "textOrdenCompra": "",
@@ -482,8 +496,6 @@ sap.ui.define([
 
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
 
-                that._dialogSelectClient.close();
-                that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
                 console.log(oError);
@@ -591,7 +603,6 @@ sap.ui.define([
                         that.oModelSavePedidoVenta.refresh();
 
                         that._onClearComponentSelectClient();
-					    that._onClearComponentDetailClient();
                         that["_dialogDetailCliente"].close();
 
                         that.oRouter.navTo("Detail", {

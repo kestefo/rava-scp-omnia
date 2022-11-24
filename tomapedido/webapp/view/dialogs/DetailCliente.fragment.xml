@@ -46,7 +46,8 @@
                         </layoutData>
                     </Input>
                     <Label text="{i18n>textFlete}"/>
-                    <Input id="inFlete" value="{i18n>textDataFlete}" maxLength="40" enabled="false">
+                    <Input id="inFlete" maxLength="40" enabled="false"
+                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFlete}">
                         <layoutData>
                             <l:GridData span="L3 M5"/>
                         </layoutData>
@@ -62,7 +63,7 @@
                         <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
                     </ComboBox> -->
                     <Label text="{i18n>textFechaEntrega}"/>
-                    <DatePicker id="dtFechaEntrega" value="{i18n>textDataFechaEntrega}" textAlign="Center" valueFormat="yyyy-MM-dd"
+                    <DatePicker id="dtFechaEntrega" value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFechaEntrega}" textAlign="Center" valueFormat="dd/MM/yyyy"
                         displayFormat="dd/MM/yyyy">
                         <layoutData>
                             <l:GridData span="M3"/>

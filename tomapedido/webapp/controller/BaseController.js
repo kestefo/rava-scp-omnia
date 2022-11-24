@@ -603,8 +603,12 @@ sap.ui.define([
 		_onClearComponentDetailClient: function(){
 			this._byId("frgIdDetailCliente--slDirecciones").setSelectedKey("");
 			this._byId("frgIdDetailCliente--rbgComprobante").setSelectedIndex(0);
+			this._byId("frgIdDetailCliente--inOrdenCompra").setValue("");
+			this._byId("frgIdDetailCliente--tardenCompra").setValue("");
 		},
 		_onClearDataDetailClient: function(){
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sNumPedido", "");
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sStatus", "");
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);

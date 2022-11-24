@@ -227,6 +227,19 @@ sap.ui.define([
 
 
         },
+        _onLiveChangeBuscar: function(oEvent){
+            var oSource = oEvent.getSource();
+            var sValue = oSource.getValue();
+
+            var oTable = this.byId("tbProductos");
+
+            var aFilter = [];
+            if (!this.isEmpty(sValue))
+                aFilter.push(new Filter("Maktg", 'Contains', sValue));
+
+            oTable.getBinding("items").filter(aFilter);
+            
+        },
         _onAcceptProductManual: function(oEvent){
             var oSource = oEvent.getSource();
             var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
@@ -296,15 +309,19 @@ sap.ui.define([
             var oMaterialesSelected = [];
 
             var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
-            var oSelectItems = tbProductos.getSelectedItems();
-            if(oSelectItems.length == 0){
+            var oSelectItems = [];
+            if(tbProductos.getSelectedItems().length == 0){
                 that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
                 return;
             }
 
-            oSelectItems.forEach(function(value, index){
+            tbProductos.getSelectedItems().forEach(function(value, index){
                 var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
-                var indice = oMaterial.indexOf(jObject);
+                oSelectItems.push(jObject);
+            });
+
+            oSelectItems.forEach(function(value, index){
+                var indice = oMaterial.indexOf(value);
 				if(indice != -1)
 				oMaterial.splice( indice, 1 );
             });
