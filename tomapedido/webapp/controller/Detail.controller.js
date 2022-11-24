@@ -175,8 +175,8 @@ sap.ui.define([
         _getStockMateriales: function(oDetailStockSet){
             try{
 				return new Promise(function (resolve, reject) {
-                    var urlget = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/";
-				    var urlpost = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/OperationSet";
+                    var urlget = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/";
+				    var urlpost = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/OperationSet";
                     var oData = {
                         "Type": "G",
                         "DetailStockSet": oDetailStockSet
@@ -397,8 +397,8 @@ sap.ui.define([
         _postProductos: function(oDataSap){
             try{
 				return new Promise(function (resolve, reject) {
-                    var urlget = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/";
-				    var urlpost = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/HeaderSOSet";
+                    var urlget = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/";
+				    var urlpost = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/HeaderSOSet";
 
                     Services.postoDataERPAsync(that, urlget, urlpost, oDataSap, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {

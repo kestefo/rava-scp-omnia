@@ -16,6 +16,13 @@
       "destination": "LIVE-DEV-200"
     },
     {
+      "source": "^/ERP/(.*)$",
+      "target":"$1",
+      "destination": "LIVE-DEV-200",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
       "source": "^/user-api(.*)",
       "target": "$1",
       "service": "sap-approuter-userapi"

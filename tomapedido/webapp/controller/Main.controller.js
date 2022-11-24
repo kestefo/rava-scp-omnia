@@ -210,7 +210,7 @@ sap.ui.define([
                     "oResults": []
                 };
 				return new Promise(function (resolve, reject) {
-                    var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
+                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
                     Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
                             success: function (oData, message) {
@@ -619,7 +619,7 @@ sap.ui.define([
         _getLineaCredito: function (oValue) {
 			try{
 				return new Promise(function (resolve, reject) {
-                    var sPath = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/CreditoSet?$filter=(Kunnr eq '"+oValue.codeCliente+"' and Segme eq 'ZCR01')";
+                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/CreditoSet?$filter=(Kunnr eq '"+oValue.codeCliente+"' and Segme eq 'ZCR01')";
                     Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
                             success: function (oData, message) {
