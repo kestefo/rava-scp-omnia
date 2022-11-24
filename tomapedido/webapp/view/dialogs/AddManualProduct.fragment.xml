@@ -11,7 +11,7 @@
                         <core:Item key="{oModelGetPedidoVenta>codeFamilia}" text="{oModelGetPedidoVenta>textFamilia}"/>
                     </ComboBox>
                 </HBox>
-                <Table id="tbMaterialesManual" mode="MultiSelect" growingThreshold="20"
+                <Table id="tbMaterialesManual" growingThreshold="20"
                     items="{oModelGetPedidoVenta>/oMaterialFamiliaSelected}">
                     <columns>
                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">

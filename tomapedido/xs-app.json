@@ -13,7 +13,7 @@
       "authenticationType": "xsuaa",
       "csrfProtection": false,
       "source": "^/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/(.*)$",
-      "destination": "LIFE-ERP-DEV"
+      "destination": "LIVE-DEV-200"
     },
     {
       "source": "^/user-api(.*)",

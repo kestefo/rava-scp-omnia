@@ -181,6 +181,8 @@ sap.ui.define([
                     "sEstado": "E",
                     "oResults": []
                 };
+
+                sCodeUser = "1000000012";
 				return new Promise(function (resolve, reject) {
                     var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
                     Services.getoDataERPSync(that, sPath, function (result) {

@@ -47,7 +47,8 @@
                             <HBox wrap="Wrap">
                                 <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"/>
                                 <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"/>
-                                <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan"/>
+                                <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" visible="false"/>
+                                <Button text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"/>
                             </HBox>
                         </HBox>
                         <IconTabBar

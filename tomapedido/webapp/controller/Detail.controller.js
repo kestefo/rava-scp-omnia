@@ -73,6 +73,7 @@ sap.ui.define([
 			});
         },
         _onPressNavButtonDetail: function(){
+            this._onClearDataDetailClient();
             this.oRouter.navTo("Main");
         },
         //Add Product
@@ -101,7 +102,7 @@ sap.ui.define([
             this._byId("frgIdAddManualProduct--tbMaterialesManual").setVisible(false);
             this._byId("frgIdAddManualProduct--btnNextAddManualProduct").setVisible(true);
             this._byId("frgIdAddManualProduct--btnAcceptAddManualProduct").setVisible(false);
-            this._byId("frgIdAddManualProduct--tbMaterialesManual").removeSelections(true);
+            // this._byId("frgIdAddManualProduct--tbMaterialesManual").removeSelections(true);
             this.oModelGetPedidoVenta.setProperty("/oMaterialFamiliaSelected", []);
         },
         _onSelectFamilia: function(oEvent){
@@ -119,6 +120,7 @@ sap.ui.define([
                 var oObjectSelectedItem = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
 
                 var oDetailStockSet = [];
+                let oMaterial = [];
                 oObjectSelectedItem.materiales.forEach(async function(value, index){
                     var jValue = {
                         "Type": "G",
@@ -128,12 +130,25 @@ sap.ui.define([
                         "Lgort": "0201",
                         "Labst": "0"
                     }
+
+                    const jValueMat = {
+                        "Codfa": value.Codfa,
+                        "Kbetr": value.Kbetr,
+                        "Labst": value.Labst,
+                        "Maktg": value.Maktg,
+                        "Matnr": value.Matnr,
+                        "Meins": value.Meins,
+                        "Txtfa": value.Txtfa,
+                        "Umrez": value.Umrez,
+                        "Vtweg": value.Vtweg
+                    };
                     oDetailStockSet.push(jValue)
+                    oMaterial.push(jValueMat);
                 });
 
                 Promise.all([that._getStockMateriales(oDetailStockSet)]).then((values) => {
                     var oStock = values[0].DetailStockSet.results;
-                    oObjectSelectedItem.materiales.forEach(async function(value, index){
+                    oMaterial.forEach(async function(value, index){
                         var oFindStock = oStock.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins);
                         value.Labst = "0";
                         value.icon = "sap-icon://outbox";
@@ -147,8 +162,8 @@ sap.ui.define([
                     that._byId("frgIdAddManualProduct--tbMaterialesManual").setVisible(true);
                     that._byId("frgIdAddManualProduct--btnNextAddManualProduct").setVisible(false);
                     that._byId("frgIdAddManualProduct--btnAcceptAddManualProduct").setVisible(true);
-                    that._byId("frgIdAddManualProduct--tbMaterialesManual").removeSelections(true);
-                    that.oModelGetPedidoVenta.setProperty("/oMaterialFamiliaSelected", oObjectSelectedItem.materiales);
+                    // that._byId("frgIdAddManualProduct--tbMaterialesManual").removeSelections(true);
+                    that.oModelGetPedidoVenta.setProperty("/oMaterialFamiliaSelected", oMaterial);
                     sap.ui.core.BusyIndicator.hide(0);
                 }).catch(function (oError) {
                     console.log(oError);
@@ -210,7 +225,6 @@ sap.ui.define([
                 oSource.setValue("0");
             }
 
-            this.getModel("oModelGetPedidoVenta").refresh();
 
         },
         _onAcceptProductManual: function(oEvent){
@@ -218,17 +232,20 @@ sap.ui.define([
             var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
             var oMaterialesSelected = [];
 
-            var oSelectItems = tbMaterialesManual.getSelectedItems();
+            var oSelectItems = tbMaterialesManual.getItems();
             if(oSelectItems.length == 0){
                 that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
                 return;
             }
 
             oSelectItems.forEach(function(value, index){
-                oMaterialesSelected.push(value.getBindingContext("oModelGetPedidoVenta").getObject());
+                var jObject = value.getBindingContext("oModelGetPedidoVenta").getObject();
+                if(parseFloat(jObject.cantidad) > 0){
+                    oMaterialesSelected.push(jObject);
+                }
             });
 
-            var booleanNotCant = false;
+            var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
 
             oMaterialesSelected.forEach(function(value, index){
                 value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
@@ -236,24 +253,17 @@ sap.ui.define([
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
                 value.status = "S";
-                if(parseFloat(value.cantidad) === 0){
-                    booleanNotCant = true
-                }
+                oMaterial.push(value);
             });
-
-            if(booleanNotCant){
-                that.getMessageBox("error", that.getI18nText("errorNotCant"));
-                return;
-            }
             
-            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial", oMaterialesSelected);
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
 
             this._onClearDataAddManualProduct();
             this._onClearComponentAddManualProduct();
             oSource.getParent().close();
 
-            this.onConteoMaterial(oMaterialesSelected);
-            // this.onUpdateMaterial(oMaterialesSelected);
+            this.onConteoMaterial();
+            this.onUpdateMaterial(oMaterialesSelected);
         },
         onConteoMaterial: function(){
             var tbProductos = this._byId("tbProductos");
@@ -276,6 +286,117 @@ sap.ui.define([
             
             that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat(total.toString()));
             that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat(cantidad.toString()));
+        },
+        onUpdateMaterial: function(oMaterialesSelected){
+            
+        },
+        _onPressDeletePro: function(oEvent){
+            var oSource = oEvent.getSource();
+            var tbProductos = this._byId("tbProductos");
+            var oMaterialesSelected = [];
+
+            var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oSelectItems = tbProductos.getSelectedItems();
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+                return;
+            }
+
+            oSelectItems.forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                var indice = oMaterial.indexOf(jObject);
+				if(indice != -1)
+				oMaterial.splice( indice, 1 );
+            });
+
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+            this._byId("tbProductos").removeSelections(true);
+
+            this.onConteoMaterial();
+        },
+        _onPressSave: function(){
+            var tbProductos = this._byId("tbProductos");
+            var oSelectItems = tbProductos.getItems();
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorNotProduct"));
+                return;
+            }
+
+            var oMaterial = [];
+            var oMaterialSap = [];
+            oSelectItems.forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                var jDataSap = {
+                    "Type": "C",
+                    "Posnr": "",
+                    "Matnr": jObject.Matnr,
+                    "Werks": "1103",
+                    "Lgort": "0201",
+                    "Fkimg": "",
+                    "Meins": jObject.Meins
+                };
+				oMaterial.push(jObject);
+                oMaterialSap.push(jDataSap);
+            });
+
+            utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
+                if(value){
+                    sap.ui.core.BusyIndicator.show(0);
+                    var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+                    var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
+                    var date = that.reformatDateString(that.getYYYYMMDD(new Date()));
+                    var dateFormat = date.replace("/",".").replace("/",".");
+
+                    var oDataSap={
+                        "Type": "C",
+                        "Kunnr": oSelectedCliente.codeCliente,
+                        "Vkorg": "1000",
+                        "Vtweg": "10",
+                        "Spart": "XX",
+                        "Bstkd": dateFormat,
+                        "Waerk": oSelectedLineaCredito.Waers,
+                        "DetailSOSet": oMaterialSap,
+                        "ResultSOSet": [
+                        {
+                        "Type": "C",
+                        "Posnr": "",
+                        "Msage": ""
+                        }
+                        ]
+                    };
+                    Promise.all([that._postProductos(oDataSap)]).then((values) => {
+                        that._onClearComponentTableProduct();
+                        that._onPressNavButtonDetail();
+                        sap.ui.core.BusyIndicator.hide(0);
+                    }).catch(function (oError) {
+                        that.getMessageBox("error", that.getI18nText("errorSave"));
+                        sap.ui.core.BusyIndicator.hide(0);
+                    });
+                }
+            });
+            
+            
+        },
+        _postProductos: function(oDataSap){
+            try{
+				return new Promise(function (resolve, reject) {
+                    var urlget = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/";
+				    var urlpost = "/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/HeaderSOSet";
+
+                    Services.postoDataERPAsync(that, urlget, urlpost, oDataSap, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                resolve(oData.data);
+                            },
+                            error: function (message) {
+                                reject(message);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
         },
         _onChangeCounter: function(oEvent){
             var oSource = oEvent.getSource();

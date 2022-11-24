@@ -13,10 +13,6 @@ modules:
       build-result: resources
       requires:
         - artifacts:
-            - Cobranzaomnia.zip
-          name: Cobranzaomnia
-          target-path: resources/
-        - artifacts:
             - tomapedido.zip
           name: tomapedido
           target-path: resources/
@@ -28,16 +24,6 @@ modules:
             - reportecartera.zip
           name: reportecartera
           target-path: resources/
-  - name: Cobranzaomnia
-    type: html5
-    path: omnia
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - 'npm run build:cf'
-      supported-platforms: []
   - name: Omnia-destination-content
     type: com.sap.application.content
     requires:

@@ -308,6 +308,9 @@ sap.ui.define([
 				case "I":
 					oItem.MessageType = "Information";
 					break;
+				case "C":
+					oItem.MessageType = "Confirm";
+					break;
 				default:
 				}
 			});
@@ -604,6 +607,7 @@ sap.ui.define([
 		_onClearDataDetailClient: function(){
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});
 		},
 		_onClearComponentAddManualProduct: function(){
@@ -615,6 +619,11 @@ sap.ui.define([
 		},
 		_onClearDataAddManualProduct: function(){
             this.oModelGetPedidoVenta.setProperty("/oMaterialFamiliaSelected", []);
+		},
+		_onClearComponentTableProduct: function(){
+			this._byId("tbProductos").removeSelections(true);
+		},
+		_onClearDatatTableProduct: function(){
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);
@@ -753,7 +762,114 @@ sap.ui.define([
 			var json = {};
 			parse(root, json);
 			console.log(json);
-		  }
+		},
+
+		getYYYYMMDD: function (e) {
+			var t = e.getDate();
+			var n = e.getMonth() + 1;
+			var r = e.getFullYear();
+			if (t < 10) {
+				t = "0" + t
+			}
+			if (n < 10) {
+				n = "0" + n
+			}
+			var o = r + "/" + n + "/" + t;
+			return o
+		},
+		getYYYYMMDDHHMMSS: function (e) {
+			var t = e.getDate();
+			var n = e.getMonth() + 1;
+			var r = e.getFullYear();
+			if (t < 10) {
+				t = "0" + t
+			}
+			if (n < 10) {
+				n = "0" + n
+			}
+			var o = r + "-" + n + "-" + t;
+			var i = e.getHours();
+			var u = e.getMinutes();
+			var a = e.getSeconds();
+			o = o + " " + this.getStrZero(i, 2) + ":" + this.getStrZero(u, 2) + ":" + this.getStrZero(a, 2);
+			return o
+		},
+		getFechaNotNull: function (e) {
+			var t = e;
+			if (e === "" || e === undefined || e === null) {
+				t = undefined
+			}
+			return t
+		},
+		formatDayDateHana: function (e) {
+			if (e) {
+				var split = e.split("T");
+				var date = split[0].replaceAll("-","/");
+				var fechaf = this.reverseStringForParameter(date,"/");;
+				return fechaf;
+			}
+		},
+		formatYYYYMMDDAbap: function (e) {
+			if (e) {
+				var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+					pattern: "dd/MM/yyyy"
+				});
+				var fecha = new Date(e.substr(0, 4) + "/" + e.substr(4, 2) + "/" + e.substr(6, 2));
+				var fechaf = dateFormat.format(fecha);
+				return fechaf;
+			}
+		},
+		formatHHMMSSAbap: function (e) {
+			if (e) {
+				// var sHour = e.substr(0,2) + ":" + e.substr(2,2) + ":" +e.substr(4,2);
+				var sHourf = e.substr(0, 2) + ":" + e.substr(2, 2) + ":" + e.substr(4, 2);
+				// var sHour = e.substr(0,2);
+				// var sMinute = e.substr(2,2);
+				// var sSecond = e.substr(4,2);
+				// var ampm = parseInt(sHour) >= 12 ? 'pm' : 'am';
+				// sHour = sHour % 12;
+				// sHour = sHour ? sHour : 12; 
+				// var sHourf = sHour + sMinute + sSecond + ampm;
+				return sHourf;
+			}
+		},
+		convertformatDateTotalAbapInDateTotal: function(sValueDate, sValueHour){
+			if(sValueDate != null &&  sValueDate != ""){
+				var hour = "";
+				if(sValueHour != null &&  sValueHour != ""){
+					hour = this.convertformatHourAbapInHour(sValueHour);
+				}
+				var fecha = "";
+				if(hour){
+					fecha = new Date(sValueDate.substr(0,4)+"/"+sValueDate.substr(4,2)+"/"+sValueDate.substr(6,2) + " " + hour);
+				}else{
+					fecha = new Date(sValueDate.substr(0,4)+"/"+sValueDate.substr(4,2)+"/"+sValueDate.substr(6,2));
+				}
+				return fecha;
+			}else{
+				return sValue;
+			}
+		},
+		convertformatDateAbapInDate: function(sValue){
+			if(sValue != null &&  sValue != ""){
+				var fecha = new Date(sValue.substr(0,4) + "/" + sValue.substr(4,2) + "/" +sValue.substr(6,2) );
+				return fecha;
+			}else{
+				return sValue;
+			}
+		},
+		convertformatHourAbapInHour: function(sValue){
+			if(sValue != null &&  sValue != ""){
+				var hour = sValue.substr(0,2) + ":" + sValue.substr(2,2) + ":" +sValue.substr(4,2);
+				return hour;
+			}else{
+				return sValue;
+			}
+		},
+		reformatDateString: function(s) {
+			var b = s.split(/\D/);
+			return b.reverse().join('/');
+		},
 
 	});
 
