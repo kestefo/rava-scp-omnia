@@ -8,7 +8,7 @@
                 <f:title>
                     <f:DynamicPageTitle>
                         <f:heading>
-                            <Title text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeCliente} {oModelPedidoVenta>/DataGeneral/oSelectedCliente/nameCliente}" 
+                            <Title text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/rucCliente} {oModelPedidoVenta>/DataGeneral/oSelectedCliente/nameCliente}" 
                                 wrapping="true" class="sapUiSmallMarginTop" level="H2"/>
                         </f:heading>
                         <f:navigationActions>

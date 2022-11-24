@@ -16,7 +16,7 @@
                 <Text text="{i18n>textDetailAddPedido}"/>
                 <ComboBox id="slUsuario" width="100%" 
                     items="{oModelGetPedidoVenta>/oClientePorVendedor}" change="onValidateChange">
-                    <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Kunnr} {oModelGetPedidoVenta>Namec}"/>
+                    <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Stcd1} {oModelGetPedidoVenta>Namec}"/>
                 </ComboBox>
             </VBox>
         </content>

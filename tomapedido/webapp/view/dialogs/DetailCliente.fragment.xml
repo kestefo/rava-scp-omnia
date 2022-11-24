@@ -1,18 +1,18 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:uxap="sap.uxap">
 	<Dialog contentHeight="auto" contentWidth="auto" afterOpen="_afterOpenAddPedido"
-        title="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeCliente} {oModelPedidoVenta>/DataGeneral/oSelectedCliente/nameCliente}">
+        title="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/rucCliente} {oModelPedidoVenta>/DataGeneral/oSelectedCliente/nameCliente}">
         <uxap:ObjectPageHeaderContent>
             <uxap:content>
-                <VBox width="auto">
-                    <HBox width="auto" justifyContent="SpaceBetween">
+                <VBox>
+                    <HBox justifyContent="SpaceBetween">
                         <Title text="{i18n>textDatosContacto}" level="H1" />
                         <!-- <Button press="_onPressEditContact" text="{i18n>txtbtnEditar}" icon="sap-icon://edit" tooltip="{i18n>tooltipbtnEditar}"/> -->
                     </HBox>
-                    <HBox>
-                        <Text text="{i18n>textEmail}:{i18n>textDataEmail}"/>
+                    <HBox justifyContent="SpaceBetween">
+                        <Text text="{i18n>textEmail}:{oModelPedidoVenta>/DataGeneral/oSelectedCliente/sTextDescContacto}"/>
                         <ToolbarSpacer width="100px"/>
-                        <Text text="{i18n>textPhone}:{i18n>textDataPhone}"/>
+                        <Text text="{i18n>textPhone}:{oModelPedidoVenta>/DataGeneral/oSelectedCliente/sTextTelContacto}"/>
                     </HBox>
                 </VBox>
             </uxap:content>
@@ -34,9 +34,9 @@
                         <core:Item key="{oModelPedidoVenta>key}" text="{oModelPedidoVenta>desc}"/>
                     </ComboBox> -->
                     <Label text="{i18n>textDirecciones}"/>
-                    <ComboBox id="slDirecciones" width="100%" selectedKey="01"
+                    <ComboBox id="slDirecciones" width="100%" selectedKey="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeDirecccion}"
                         items="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/oDireccion}">
-                        <core:Item key="{oModelPedidoVenta>sKey}" text="{oModelPedidoVenta>sDireccion}"/>
+                        <core:Item key="{oModelPedidoVenta>posStras}" text="{oModelPedidoVenta>Stras}"/>
                     </ComboBox>
                     <Label text="{i18n>textPuntoVenta}"/>
                     <Input id="inPuntoVenta" maxLength="40" enabled="false"
