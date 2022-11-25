@@ -341,15 +341,18 @@ sap.ui.define([
 
             var oMaterial = [];
             var oMaterialSap = [];
+            
+            var cont = 0;
             oSelectItems.forEach(function(value, index){
+                cont = cont + 10;
                 var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
                 var jDataSap = {
                     "Type": "C",
-                    "Posnr": "",
+                    "Posnr": that.zfill(cont,6),
                     "Matnr": jObject.Matnr,
-                    "Werks": "1103",
-                    "Lgort": "0201",
-                    "Fkimg": "",
+                    "Werks": "1020",
+                    "Lgort": "0201",//por revisar
+                    "Fkimg": jObject.cantidad,
                     "Meins": jObject.Meins
                 };
 				oMaterial.push(jObject);
@@ -358,32 +361,61 @@ sap.ui.define([
 
             utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
                 if(value){
-                    sap.ui.core.BusyIndicator.show(0);
                     var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
                     var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
                     var date = that.reformatDateString(that.getYYYYMMDD(new Date()));
-                    var dateFormat = date.replace("/",".").replace("/",".");
+                    var dateFormat = date;
+
+                    var sComprobante = parseFloat(oSelectedCliente.codeComprobante) == 0 ? "BB":"FA";
+                    var sPardm = oSelectedCliente.textPardm;
+                    var sKundm = oSelectedCliente.textKundm;
 
                     var oDataSap={
                         "Type": "C",
                         "Kunnr": oSelectedCliente.codeCliente,
                         "Vkorg": "1000",
-                        "Vtweg": "10",
+                        "Vtweg": oSelectedCliente.codeCanal,
                         "Spart": "XX",
-                        "Bstkd": dateFormat,
-                        "Waerk": oSelectedLineaCredito.Waers,
+                        "Bstdk": date,
+                        "Waerk": "PEN",
+                        "ReqDt": oSelectedCliente.textFechaEntrega,
+                        "Bstkd": oSelectedCliente.textOrdenCompra,
+                        "Obser": oSelectedCliente.textObservacion,
+                        "Pardm": sPardm,
+                        "Kundm": sKundm,
+                        "TipCo": sComprobante,
+                        "Vbeln": "",
                         "DetailSOSet": oMaterialSap,
                         "ResultSOSet": [
-                        {
-                        "Type": "C",
-                        "Posnr": "",
-                        "Msage": ""
-                        }
+                            {
+                                "Type": "C",
+                                "Posnr": "",
+                                "Msage": ""
+                            }
                         ]
                     };
+                    
+                    sap.ui.core.BusyIndicator.show(0);
                     Promise.all([that._postProductos(oDataSap)]).then((values) => {
-                        that._onClearComponentTableProduct();
-                        that._onPressNavButtonDetail();
+
+                        var oResp = values[0].ResultSOSet.results;
+                        var booleanError = false;
+                        var sSms = ""
+                        oResp.forEach(function(value,index){
+                            if(value.Type == "E"){
+                                booleanError = true;
+                                sSms += value.Msage + "\n";
+                            }
+                        });
+
+                        if(booleanError){
+                            that.getMessageBox("error", sSms);
+                        }else{
+                            utilUI.messageBox(oResp[oResp.length-1].Msage,"S", function(value){
+                                that._onClearComponentTableProduct();
+                                that._onPressNavButtonDetail();
+                            });
+                        }
                         sap.ui.core.BusyIndicator.hide(0);
                     }).catch(function (oError) {
                         that.getMessageBox("error", that.getI18nText("errorSave"));

@@ -147,16 +147,8 @@ sap.ui.define([
                         oClienteGroup.push(jFamilia);
                     });
                     that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", oClienteGroup);
-    
-                    $.each(that._groupBy(oMateriales,'Codfa'), function (x, y) {
-                        var jFamilia = {
-                            "codeFamilia": y[0].Codfa,
-                            "textFamilia": y[0].Txtfa,
-                            "materiales": y
-                        };
-                        oFamiliaMateriales.push(jFamilia);
-                    });
-                    that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+                    that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", oMateriales);
+                    that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", []);
                 }else{
                     that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", []);
                     that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", []);
@@ -453,9 +445,30 @@ sap.ui.define([
 
             var oSelectedItem = slUsuario.getSelectedItem();
             var oObjectSelected = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
+            var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
             sap.ui.core.BusyIndicator.show(0);
             Promise.all([]).then((values) => {
                 that._dialogSelectClient.close();
+
+                var oMaterialFilter = oMaterialTotal.filter(function(value,index){
+                    if(oObjectSelected.Vtweg == value.Vtweg){
+                        return value;
+                    }else{
+                        return !value;
+                    }
+                });
+
+                var oFamiliaMateriales = [];
+                $.each(that._groupBy(oMaterialFilter,'Codfa'), function (x, y) {
+                    var jFamilia = {
+                        "codeFamilia": y[0].Codfa,
+                        "textFamilia": y[0].Txtfa,
+                        "materiales": y
+                    };
+                    oFamiliaMateriales.push(jFamilia);
+                });
+                that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+
                 that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
                 that._onClearComponentDetailClient();
 
@@ -492,6 +505,8 @@ sap.ui.define([
                     "textComprobante": "",
                     "textOrdenCompra": "",
                     "textObservacion": "",
+                    "textPardm": "",
+                    "textKundm": ""
                 };
 
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
@@ -568,6 +583,8 @@ sap.ui.define([
             }
 
             var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+            var sPardm = slDirecciones.getSelectedItem().getBindingContext("oModelPedidoVenta").getObject().Pardm;
+            var sKundm = slDirecciones.getSelectedItem().getBindingContext("oModelPedidoVenta").getObject().Kundm;
 
             utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
                 if(value){
@@ -578,6 +595,8 @@ sap.ui.define([
                     oSelectedCliente.textComprobante = sComprobante;
                     oSelectedCliente.textOrdenCompra = sOrdenCompra;
                     oSelectedCliente.textObservacion = sObservacion;
+                    oSelectedCliente.textPardm = sPardm;
+                    oSelectedCliente.textKundm = sKundm;
                         
                     Promise.all([that._getLineaCredito(oSelectedCliente)]).then((values) => {
                         var sNumPedido = "1";

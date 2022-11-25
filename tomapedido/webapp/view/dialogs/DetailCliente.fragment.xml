@@ -76,7 +76,7 @@
                     </RadioButtonGroup>
                     <Label text="{i18n>textOrdenCompra}"/>
                     <VBox>
-                        <Input id="inOrdenCompra" value="" maxLength="40" placeholder="{i18n>phOrdenCompra}">
+                        <Input id="inOrdenCompra" value="" maxLength="35" placeholder="{i18n>phOrdenCompra}">
                             <layoutData>
                                 <l:GridData span="L3 M5"/>
                             </layoutData>
@@ -85,7 +85,7 @@
                     </VBox>
                     <Label text="{i18n>textObservaciones}"/>
                     <TextArea id="tardenCompra" value=""  placeholder="{i18n>phObservaciones}" showExceededText="true" 
-                        maxLength="1000" rows="5" width="100%" valueLiveUpdate="false">
+                        maxLength="132" rows="5" width="100%" valueLiveUpdate="false">
 						<layoutData>
 				             <l:GridData span="L3 M5"/>
 				        </layoutData>

@@ -530,6 +530,13 @@ sap.ui.define([
 				return "0.00";
 			}
 		},
+		formatMay: function (value) {
+			if(value){
+				return value.toUpperCase();
+			}else{
+				return "";
+			}
+		},
 		onValidateChange: function(oEvent){
 			var kSelected=oEvent.getSource().getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
@@ -668,6 +675,26 @@ sap.ui.define([
                 return groups
             }, {});
         },
+		zfill: function(number, width) {
+			var numberOutput = Math.abs(number); /* Valor absoluto del número */
+			var length = number.toString().length; /* Largo del número */ 
+			var zero = "0"; /* String de cero */  
+			
+			if (width <= length) {
+				if (number < 0) {
+					 return ("-" + numberOutput.toString()); 
+				} else {
+					 return numberOutput.toString(); 
+				}
+			} else {
+				if (number < 0) {
+					return ("-" + (zero.repeat(width - length)) + numberOutput.toString()); 
+				} else {
+					return ((zero.repeat(width - length)) + numberOutput.toString()); 
+				}
+			}
+		},
+
         onInvoiceDateChange: function(oEvent){
             var oSource = oEvent.getSource();
             var sValue = oSource.getValue();
@@ -724,7 +751,6 @@ sap.ui.define([
 				return false;
 			}
 		},
-		
 		ValidateDate:function(fecha){
 			var fechaf = fecha.split("/");
 			var day = fechaf[0];

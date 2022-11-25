@@ -30,7 +30,7 @@
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleDetColTipo}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleDetColPrecio}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -57,7 +57,7 @@
                 <cells>
                     <Text text="{oModelPedidoVenta>Maktg}"/>
                     <Text text="{oModelPedidoVenta>cantidad}"/>
-                    <Text text="{oModelPedidoVenta>tipo}"/>
+                    <Text text="{path:'oModelPedidoVenta>Kbetr', formatter: '.currencyFormat'}"/>
                     <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormat'}"/>
                     <Text text="{oModelPedidoVenta>descuentos}"/>
                     <Text text="{oModelPedidoVenta>descuentosVolumen}"/>

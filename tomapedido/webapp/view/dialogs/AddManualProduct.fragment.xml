@@ -8,7 +8,7 @@
                     <!-- <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia" -->
                     <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia"
                         items="{oModelGetPedidoVenta>/oFamiliaMaterial}">
-                        <core:Item key="{oModelGetPedidoVenta>codeFamilia}" text="{oModelGetPedidoVenta>textFamilia}"/>
+                        <core:Item key="{oModelGetPedidoVenta>codeFamilia}" text="{path:'oModelGetPedidoVenta>textFamilia', formatter:'.formatMay'}"/>
                     </ComboBox>
                 </HBox>
                 <Table id="tbMaterialesManual" growingThreshold="20"
@@ -48,7 +48,7 @@
                                 <Text text="{path:'oModelGetPedidoVenta>Labst', formatter:'.formatInteger'}"/>
                                 <HBox>
                                     <ObjectStatus icon="{oModelGetPedidoVenta>icon}" state="{oModelGetPedidoVenta>state}" />
-                                    <Text text="{oModelGetPedidoVenta>Meins}"/>
+                                    <Text text="{oModelGetPedidoVenta>Umrez} {oModelGetPedidoVenta>Meins}"/>
                                 </HBox>
                                 <Input value="{oModelGetPedidoVenta>cantidad}" width="auto" liveChange="_onLiveChangeCantidad"></Input>
                             </cells>
