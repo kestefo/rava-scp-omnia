@@ -31,7 +31,11 @@ sap.ui.define([
                     sNumPedido: "",
                     sStatus: "",
                     oSelectedCliente:{},
-                    oSelectedLineaCredito:{},
+                    oMaterialSelectEan:{},
+                    oMaterialSelectMasive:{
+                        titulo: "",
+                        oDataCargada: []
+                    },
                     oMaterial:[]
                 };
                 return oModel;

@@ -31,11 +31,17 @@ sap.ui.define([
 
                 var oProductosSave = values[0];
                 if(that.isEmpty(oProductosSave)){
-                    that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
-                    that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
+                    // that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
+                    // that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
+
+                    that._byId("lTotalProductos").setText(this.currencyFormat("0"));
+                    that._byId("lCantidadProductos").setText(this.currencyFormat("0"));
                 }else{
-                    that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
-                    that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
+                    // that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
+                    // that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
+
+                    that._byId("lTotalProductos").setText(this.currencyFormat("0"));
+                    that._byId("lCantidadProductos").setText(this.currencyFormat("0"));
                 }
                 // var oData = models.JsonProductos();
                 // var iCounter = this._byId("siContador").getValue();
@@ -86,7 +92,6 @@ sap.ui.define([
             this._onClearComponentAddManualProduct();
             this._onClearDataAddManualProduct();
         },
-        //Add Product
         _onChangeFamilia: function(oEvent){
             var kSelected=oEvent.getSource().getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
@@ -227,19 +232,6 @@ sap.ui.define([
 
 
         },
-        _onLiveChangeBuscar: function(oEvent){
-            var oSource = oEvent.getSource();
-            var sValue = oSource.getValue();
-
-            var oTable = this.byId("tbProductos");
-
-            var aFilter = [];
-            if (!this.isEmpty(sValue))
-                aFilter.push(new Filter("Maktg", 'Contains', sValue));
-
-            oTable.getBinding("items").filter(aFilter);
-            
-        },
         _onAcceptProductManual: function(oEvent){
             var oSource = oEvent.getSource();
             var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
@@ -262,7 +254,6 @@ sap.ui.define([
 
             oMaterialesSelected.forEach(function(value, index){
                 value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
-                value.tipo = "";
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
                 value.status = "S";
@@ -278,6 +269,181 @@ sap.ui.define([
             this.onConteoMaterial();
             this.onUpdateMaterial(oMaterialesSelected);
         },
+        //Add Product Manual
+
+        //Add Product EAN
+        _onPressAddEan: function(){
+            this["_dialogAddProduct"].close();
+            this.setFragment("_dialogAddEan", this.frgIdAddEan, "AddEan", this);
+
+            this._onClearComponentDialogEan();
+            this._onClearDataDialogEan()
+        },
+        _onPressSearchEan: function(){
+            var sValueCode = this._byId("frgIdAddEan--inCodeEan").getValue();
+            if(this.isEmpty(sValueCode)){
+                this.getMessageBox("error", that.getI18nText("errorNotProduct"));
+                return;
+            }
+            var oMaterialTotalFilter = that.oModelGetPedidoVenta.getProperty("/oMaterialTotalFilter");
+            var sValueCodeFormat = this.zfill(sValueCode, 18);
+            var oMaterialEan = [];
+            var oDetailStockSet = [];
+            oMaterialTotalFilter.forEach(function(value, index){
+                if(value.Ean11 === sValueCode){
+                    var jValue = {
+                        "Type": "G",
+                        "Matnr": value.Matnr,
+                        "Meins": value.Meins,
+                        "Werks": "1020",
+                        "Lgort": "0201",
+                        "Labst": "0"
+                    }
+                    oMaterialEan.push(value);
+                    oDetailStockSet.push(jValue)
+
+                }
+            });
+
+            if(oMaterialEan.length === 0){
+                this.getMessageBox("error", that.getI18nText("errorNotProductSearch"));
+                return;
+            }
+
+            Promise.all([that._getStockMateriales(oDetailStockSet)]).then((values) => {
+                var oStock = values[0].DetailStockSet.results;
+                oMaterialEan.forEach(async function(value, index){
+                    var oFindStock = oStock.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins);
+                    value.Labst = "0";
+                    value.icon = "sap-icon://outbox";
+                    value.state = "Information",
+                    value.cantidad = "0";
+                    if(!that.isEmpty(oFindStock)){
+                        value.Labst = oFindStock.Labst;
+                    }
+                });
+                this.oModelGetPedidoVenta.setProperty("/oMaterialEanSelected",oMaterialEan);
+            }).catch(function (oError) {
+                console.log(oError);
+                that.getMessageBox("error", that.getI18nText("errorData"));
+                sap.ui.core.BusyIndicator.hide(0);
+            });
+        },
+        _onAcceptProductEan: function(oEvent){
+            var oSource = oEvent.getSource();
+            var tbMaterialesManual = this._byId("frgIdAddEan--tbMaterialesEan");
+            var oMaterialesSelected = [];
+
+            var oSelectItems = tbMaterialesManual.getItems();
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+                return;
+            }
+
+            oSelectItems.forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelGetPedidoVenta").getObject();
+                if(parseFloat(jObject.cantidad) > 0){
+                    oMaterialesSelected.push(jObject);
+                }
+            });
+
+            if(oMaterialesSelected.length === 0){
+                that.getMessageBox("error", that.getI18nText("errorNotCant"));
+                return;
+            }
+
+            var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+
+            oMaterialesSelected.forEach(function(value, index){
+                delete value["__metadata"];
+                value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
+                value.descuentos = "0%";
+                value.descuentosVolumen = "0%";
+                value.status = "S";
+                oMaterial.push(value);
+            });
+            
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+
+            oSource.getParent().close();
+
+            this.onConteoMaterial();
+        },
+        //Add Product EAN
+
+        //Add Product Masive
+        _onPressLoadMasive: function(){
+            this["_dialogAddProduct"].close();
+            var oModelHtml = {
+                HTML : 
+                "<p>"+ this.getI18nText("textSegundoCarga") +
+                "<a style=\"color:blue; font-weight:600;\">"+ this.getI18nText("textTerceroCarga") +
+                "</a> "+ this.getI18nText("textCuartoCarga") +"</p>"
+            }
+            this.oModelPedidoVenta.setProperty("/textHtml", oModelHtml);
+            this.setFragment("_dialogLoadMasive", this.frgIdLoadMasive, "LoadMasive", this);
+        },
+        //Importar archivo excel tabla detalle
+        _onImportPress: function (oEvent) {
+            console.log(oEvent);
+            var pUpload = $.Deferred();
+            var file = oEvent.getParameter("files")[0];
+            if(file.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && file.type !="application/vnd.ms-excel"){
+                that.getMessageBox("error", that.getI18nText("msgErrorFormat"));
+            }
+
+            if (file && window.FileReader) {
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+ 
+                    function arrayBufferToBase64(buffer) {
+                        var binary = '';
+                        var bytes = new Uint8Array(buffer);
+                        var len = bytes.byteLength;
+                        for (var i = 0; i < len; i++) {
+                            binary += String.fromCharCode(bytes[i]);
+                        }
+                        return binary;
+                    }
+ 
+                    var result = {};
+                    var data;
+                    var arr;
+                    var xlsx;
+                    data = evt.target.result;
+                    //var xlsx = XLSX.read(data, {type: 'binary'});
+                    arr = arrayBufferToBase64(data); //String.fromCharCode.apply(null, new Uint8Array(data));
+                    xlsx = XLSX.read(btoa(arr), {
+                        type: 'base64'
+                    });
+                    result = xlsx.Strings;
+                    result = {};
+                    xlsx.SheetNames.forEach(function (sheetName) {
+                        var rObjArr = XLSX.utils.sheet_to_row_object_array(xlsx.Sheets[sheetName]);
+                        if (rObjArr.length > 0) {
+                            result[sheetName] = rObjArr;
+                        }
+                    });
+                    var contenido = result[xlsx.SheetNames[0]];
+                    pUpload.resolve(contenido);
+                }.bind(this);
+                reader.readAsArrayBuffer(file);
+            }
+ 
+            pUpload.then(function (value) {
+                var oDataCampos = {};
+                oDataCampos.aItems = [];
+                value.forEach(function (item) {
+
+
+                }.bind(this));
+
+                that.getMessageBox("success", that.getI18nText("msgGeneraImport"));
+            }.bind(this));
+        },
+        //Add Product Masive
+
+        //FunctionDetail
         onConteoMaterial: function(){
             var tbProductos = this._byId("tbProductos");
             var oItems = tbProductos.getItems();
@@ -297,8 +463,11 @@ sap.ui.define([
                 total += parseFloat(value.total);
             });
             
-            that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat(total.toString()));
-            that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat(cantidad.toString()));
+            // that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat(total.toString()));
+            // that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat(cantidad.toString()));
+
+            that._byId("lTotalProductos").setText( this.currencyFormat(total.toString()));
+            that._byId("lCantidadProductos").setText( this.currencyFormat(cantidad.toString()));
 
             var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
             oSelectedLineaCredito.sConsumo = (parseFloat(oSelectedLineaCredito.Amount) + parseFloat(total)).toString();
@@ -341,7 +510,7 @@ sap.ui.define([
             var tbProductos = this._byId("tbProductos");
             var oSelectItems = tbProductos.getItems();
             if(oSelectItems.length == 0){
-                that.getMessageBox("error", that.getI18nText("errorNotProduct"));
+                that.getMessageBox("error", that.getI18nText("errorNotProductSave"));
                 return;
             }
 
@@ -375,6 +544,8 @@ sap.ui.define([
                     var sComprobante = parseFloat(oSelectedCliente.codeComprobante) == 0 ? "BB":"FA";
                     var sPardm = oSelectedCliente.textPardm;
                     var sKundm = oSelectedCliente.textKundm;
+                    var sKundm = oSelectedCliente.textKundm;
+                    var sCondPago = oSelectedCliente.codeCondPago === 'C001' ? oSelectedCliente.codeCondPago: '';
 
                     var oDataSap={
                         "Type": "C",
@@ -390,6 +561,7 @@ sap.ui.define([
                         "Pardm": sPardm,
                         "Kundm": sKundm,
                         "TipCo": sComprobante,
+                        "Zterm": sCondPago,
                         "Vbeln": "",
                         "DetailSOSet": oMaterialSap,
                         "ResultSOSet": [
@@ -453,6 +625,19 @@ sap.ui.define([
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
 			}
         },
+        _onLiveChangeBuscar: function(oEvent){
+            var oSource = oEvent.getSource();
+            var sValue = oSource.getValue();
+
+            var oTable = this.byId("tbProductos");
+
+            var aFilter = [];
+            if (!this.isEmpty(sValue))
+                aFilter.push(new Filter("Maktg", 'Contains', sValue));
+
+            oTable.getBinding("items").filter(aFilter);
+            
+        },
         _onChangeCounter: function(oEvent){
             var oSource = oEvent.getSource();
             var iCounter = oSource.getValue();
@@ -491,19 +676,8 @@ sap.ui.define([
 
             this._byId("vbTableDetalle").addItem(VBox);
         },
-        _onPressLoadMasive: function(){
-            var oModelHtml = {
-                HTML : 
-                "<p>"+ this.getI18nText("textSegundoCarga") +
-                "<a href=\"//www.sap.com\" style=\"color:blue; font-weight:600;\">"+ this.getI18nText("textTerceroCarga") +
-                "</a> "+ this.getI18nText("textCuartoCarga") +"</p>"
-            }
-            this.oModelPedidoVenta.setProperty("/textHtml", oModelHtml);
-            this.setFragment("_dialogLoadMasive", this.frgIdLoadMasive, "LoadMasive", this);
-        },
-        _onPressAddEan: function(){
-            this.setFragment("_dialogAddEan", this.frgIdAddEan, "AddEan", this);
-        },
+        
+        
         _onPressPromotion: function(){
             var navCon = this.byId("navcIdGroupPromotions");
             navCon.to(this.byId("IdPromotionsCenter"));

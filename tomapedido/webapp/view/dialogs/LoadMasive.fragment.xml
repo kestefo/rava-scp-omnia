@@ -5,7 +5,7 @@
             <VBox width="auto" class="sapUiSmallMargin">
                 <Text text="{i18n>textPrimeraCarga}"/>
                 <u:FileUploader name="myFileUpload" icon="sap-icon://upload" change="_onImportPress" uploadUrl="upload/" sameFilenameAllowed="true"
-                    buttonOnly="true" fileType="Xlsx" buttonText="{i18n>btnUpload}" tooltip="{i18n>toolUpload}" uploadComplete="_onHandleUploadComplete">
+                    buttonOnly="true" fileType="Xlsx,Xls" buttonText="{i18n>btnUpload}" tooltip="{i18n>toolUpload}" uploadComplete="_onHandleUploadComplete">
                 </u:FileUploader>
                 <FormattedText htmlText="{oModelPedidoVenta>/textHtml/HTML}"/>
             </VBox>

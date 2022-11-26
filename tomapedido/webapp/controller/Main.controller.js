@@ -135,7 +135,17 @@ sap.ui.define([
                             "Txtcp":y[0].Txtcp,
                             "Vtweg":y[0].Vtweg,
                             "Txtca":y[0].Txtca,
-                            "oDireccion": []
+                            "oDireccion": [],
+                            "oCondPago": [
+                                {
+                                    "Zterm": "C001",
+                                    "Txtcp": "Al contado"
+                                },
+                                {
+                                    "Zterm": y[0].Zterm,
+                                    "Txtcp": y[0].Txtcp
+                                }
+                            ]
                         };
                         var count = 0;
                         y.forEach(function(value, index){
@@ -202,6 +212,7 @@ sap.ui.define([
                     "oResults": []
                 };
 				return new Promise(function (resolve, reject) {
+                    var sCodeUser = '9600000068';
                     var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
                     Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
@@ -406,7 +417,17 @@ sap.ui.define([
                                 "Txtcp":y[0].Txtcp,
                                 "Vtweg":y[0].Vtweg,
                                 "Txtca":y[0].Txtca,
-                                "oDireccion": []
+                                "oDireccion": [],
+                                "oCondPago": [
+                                    {
+                                        "Zterm": "C001",
+                                        "Txtcp": "Al contado"
+                                    },
+                                    {
+                                        "Zterm": y[0].Zterm,
+                                        "Txtcp": y[0].Txtcp
+                                    }
+                                ]
                             };
                             var count = 0;
                             y.forEach(function(value, index){
@@ -468,6 +489,8 @@ sap.ui.define([
                     oFamiliaMateriales.push(jFamilia);
                 });
                 that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+                that.oModelGetPedidoVenta.setProperty("/oMaterialTotalFilter", oMaterialFilter);
+
 
                 that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
                 that._onClearComponentDetailClient();
@@ -495,6 +518,7 @@ sap.ui.define([
                     "codeDirecccion": "1",
                     "textDirecccion": oObjectSelected.Stras,
                     "oDireccion": oObjectSelected.oDireccion,
+                    "oCondPago": oObjectSelected.oCondPago,
                     "codePuntoVenta": oObjectSelected.Vkbur,
                     "textPuntoVenta": oObjectSelected.Txtpv,
                     "codeCondPago": oObjectSelected.Zterm,
@@ -510,6 +534,12 @@ sap.ui.define([
                 };
 
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
+
+                if(oObjectSelected.Stcd1.length == 11){
+                    that._byId("frgIdDetailCliente--rbgComprobante").setSelectedIndex(1);
+                }else{
+                    that._byId("frgIdDetailCliente--rbgComprobante").setSelectedIndex(0);
+                }
 
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
@@ -558,7 +588,8 @@ sap.ui.define([
             var slDirecciones = this._byId("frgIdDetailCliente--slDirecciones");
             var inPuntoVenta = this._byId("frgIdDetailCliente--inPuntoVenta");
             var inFlete = this._byId("frgIdDetailCliente--inFlete");
-            var inCondicionPago = this._byId("frgIdDetailCliente--inCondicionPago");
+            // var inCondicionPago = this._byId("frgIdDetailCliente--inCondicionPago");
+            var slCondicionPago = this._byId("frgIdDetailCliente--slCondicionPago");
             var dtFechaEntrega = this._byId("frgIdDetailCliente--dtFechaEntrega");
 			var rbgComprobante = this._byId("frgIdDetailCliente--rbgComprobante");
             var inOrdenCompra = this._byId("frgIdDetailCliente--inOrdenCompra");
@@ -571,14 +602,26 @@ sap.ui.define([
             var sComprobante = rbgComprobante.getSelectedButton().getText();
             var sOrdenCompra = inOrdenCompra.getValue();
             var sObservacion = tardenCompra.getValue();
+            var sKeyCondPago = slCondicionPago.getSelectedKey();
+            var sCondPago = slCondicionPago.getValue();
             
             if(this.isEmpty(sKeyDireccion)){
                 that.getMessageBox("error", that.getI18nText("errorSelectDireccion"));
                 return;
             }
 
+            if(this.isEmpty(sKeyCondPago)){
+                that.getMessageBox("error", that.getI18nText("errorSelectCondPago"));
+                return;
+            }
+
             if(this.isEmpty(sFechaEntrega)){
                 this.getMessageBox("error", this.getI18nText("errorSelectFechaEntrega"));
+                return;
+            }
+
+            if(this.isEmpty(sOrdenCompra)){
+                this.getMessageBox("error", this.getI18nText("errorInputOrdenCompra"));
                 return;
             }
 
@@ -590,6 +633,8 @@ sap.ui.define([
                 if(value){
                     oSelectedCliente.codeDirecccion = sKeyDireccion;
                     oSelectedCliente.textDirecccion = sDireccion;
+                    oSelectedCliente.codeCondPago = sKeyCondPago;
+                    oSelectedCliente.textCondPago = sCondPago;
                     oSelectedCliente.textFechaEntrega = sFechaEntrega;
                     oSelectedCliente.codeComprobante = iKeyComprobante;
                     oSelectedCliente.textComprobante = sComprobante;
@@ -599,7 +644,7 @@ sap.ui.define([
                     oSelectedCliente.textKundm = sKundm;
                         
                     Promise.all([that._getLineaCredito(oSelectedCliente)]).then((values) => {
-                        var sNumPedido = "1";
+                        var sNumPedido = "";
                         that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "C");
                         that.oModelPedidoVenta.setProperty("/DataGeneral/sNumPedido", sNumPedido);
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oSelectedCliente);

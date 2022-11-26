@@ -561,7 +561,7 @@ sap.ui.define([
 				var x = values.substring(0, values.length - 1);
 			}
 			var x = parseInt(values);
-			var sValueUsed = isNaN(x) ? '' : x;
+			var sValueUsed = isNaN(x) ? '0' : x;
 			
 			oSource.setValue(sValueUsed);
 		},
@@ -600,6 +600,10 @@ sap.ui.define([
 					this._onClearComponentAddManualProduct();
 					oSource.getParent().close();
 					break;
+				case "AddEanProduct":
+					this._onClearComponentDialogEan();
+					oSource.getParent().close();
+					break;
 				default:
 					oSource.getParent().close();
 			}
@@ -617,6 +621,8 @@ sap.ui.define([
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sNumPedido", "");
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sStatus", "");
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectEan", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});
@@ -635,6 +641,12 @@ sap.ui.define([
 			this._byId("tbProductos").removeSelections(true);
 		},
 		_onClearDatatTableProduct: function(){
+		},
+		_onClearComponentDialogEan: function(){
+			this._byId("frgIdAddEan--inCodeEan").setValue("");
+		},
+		_onClearDataDialogEan: function(){
+			this.oModelGetPedidoVenta.setProperty("/oMaterialEanSelected",[]);
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);

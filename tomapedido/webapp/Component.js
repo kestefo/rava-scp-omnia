@@ -5,9 +5,10 @@
 sap.ui.define([
         "sap/ui/core/UIComponent",
         "sap/ui/Device",
-        "tomapedido/model/models"
+        "tomapedido/model/models",
+        "./libs/xlsx.min"
     ],
-    function (UIComponent, Device, models) {
+    function (UIComponent, Device, models, ExcelXLSX) {
         "use strict";
 
         return UIComponent.extend("tomapedido.Component", {

@@ -38,40 +38,46 @@
                     </f:DynamicPageHeader>
                 </f:header>
                 <f:content>
-                    <VBox height="100%">
-                        <HBox width="100%" justifyContent="SpaceBetween" wrap="Wrap">
-                            <HBox alignItems="Center" alignContent="Center">
-                                <Label text="{i18n>textPedido}:" class="MyTextLabelSize"/>
-                                <ObjectStatus text="{oModelPedidoVenta>/DataGeneral/sNumPedido}" state="Information" class="MyTextLabelSize"/>
+                    <VBox height="auto" justifyContent="SpaceBetween">
+                        <VBox height="auto">
+                            <HBox width="100%" justifyContent="SpaceBetween" wrap="Wrap">
+                                <HBox alignItems="Center" alignContent="Center">
+                                    <Label text="{i18n>textPedido}:" class="MyTextLabelSize"/>
+                                    <ObjectStatus text="{oModelPedidoVenta>/DataGeneral/sNumPedido}" state="Information" class="MyTextLabelSize"/>
+                                </HBox>
+                                <HBox wrap="Wrap">
+                                    <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                    <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                    <Button text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                    <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
+                                    <Button text="{i18n>textbtnEditar}" type="Transparent" icon="sap-icon://edit" press="_onPressAddEdit" 
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
+                                </HBox>
                             </HBox>
-                            <HBox wrap="Wrap">
-                                <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
-                                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
-                                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                <Button text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
-                                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
-                                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
-                                <Button text="{i18n>textbtnEditar}" type="Transparent" icon="sap-icon://edit" press="_onPressAddEdit" 
-                                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
-                            </HBox>
-                        </HBox>
-                        <IconTabBar
-                            id="idIconTabBarDetail"
-                            headerMode="Inline"
-                            expanded="{device>/isNoPhone}">
-                            <items>
-                                <IconTabFilter icon="sap-icon://create-form"  key="keyDetail" text="{i18n>textIconTabDetalle}">
-                                    <VBox id="vbTableDetalle" height="100%">
-                                        <core:Fragment fragmentName="tomapedido.view.fragments.TableDetalle" type="XML"/>
-                                    </VBox>
-                                </IconTabFilter>
-                                <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">
-                                    <Text text="Attachments go here ..." />
-                                </IconTabFilter>
-                            </items>
-                        </IconTabBar>
+                            <IconTabBar
+                                id="idIconTabBarDetail"
+                                headerMode="Inline"
+                                expanded="{device>/isNoPhone}">
+                                <items>
+                                    <IconTabFilter icon="sap-icon://create-form"  key="keyDetail" text="{i18n>textIconTabDetalle}">
+                                        <VBox id="vbTableDetalle" height="100%">
+                                            <core:Fragment fragmentName="tomapedido.view.fragments.TableDetalle" type="XML"/>
+                                        </VBox>
+                                    </IconTabFilter>
+                                    <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">
+                                        <Text text="Attachments go here ..." />
+                                    </IconTabFilter>
+                                </items>
+                            </IconTabBar>
+                        </VBox>
+                        <!-- <HBox justifyContent="SpaceAround" alignItems="Center" width="100%">
+                            <Label design="Bold" id="lTotalProductos" visible="{=${device>/system/phone}?false:true}"/>
+                            <Label design="Bold" id="lCantidadProductos" visible="{=${device>/system/phone}?false:true}"/>
+                        </HBox> -->
                     </VBox>
                 </f:content>
                 <f:footer>
