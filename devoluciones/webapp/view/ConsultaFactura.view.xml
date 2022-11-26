@@ -1,5 +1,5 @@
 <mvc:View xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m" controllerName="devoluciones.controller.ConsultaFactura" displayBlock="true">
-    <Page id="IdClienteCenter02" showHeader="true" showNavButton="false" title="Detalle Factura - Boleta">
+    <Page id="IdClienteCenter02" showHeader="true" showNavButton="false" title="{i18n>titleFacturaBoleta}">
         <VBox width="auto" class="sapUiSmallMargin">
             <Table id="id1" items="{oModelDevolucion>/AddFacturaBoleta}" growingThreshold="20">
                 <headerToolbar>
@@ -56,13 +56,13 @@
                 <items>
                     <ColumnListItem type="Inactive" press="_onNavDetalleFacturaBoleta">
                         <cells>
-                            <Text text="{oModelDevolucion>Cliente}"/>
-                            <Text text="{oModelDevolucion>documento}"/>
-                            <Text text="{oModelDevolucion>fecha}"/>
+                            <Text text="{oModelDevolucion>NombreCliente}"/>
+                            <Text text="{oModelDevolucion>mostFactura}"/>
+                            <Text text="{path:'oModelDevolucion>Fechaformat', formatter:'.formatDayRayDateSl'}"/>
                             <!-- <Text text="{oModelDevolucion>lote}" /> -->
 
                             <!-- <Text text="{oModelDevolucion>cantidad}" /> -->
-                            <Text text="{oModelDevolucion>importe}"/>
+                            <Text text="{path:'oModelDevolucion>mostMont', formatter:'.currencyFormat'}"/>
                             <!-- <Text text="{oModelDevolucion>tipo}" /> -->
                             <Button icon="sap-icon://show" press="onDetalleDocFact"/>
                         </cells>

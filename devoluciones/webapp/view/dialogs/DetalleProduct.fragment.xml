@@ -9,7 +9,7 @@
 
                         <HBox wrap="Wrap" width="auto">
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
-                                <Text text="{i18n>textDocumento}:{i18n>textDataDocumento}" />
+                                <Text text="{i18n>textDocumento}:{oModelDevolucion>/textDataDocumento}" />
                             </HBox>
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
                                 <Text text="{i18n>textMotivo}:" />
@@ -23,11 +23,6 @@
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                     <header>
                                         <Text text="{i18n>titleAddColProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
-                                    </header>
-                                </Column>
-                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                    <header>
-                                        <Text text="{i18n>titleColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                                     </header>
                                 </Column>
                                 <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -59,11 +54,10 @@
                             <items>
                                 <ColumnListItem type="Inactive">
                                     <cells>
-                                        <Text text="{oModelDevolucion>producto}" />
-                                        <Text text="{oModelDevolucion>Lote}" />
+                                        <Text text="{oModelDevolucion>Desc}" />
                                         <Text text="{oModelDevolucion>cantorig}" />
-                                        <Text text="{oModelDevolucion>cantdev}" />
-                                        <Text text="{oModelDevolucion>total}" />
+                                        <Text text="{oModelDevolucion>CantDevuelta}" />
+                                        <Text text="{oModelDevolucion>Cantidad}" />
                                         <Input value="{oModelDevolucion>cantsoldev}" />
                                         <Text text="{oModelDevolucion>montonc}" />
                                     </cells>
@@ -72,7 +66,7 @@
                         </Table>
                         <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
                             <items>
-                                <Text text="" width="" wrapping="false" />
+                                
                                 <Text text="{i18n>titleTotal}" width="auto" wrapping="false" textAlign="Right" />
                                 <Text text="" width="" wrapping="false" />
                                 <Text text="{oModelDevolucion>/totalCantidadDetProd}" wrapping="false" width="auto" textAlign="Right" />

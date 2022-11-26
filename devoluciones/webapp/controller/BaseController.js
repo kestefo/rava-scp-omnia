@@ -72,6 +72,14 @@ sap.ui.define([
 
 			return flag;
 		},
+		_groupBy: function (array, param) {
+			return array.reduce(function (groups, item) {
+				const val = item[param]
+				groups[val] = groups[val] || []
+				groups[val].push(item)
+				return groups
+			}, {});
+		},
 		validateUser: function () {
 			that = this;
 			var oModel = new sap.ui.model.json.JSONModel();
@@ -515,6 +523,24 @@ sap.ui.define([
 			var joinArray = reverseArray.join(variable); 
 			return joinArray;
 		},
+		currencyFormat: function (value) {
+			if(value){
+				var sNumberReplace = value.replaceAll(",","");
+				var iNumber = parseFloat(sNumberReplace);
+				return iNumber.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			}else{
+				return "0.00";
+			}
+		},
+
+		formatDayRayDateSl: function (value) {
+			if(value){
+				var date = value.replaceAll("-","/");
+				return date;
+			}else{
+				return "";
+			}
+		},
 
 		onPressSelect: function(oEvent){
 			var kSelected=oEvent.getSource().getSelectedKey();
@@ -572,7 +598,7 @@ sap.ui.define([
             var vista  				= this.getView();
             var tablaCliente 		= sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
             var tablaCliente02 		= sap.ui.getCore().byId("frgAddDetalleFact--IdTablaClients01");
-			
+			var that				=this;
             switch (sCustom) {
 				case "closeClient":
 					
@@ -580,7 +606,7 @@ sap.ui.define([
                     this.oModelDevolucion.setProperty("/KeyAddUser" ,"");
                     this.oModelDevolucion.setProperty("/KeyMotivo","");
                     vista.byId("idTablaPrincipal").removeSelections(true);
-                   
+					
 					break;
                 case "closeProduct":
                     this.goNavConTo("frgIdAddProduct", "navcIdGroupProducto", "IdProductoCenter")

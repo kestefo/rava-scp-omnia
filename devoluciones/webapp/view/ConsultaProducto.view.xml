@@ -25,7 +25,7 @@
         <content>
             <VBox width="auto" class="sapUiSmallMargin">
                 <VBox class="sapUiSmallMargin">
-                    <VBox width="auto">
+                    <!-- <VBox width="auto">
                         <items>
                             <Title xmlns="sap.m" text="{i18n>textMarca}" level="H4" />
                             <ComboBox id="slMarca" items="{oModelDevolucion>/AddSelectMarca}" width="100%" change="_onChangeMarca" selectedKey="{oModelDevolucion>/keyMarca}">
@@ -43,7 +43,7 @@
                         <Title text="{i18n>textLote}" level="H4" />
                         <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad" />
                         <Button text="{i18n>txtbtnBuscarProduct}" visible="true" press="_SearchPedido" type="Emphasized" icon="sap-icon://search" />
-                    </VBox>
+                    </VBox> -->
                     <Table items="{oModelDevolucion>/AddProducto}" growingThreshold="20">
                         <columns>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -91,12 +91,12 @@
                         <items>
                             <ColumnListItem type="Inactive" press="_onNavDetalleProducto">
                                 <cells>
-                                    <Text text="{oModelDevolucion>Cliente}" />
-                                    <Text text="{oModelDevolucion>documento}" />
-                                    <Text text="{oModelDevolucion>fecha}" />
+                                    <Text text="{oModelDevolucion>CodCli}" />
+                                    <Text text="{oModelDevolucion>CodFact}" />
+                                    <Text text="{oModelDevolucion>Fechaformat}" />
                                     <!-- <Text text="{oModelDevolucion>lote}" /> -->
                                     <!-- <Text text="{oModelDevolucion>cantidad}" /> -->
-                                    <Text text="{oModelDevolucion>importe}" />
+                                    <Text text="{oModelDevolucion>ImpGlobal}" />
                                     <Button icon="sap-icon://show" press="onDetalleDocFact" />
                                     <!-- <Text text="{oModelDevolucion>tipo}" /> -->
                                 </cells>

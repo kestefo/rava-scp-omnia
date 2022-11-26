@@ -127,23 +127,37 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             oModelDevolucion.setProperty("/KeyMotivoProd", "");
             this.AbrirProducto.close();
         },
-        onDetalleDocFact:function(){
+        onDetalleDocFact:function(oEvent){
             var oView           = this.getView();
             var that            = this;
             var contCantidad    =0;
             var contTotal       =0;
             var contMonto       =0;
             var oModelDevolucion = oView.getModel("oModelDevolucion");
+            var productPath      = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
+            var selected        = oView.getModel("oModelDevolucion").getProperty(productPath);
 
-            oModelDevolucion.setProperty("/AddProductoDetail", models.JsonFacturaDetail());
+            oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
+            oModelDevolucion.setProperty("/AddProductoDetail", selected.DetalleBuscaReceiptSet.results);
+            
 
-            models.JsonFacturaDetail().forEach(function(items){
+            selected.DetalleBuscaReceiptSet.results.forEach(function(items){
 
-                contCantidad += parseFloat(items.cantorig);
-                contTotal   += parseFloat(items.total);
+                contTotal += 0.00;
+                contTotal   += parseFloat(items.Cantidad);
                 contMonto   += parseFloat(items.montonc);
 
             });
+
+            if (isNaN(contTotal) || contCantidad === "0") {
+                contTotal = "0.00";
+            }
+            if (isNaN(contTotal) || contTotal === "0") {
+                contMonto = "0.00";
+            }
+            if (isNaN(contTotal) || contMonto === "0") {
+                contTotal = "0.00";
+            }
 
             oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toString());
             oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
@@ -167,14 +181,17 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var KeyMotivoProd   = oModelDevolucion.getProperty("/KeyMotivoProd");
             var AddProductoDetail = oModelDevolucion.getProperty("/AddProductoDetail");
             var arraypedido          =[];
+            var keyCliente          =oModelDevolucion.getProperty("/keyCliente");
+            var textDataDocumento   =oModelDevolucion.getProperty("/textDataDocumento");
+            var oUser               =oModelDevolucion.getProperty("/oUser");
 
             if(KeyMotivoProd !== "" && KeyMotivoProd !== undefined){
 
                 AddProductoDetail.forEach(function(obj){
   
                     var detalleproducto={
-                        "Material": "",
-                        "Cantidad": "",
+                        "Material": obj.Desc,
+                        "Cantidad": obj.Cantidad,
                         "UnidadMed": ""
         
                     }
@@ -182,13 +199,13 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                   });
         
                     var datos= {
-                        "CodCli": "",
-                        "Tipo": "",
-                        "Canal": "",
-                        "Referencia": "",
-                        "NumDocMod": "",
-                        "CodVen": "",
-                        "MotivoPed": "",
+                        "CodCli": keyCliente,
+                        "Tipo": "1",
+                        "Canal": "2",
+                        "Referencia": textDataDocumento,
+                        "NumDocMod": "0214589632",
+                        "CodVen": oUser,
+                        "MotivoPed": "12",
                         "DetallePedidosDevSet": arraypedido
                         
                         ,

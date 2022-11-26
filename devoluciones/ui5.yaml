@@ -20,10 +20,7 @@ server:
             url: http://life:44300
             client: '200'
             destination: LIVE-DEV-200
-          - path: /ERP/
-            url: http://life:44300
-            client: '100'
-            destination: LIFE-DEV-100
+         
           - path: /service/scim
             url: https://aijy7d89l.accounts.ondemand.com
             destination: API-USER-IAS

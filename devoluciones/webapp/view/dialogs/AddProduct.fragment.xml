@@ -1,15 +1,15 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-    <Dialog contentHeight="{=${device>/system/phone}?'25%':'25%'}" showHeader="false" contentWidth="{=${device>/system/phone}?'40%':'40%'}" afterOpen="_afterOpenAddPedido">
+    <Dialog contentHeight="{=${device>/system/phone}?'21%':'21%'}" showHeader="false" contentWidth="{=${device>/system/phone}?'40%':'40%'}" afterOpen="_afterOpenAddPedido">
         <NavContainer id="navcIdGroupProducto">
             <Page id="IdProductoCenter" showHeader="true" showNavButton="false" title="{i18n>titleDialogAddCliente}">
+                <!-- <ToolbarSpacer width="auto" />
+                <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" custom:custom="closeProduct" type="Default" icon="sap-icon://nav-back" /> -->
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
                         <Text text="{i18n>titleAddDescripcionRuc}" />
                         <ComboBox id="slRuc" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeProducto" selectedKey="{oModelDevolucion>/keyProducto}">
-                            <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Kunnr} {oModelDevolucion>Namec}" />
+                            <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Stcd1} {oModelDevolucion>Namec}" />
                         </ComboBox>
-
-                        <Button text="{i18n>txtbtnBuscar}" visible="true" press="BusquedaProducto" custom:custom="closeClient" type="Emphasized"  icon="sap-icon://search"/>
                     </VBox>
                 </content>
                 <headerContent>
@@ -18,8 +18,8 @@
             </Page>
         </NavContainer>
         <buttons>
-            <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" custom:custom="default" type="Accept" />
-            <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" custom:custom="closeProduct" type="Default" />
+            <Button text="{i18n>txtbtnBuscarProduct}" visible="true" press="BusquedaProducto" custom:custom="closeClient" type="Emphasized" icon="sap-icon://search" />
+            <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" custom:custom="closeProduct" type="Default" icon="sap-icon://nav-back" />
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

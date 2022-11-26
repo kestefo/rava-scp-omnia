@@ -1,24 +1,25 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-    <Dialog showHeader="false" contentHeight="{=${device>/system/phone}?'25%':'25%'}" contentWidth="{=${device>/system/phone}?'40%':'40%'}" afterOpen="_afterOpenAddPedido">
+    <Dialog showHeader="false" contentHeight="{=${device>/system/phone}?'21%':'21%'}" contentWidth="{=${device>/system/phone}?'40%':'40%'}" afterOpen="_afterOpenAddPedido">
         <NavContainer id="navcIdGroupFacturaBoleta">
             <Page id="IdClienteCenter03" showHeader="true" showNavButton="false" title="{i18n>titleDialogAddCliente}">
-                <VBox width="auto" class="sapUiSmallMargin">
-                    <Text text="{i18n>textDetailAddCliente}" />
-                    <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeFactBol" selectedKey="{oModelDevolucion>/KeyAddUser}">
-                        <core:Item key="{oModelDevolucion>Kunnr}" text=" {oModelDevolucion>Kunnr} {oModelDevolucion>Namec}" />
-                    </ComboBox>
-
-                    <Button text="{i18n>titlebtnBuscar}" type="Emphasized" class="sapUiMediumMarginEnd" press="BusquedaFactBol" icon="sap-icon://search" />
-                </VBox>
-
+                <!-- <ToolbarSpacer width="auto" />
+                <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" icon="sap-icon://nav-back" custom:custom="closeClient" type="Default" /> -->
+                <content>
+                    <VBox width="auto" class="sapUiSmallMargin">
+                        <Text text="{i18n>textDetailAddCliente}" />
+                        <ComboBox id="slUsuario" items="{oModelDevolucion>/AddSelectUser}" width="100%" change="_onChangeFactBol" selectedKey="{oModelDevolucion>/KeyAddUser}">
+                            <core:Item key="{oModelDevolucion>Kunnr}" text=" {oModelDevolucion>Stcd1} {oModelDevolucion>Namec}" />
+                        </ComboBox>
+                    </VBox>
+                </content>
                 <headerContent>
                     <Button text="" press="onRefreshCliente" type="Transparent" icon="sap-icon://refresh" iconFirst="true" width="auto" enabled="true" visible="true" />
                 </headerContent>
             </Page>
         </NavContainer>
         <buttons>
-            <Button text="{i18n>accpetText}" visible="{path:'oModelDevolucion>/addClientVisible'}" press="_onAcceptDevolucion" custom:custom="default" type="Accept" />
-            <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" custom:custom="closeClient" type="Default" />
+            <Button text="{i18n>titlebtnBuscar}" type="Emphasized" press="BusquedaFactBol" icon="sap-icon://search" />
+            <Button text="{i18n>cancelText}" visible="true" press="_onPressClose" icon="sap-icon://nav-back" custom:custom="closeClient" type="Default" />
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

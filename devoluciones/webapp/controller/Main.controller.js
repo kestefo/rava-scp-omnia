@@ -35,7 +35,8 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.show();
                     this.oModelDevolucion = this.getModel("oModelDevolucion");
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
-                    var sCodeUser = values[0].value;
+                    // var sCodeUser = values[0].value;
+                    var sCodeUser ="9600000065";// cambio 25/11/2022
                     if(!that.isEmpty(sCodeUser)){
                         that.filtroCliente(sCodeUser);
                        
@@ -108,36 +109,7 @@ sap.ui.define([
                 }	
             },
 
-            onFiltroFacturaBole:function(sCodeUser){
-                var oView = this.getView();
-                var oModelDevolucion = oView.getModel("oModelDevolucion");
-                var model = new sap.ui.model.json.JSONModel();
-                sap.ui.core.BusyIndicator.show();
-                var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
-                jQuery.ajax({
-                        type: "GET",
-                        cache: false,
-                        headers: {
-                            "Accept": "application/json"
-                        },
-                        contentType: "application/json",
-                        url: sPath,
-                        async: true,
-                        success: function (data, textStatus, jqXHR) {
-                            var datos = data.d.results[0].NAVCUSTO;
-                            oModelDevolucion.setProperty("/AddSelectUser", datos.results);
-                            that.consultaProduct(sCodeUser);
-                            
-    
-                        },
-                        error: function () {
-                            MessageBox.error("Ocurrio un error al obtener los datos");
-                            sap.ui.core.BusyIndicator.hide(0);
-                        }
-                    });
-               
-            },
-
+        
             onpresPrint: function () {
                 window.print()
             },
@@ -236,9 +208,10 @@ sap.ui.define([
 
             onRefreshCliente:function(){
                 var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
-                var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+                //var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+                var sCodeUser = "9600000065";//cambio 25/11/2022
                 sap.ui.core.BusyIndicator.show();
-               this.onFiltroFacturaBole(sCodeUser);
+               this.filtroCliente(sCodeUser);
                MessageBox.success(that.getI18nText("sucessActualizacion"));
                
 
@@ -248,7 +221,7 @@ sap.ui.define([
                 var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
                 var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
                 sap.ui.core.BusyIndicator.show();
-               this.consultaProduct(sCodeUser);
+               this.filtroCliente(sCodeUser);
                MessageBox.success(that.getI18nText("sucessActualizacion"));
                
 
@@ -259,6 +232,7 @@ sap.ui.define([
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var model = new sap.ui.model.json.JSONModel();
                 var that = this;
+                var oClienteGroup =[];
                 sap.ui.core.BusyIndicator.show();
                 var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
                 jQuery.ajax({
@@ -271,9 +245,42 @@ sap.ui.define([
                         url: sPath,
                         async: true,
                         success: function (data, textStatus, jqXHR) {
-                            var datos = data.d.results[0].NAVCUSTO;
-                            oModelDevolucion.setProperty("/FiltroCliente", datos.results);
-                            that.onFiltroFacturaBole(sCodeUser);
+                            var sCodVend = data.d.results[0].Kunn2;
+                            var datos = data.d.results[0].NAVCUSTO.results;
+
+                            $.each(that._groupBy(datos,'Kunnr'), function (x, y) {
+                                var jFamilia = {
+                                    "Kunnr":y[0].Kunnr,
+                                    "Namec":y[0].Namec,
+                                    "Smtp_addr":y[0].Smtp_addr,
+                                    "Telf1":y[0].Telf1,
+                                    "Stcd1":y[0].Stcd1,
+                                    "Vkgrp":y[0].Vkgrp,
+                                    "Txtfv":y[0].Txtfv,
+                                    "Vkbur":y[0].Vkbur,
+                                    "Txtpv":y[0].Txtpv,
+                                    "Zterm":y[0].Zterm,
+                                    "Txtcp":y[0].Txtcp,
+                                    "Vtweg":y[0].Vtweg,
+                                    "Txtca":y[0].Txtca,
+                                    "oDireccion": []
+                                };
+                                var count = 0;
+                                y.forEach(function(value, index){
+                                    count ++;
+                                    value.posStras = count.toString();
+                                });
+                                jFamilia.oDireccion = y;
+        
+                                oClienteGroup.push(jFamilia);
+                            });
+
+                            oModelDevolucion.setProperty("/codVen", sCodVend);
+                            oModelDevolucion.setProperty("/FiltroCliente", oClienteGroup);
+                            oModelDevolucion.setProperty("/AddSelectUser", oClienteGroup);
+                            oModelDevolucion.setProperty("/AddNombreProduct", oClienteGroup);
+                            sap.ui.core.BusyIndicator.hide(0);
+                            //that.consultaDatosMarca();
                             
     
                         },
@@ -299,7 +306,7 @@ sap.ui.define([
                 var sSelected = oEvent.getSource().getValue();
                 if (kSelected !== '') {
                     oEvent.getSource().setValue(sSelected);
-                    oModelDevolucion.setProperty("/KeyClientAdd" , kSelected);
+                    
                 } else {
                     if (oEvent.getSource().getValue()) {
                         this.getMessageBox("error", this.getI18nText("sErrorSelect"));
@@ -308,11 +315,14 @@ sap.ui.define([
                 }
             },
             _onChangeProducto: function (oEvent) {
-
+                var oView = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var kSelected = oEvent.getSource().getSelectedKey();
                 var sSelected = oEvent.getSource().getValue();
                 if (kSelected !== '') {
                     oEvent.getSource().setValue(sSelected);
+                   
+
                 } else {
                     if (oEvent.getSource().getValue()) {
                         this.getMessageBox("error", this.getI18nText("sErrorSelect"));
@@ -323,12 +333,49 @@ sap.ui.define([
             },
 
             BusquedaFactBol: function () {
-                var that = this;
-                var KeyAddUser = this.oModelDevolucion.getProperty("/KeyAddUser");
+                var oItemSelect = this._byId("frgIdAddClient--slUsuario").getSelectedItem();
+                var oClientSelect = oItemSelect.getBindingContext("oModelDevolucion").getObject()
+                sap.ui.core.BusyIndicator.show();
+                var that        = this;
+                var oView           = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
+                var KeyAddUser  = this.oModelDevolucion.getProperty("/KeyAddUser");
+                var e           = new Date()
+                var day         = e.getDate().toString();
+                var mes         = e.getMonth()+1
+                var SumaMes     ="";
+                var Dia         ="";
+                var Añoactual   = e.getFullYear().toString();
+                var AddSelectUser = oModelDevolucion.getProperty("/AddSelectUser");
+                
+                if (day < 10) {
+                     Dia = "0" + e.getDate().toString();
+                } else {
+                     Dia = e.getDate().toString();
+                }
+    
+                if (mes < 10) {
+                    mes = "0" + mes.toString();
+                }
 
+                // (new Date).getTime() - ( 6 * 30 *24  * 60  * 60 * 1000)
+                // new Date()
+                
+                 e.setMonth(e.getMonth() - 6)// se utiliza la función set month para realizar el incremento de los meses
+                 var SumaFecha = e.getMonth()+1;
+
+                 if(SumaFecha < 10){
+                 SumaMes="0" + SumaFecha.toString();
+                }else{
+                    SumaMes = SumaFecha;
+                }
+                 
+                var SumaFechas = e.getFullYear().toString() + (SumaMes) + Dia;
+                var FechaActual = Añoactual+ mes.toString()+Dia;
+                
                 if (KeyAddUser !== undefined && KeyAddUser !== "") {
-
-                    var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '20221101' and FechaFact le '20221130') and CodCli eq '1234567890')&$expand=DetalleBuscaReceiptSet";
+                    that.oModelDevolucion.setProperty("/oClientSelect", oClientSelect);
+                    var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ KeyAddUser +"')&$expand=DetalleBuscaReceiptSet";
                     jQuery.ajax({
                         type: "GET",
                         cache: false,
@@ -340,19 +387,38 @@ sap.ui.define([
                         async: true,
                         success: function (data, textStatus, jqXHR) {
                             var datos = data.d.results;
-                            that.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
+                            AddSelectUser.forEach(function(obj1){
+                                datos.forEach(function(obj){
+                                    obj.Fechaformat = obj.FechaFact.substring(6,8)+"-"+ obj.FechaFact.substring(6,4)+"-"+obj.FechaFact.substring(4,0);
+                                    obj.NombreCliente = obj1.Namec;
+                                });
+                            })
+                           
+                            datos.forEach(function(value, index){
+                                //Claudia factura a mostrar en sus detalles
+                                value.mostFactura = "";
+                                if(value.Referencia != "0000000000000000"){
+                                    value.mostFactura = value.Referencia;
+                                }
+                                value.mostMont = (parseFloat(value.MonGlobal) + parseFloat(value.ImpGlobal)).toString();
+                            });
+                            
+                            that.oModelDevolucion.setProperty("/AddFacturaBoleta", datos);
                             that.getOwnerComponent().getRouter().navTo("ConsultaFactura");
                             that.oModelDevolucion.setProperty("/KeyAddUser", "");
+                            sap.ui.core.BusyIndicator.hide(0);
 
                         },
                         error: function () {
                             MessageBox.error("Ocurrio un error al obtener los datos");
+                            sap.ui.core.BusyIndicator.hide(0);
                         }
                     });
 
                 } else {
 
                     MessageBox.warning(this.getI18nText("txtMensajeBolFact"));
+                    sap.ui.core.BusyIndicator.hide(0);
                     return;
                 }
 
@@ -392,11 +458,43 @@ sap.ui.define([
                 this.getOwnerComponent().getRouter().navTo("DetalleDevolucion");
             },
             BusquedaProducto: function () {
-                var that = this;
-                var keyProducto = this.oModelDevolucion.getProperty("/keyProducto");
+                var that                = this;
+                var oView               = this.getView();
+                var oModelDevolucion    = oView.getModel("oModelDevolucion");
+                var keyProducto         = oModelDevolucion.getProperty("/keyProducto");
+                var e                   = new Date()
+                var day                 = e.getDate().toString();
+                var mes                 = e.getMonth()+1
+                var SumaMes             ="";
+                var Dia                 ="";
+                var Añoactual           = e.getFullYear().toString();
+                var SumaFecha           = e.getMonth()+1;
+               
+                if (day < 10) {
+                     Dia = "0" + e.getDate().toString();
+                } else {
+                     Dia = e.getDate().toString();
+                }
+    
+                if (mes < 10) {
+                    mes = "0" + mes.toString();
+                }
+                
+                 e.setMonth(e.getMonth() - 6)// se utiliza la función set month para realizar el incremento de los meses
+                 
+                 if(SumaFecha < 10){
+                 SumaMes="0" + SumaFecha.toString();
+                }else{
+                    SumaMes = SumaFecha;
+                }
+                 
+                var SumaFechas = e.getFullYear().toString() + (SumaMes) + Dia;
+                var FechaActual = Añoactual+ mes.toString()+Dia;
+
                 if (keyProducto !== undefined && keyProducto !== "") {
 
-                    var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+                    sap.ui.core.BusyIndicator.show();
+                    var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '20211101' and FechaFact le '20221201') and CodCli eq '1000000482')&$expand=DetalleBuscaReceiptSet";
                     jQuery.ajax({
                         type: "GET",
                         cache: false,
@@ -407,13 +505,18 @@ sap.ui.define([
                         url: url,
                         async: true,
                         success: function (data, textStatus, jqXHR) {
-                            var datos = data.d;
+                            var datos = data.d.results;
+                            datos.forEach(function(obj){
+                                obj.Fechaformat = obj.FechaFact.substring(6,8)+"-"+ obj.FechaFact.substring(6,4)+"-"+obj.FechaFact.substring(4,0);
+                            });
+                            oModelDevolucion.setProperty("/AddProducto",datos);
                             that.getOwnerComponent().getRouter().navTo("ConsultaProducto");
                             that.oModelDevolucion.setProperty("/keyProducto", "");
-
+                            sap.ui.core.BusyIndicator.hide(0);
                         },
                         error: function () {
                             MessageBox.error("Ocurrio un error al obtener los datos");
+                            sap.ui.core.BusyIndicator.hide(0);
                         }
                     });
 
@@ -422,44 +525,19 @@ sap.ui.define([
                     MessageBox.warning(this.getI18nText("txtMensajeProduct"));
                     return;
                 }
-
-            },
-
-            consultaDatosMarca: function () {
-                var oView = this.getView();
-                var oModelDevolucion = oView.getModel("oModelDevolucion");
-                sap.ui.core.BusyIndicator.show();
-                oModelDevolucion.setProperty("/AddSelectMarca", models.JsonMarcaProduct());
-                oModelDevolucion.setProperty("/AddSelectProducto", models.JsonMarcaProduct());//CRomero
-                sap.ui.core.BusyIndicator.hide(0);
-            },
-            consultaProduct: function (sCodeUser) {
-                sap.ui.core.BusyIndicator.show();
-                var oView = this.getView();
-                var oModelDevolucion = oView.getModel("oModelDevolucion");
-                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
-                    jQuery.ajax({
-                        type: "GET",
-                        cache: false,
-                        headers: {
-                            "Accept": "application/json"
-                        },
-                        contentType: "application/json",
-                        url: url,
-                        async: true,
-                        success: function (data, textStatus, jqXHR) {
-                            var datos = data.d.results[0].NAVCUSTO;
-                            
-                            that.oModelDevolucion.setProperty("/AddNombreProduct", datos.results);
-                            that.consultaDatosMarca();
-
-                        },
-                        error: function () {
-                            MessageBox.error("Ocurrio un error al obtener los datos");
-                        }
-                    });
+               
                 
             },
+
+            // consultaDatosMarca: function () {
+            //     var oView = this.getView();
+            //     var oModelDevolucion = oView.getModel("oModelDevolucion");
+            //     sap.ui.core.BusyIndicator.show();
+            //     oModelDevolucion.setProperty("/AddSelectMarca", models.JsonMarcaProduct());
+            //     oModelDevolucion.setProperty("/AddSelectProducto", models.JsonMarcaProduct());//CRomero
+            //     sap.ui.core.BusyIndicator.hide(0);
+            // },
+          
           
             _onNavBack: function () {
                 var navCon = this._byId("frgIdAddClient--navcIdGroupFacturaBoleta");
