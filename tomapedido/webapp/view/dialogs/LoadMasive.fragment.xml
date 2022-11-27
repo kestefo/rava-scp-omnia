@@ -11,8 +11,8 @@
             </VBox>
         </content>
 		<buttons>
-			<Button text="{i18n>accpetText}" press="_onAcceptPedido" custom:custom="default" type="Accept"/>
-			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+			<Button text="{i18n>confirmPlantillaText}" press="_onAcceptMasive" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="AddMasiveProduct" type="Default"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

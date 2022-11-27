@@ -21,6 +21,7 @@ sap.ui.define([
             this.frgIdAddProduct = "frgIdAddProduct";
             this.frgIdAddManualProduct = "frgIdAddManualProduct";
             this.frgIdLoadMasive = "frgIdLoadMasive";
+            this.frgIdLoadMasiveDetail = "frgIdLoadMasiveDetail";
             this.frgIdAddEan = "frgIdAddEan";
             this.frgIdAddPromotions = "frgIdAddPromotions";
         },
@@ -381,6 +382,7 @@ sap.ui.define([
                 "</a> "+ this.getI18nText("textCuartoCarga") +"</p>"
             }
             this.oModelPedidoVenta.setProperty("/textHtml", oModelHtml);
+            this._onClearDataDialogDialog();
             this.setFragment("_dialogLoadMasive", this.frgIdLoadMasive, "LoadMasive", this);
         },
         //Importar archivo excel tabla detalle
@@ -390,7 +392,10 @@ sap.ui.define([
             var file = oEvent.getParameter("files")[0];
             if(file.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && file.type !="application/vnd.ms-excel"){
                 that.getMessageBox("error", that.getI18nText("msgErrorFormat"));
+                return;
             }
+
+            this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/titulo", file.name);
 
             if (file && window.FileReader) {
                 var reader = new FileReader();
@@ -433,13 +438,118 @@ sap.ui.define([
             pUpload.then(function (value) {
                 var oDataCampos = {};
                 oDataCampos.aItems = [];
+
+                var titulo = that.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive/titulo");
                 value.forEach(function (item) {
-
-
+                    var indiceTotus = titulo.indexOf("TOTTUS");
+                    var indiceInka = titulo.indexOf("INKA");
+                    var indiceSuper = titulo.indexOf("SUPER");
+                    item.eanXsl = "";
+                    item.precioUnidXsl = "0";
+                    item.subtotalXsl = "0";
+                    item.solXsl = "0";
+                    item.codigo = "";
+                    item.descripcion = "";
+                    item.status = "";
+                    item.descripcionStatus = "";
+                    item.codeMotivo = "";
+                    item.descMotivo = "";
+                    if(indiceTotus != -1){
+                        item.eanXsl = item.EAN;
+                        item.codigo = item[that.getI18nText("sCodeTottus")];
+                        item.descripcion = item[that.getI18nText("sDescTottus")];
+                        item.precioUnidXsl = item[that.getI18nText("sPrecioUnidTottus")];
+                        item.subtotalXsl = item[that.getI18nText("sSubTotalTottus")];
+                        item.solXsl = item[that.getI18nText("sSolTottus")];
+                    }else if(indiceInka != -1){
+                        item.eanXsl = item.EAN;
+                        item.codigo = item[that.getI18nText("sCodeInka")];
+                        item.descripcion = item[that.getI18nText("sDescInka")];
+                        item.precioUnidXsl = item[that.getI18nText("sPrecioUnidInka")];
+                        item.subtotalXsl = item[that.getI18nText("sSubTotalInka")];
+                        item.solXsl = item[that.getI18nText("sSolInka")];
+                    }else if(indiceSuper != -1){
+                        item.eanXsl = item.EAN;
+                        item.codigo = item[that.getI18nText("sCodeSuper")];
+                        item.descripcion = item[that.getI18nText("sDescSuper")];
+                        item.precioUnidXsl = item[that.getI18nText("sPrecioUnidSuper")];
+                        item.subtotalXsl = item[that.getI18nText("sSubTotalSuper")];
+                        item.solXsl = item[that.getI18nText("sSolSuper")];
+                    }else{
+                        item.codigo = "";
+                        item.descripcion = "";
+                        item.eanXsl = item.EAN;
+                        item.precioUnidXsl = "0";
+                        item.subtotalXsl = "0";
+                        item.solXsl = "0";
+                    }
                 }.bind(this));
 
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargada", value);
                 that.getMessageBox("success", that.getI18nText("msgGeneraImport"));
             }.bind(this));
+        },
+        _onAcceptMasive: function(oEvent){
+            var oSource = oEvent.getSource();
+            var oMaterialSelectMasive = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive");
+            var titulo = oMaterialSelectMasive.titulo;
+            var oDataCargada = oMaterialSelectMasive.oDataCargada;
+
+            if(oDataCargada.length === 0){
+                this.getMessageBox("error", this.getI18nText("errorNotProductMasive"));
+                return;
+            }
+
+            var oMaterialTotalFilter = that.oModelGetPedidoVenta.getProperty("/oMaterialTotalFilter");
+            var oMaterialEan = [];
+            var oDetailStockSet = [];
+            oDataCargada.forEach(function(value, index){
+                var oFindStock = oMaterialTotalFilter.find(item => item.Ean11  === value.eanXsl);
+                value.Kbetr = "0";
+                if(!that.isEmpty(oFindStock)){
+                    value.Kbetr = oFindStock.Kbetr;
+                    var jValue = {
+                        "Type": "G",
+                        "Matnr": oFindStock.Matnr,
+                        "Meins": oFindStock.Meins,
+                        "Werks": "1020",
+                        "Lgort": "0201",
+                        "Labst": "0"
+                    }
+                    oDetailStockSet.push(jValue)
+                }
+                oMaterialEan.push(value);
+            });
+
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([that._getStockMateriales(oDetailStockSet)]).then((values) => {
+                var oStock = values[0].DetailStockSet.results;
+                var cont = 0;
+                oMaterialEan.forEach(async function(value, index){
+                    cont++;
+                    value.num = cont;
+                    var oFindStock = oStock.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins);
+                    value.Labst = "0";
+                    value.solSap = "0";
+                    value.precioUnidSap = value.Kbetr;
+                    value.subtotalSap = "0";
+                    if(!that.isEmpty(oFindStock)){
+                        value.Labst = oFindStock.Labst;
+                        value.solSap = oFindStock.Labst;
+                        value.subtotalSap = (parseFloat(value.precioUnidSap)*parseFloat(oFindStock.solSap)).toString();
+                    }
+                });
+                
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargada", oMaterialEan);
+
+                sap.ui.core.BusyIndicator.hide(0);
+                oSource.getParent().close();
+                that.setFragment("_dialogLoadMasiveDetail", that.frgIdLoadMasiveDetail, "LoadMasiveDetail", that);
+            }).catch(function (oError) {
+                console.log(oError);
+                that.getMessageBox("error", that.getI18nText("errorData"));
+                sap.ui.core.BusyIndicator.hide(0);
+            });
         },
         //Add Product Masive
 
