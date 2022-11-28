@@ -4,7 +4,7 @@
         <content>
             <VBox>
                 <Table id="tbMaterialesMasive" growingThreshold="20"
-                    items="{oModelPedidoVenta>/DataGeneral/oMaterialSelectMasive/oDataCargada}">
+                    items="{oModelPedidoVenta>/DataGeneral/oMaterialSelectMasive/oDataCargadaMost}">
                     <columns>
                         <Column width="2rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
@@ -30,7 +30,7 @@
                                 </VBox>
                             </header>
                         </Column>
-                        <Column width="12rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="10rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
                                 <VBox width="100%" alignItems="Center">
                                     <Label text="{i18n>titleAddColPrecioUnid}" design="Bold"/>
@@ -52,7 +52,7 @@
                                 </VBox>
                             </header>
                         </Column>
-                        <Column width="12rem" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="10rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
                                 <VBox width="100%" alignItems="Center">
                                     <Label text="{i18n>titleAddColCant}" design="Bold"/>
@@ -71,7 +71,7 @@
                                 </VBox>
                             </header>
                         </Column>
-                        <Column width="12rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="11rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
                                 <VBox>
                                     <Text text=""/>
@@ -87,20 +87,24 @@
                                 <Text text="{oModelPedidoVenta>codigo}"/>
                                 <Text text="{oModelPedidoVenta>descripcion}"/>
                                 <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
-                                    <Text text="{path:'oModelPedidoVenta>precioUnidXsl', formatter: '.currencyFormat'}"/>
-                                    <Text text="{path:'oModelPedidoVenta>precioUnidSap', formatter: '.currencyFormat'}"/>
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>precioUnidXsl', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusPrecio}" />
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>precioUnidSap', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusPrecio}" />
                                 </HBox>
                                 <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
                                     <Text text="{path:'oModelPedidoVenta>subtotalXsl', formatter: '.currencyFormat'}"/>
                                     <Text text="{path:'oModelPedidoVenta>subtotalSap', formatter: '.currencyFormat'}"/>
                                 </HBox>
                                 <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
-                                    <Text text="{path:'oModelPedidoVenta>solXsl', formatter: '.currencyFormat'}"/>
-                                    <Text text="{path:'oModelPedidoVenta>solSap', formatter: '.currencyFormat'}"/>
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>solXsl', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusStock}"/>
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>solSap', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusStock}"/>
                                 </HBox>
-                                <ObjectStatus text="{oModelPedidoVenta>descripcionStatus}" state="None" />
-                                <ComboBox id="slMotivo"  change="onValidateChange" width="100%" selectedKey="{oModelDevolucion>/codeMotivo}"
-                                    items="{oModelGetPedidoVenta>/oMotivo}" visible="{=${oModelDevolucion>/DataGeneral/status}==='S'?false:true}">
+                                <ObjectStatus text="{oModelPedidoVenta>descripcionStatus}" state="{oModelPedidoVenta>status}" />
+                                <ComboBox id="slMotivo"  change="onValidateChange" width="100%" selectedKey="{oModelPedidoVenta>codeMotivo}"
+                                    items="{oModelGetPedidoVenta>/oMotivo}" visible="{=${oModelPedidoVenta>status}==='None'?false:true}">
                                     <core:Item key="{oModelGetPedidoVenta>key}" text="{oModelGetPedidoVenta>desc}" />
                                 </ComboBox>
                             </cells>
@@ -108,7 +112,7 @@
                     </items>
                 </Table>
             </VBox>
-        </content>
+        </content> 
 		<buttons>
 			<Button id="btnNextAddManualProduct" text="{i18n>nextText}" press="_onSelectFamilia" custom:custom="default" type="Accept"/>
 			<Button id="btnCloseAddManualProduct" text="{i18n>returnText}" press="_onPressClose" custom:custom="default" type="Default"/>

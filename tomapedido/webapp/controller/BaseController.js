@@ -629,7 +629,8 @@ sap.ui.define([
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectEan", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
 				titulo:"",
-				oDataCargada:[]
+				oDataCargadaPrev:[],
+				oDataCargadaMost:[]
 			});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
@@ -661,7 +662,8 @@ sap.ui.define([
 		_onClearDataDialogDialog: function(){
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
 				titulo:"",
-				oDataCargada:[]
+				oDataCargadaPrev:[],
+				oDataCargadaMost:[]
 			});
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {

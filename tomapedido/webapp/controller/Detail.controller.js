@@ -485,7 +485,7 @@ sap.ui.define([
                     }
                 }.bind(this));
 
-                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargada", value);
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargadaPrev", value);
                 that.getMessageBox("success", that.getI18nText("msgGeneraImport"));
             }.bind(this));
         },
@@ -493,9 +493,9 @@ sap.ui.define([
             var oSource = oEvent.getSource();
             var oMaterialSelectMasive = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive");
             var titulo = oMaterialSelectMasive.titulo;
-            var oDataCargada = oMaterialSelectMasive.oDataCargada;
+            var oDataCargadaPrev = oMaterialSelectMasive.oDataCargadaPrev;
 
-            if(oDataCargada.length === 0){
+            if(oDataCargadaPrev.length === 0){
                 this.getMessageBox("error", this.getI18nText("errorNotProductMasive"));
                 return;
             }
@@ -503,11 +503,16 @@ sap.ui.define([
             var oMaterialTotalFilter = that.oModelGetPedidoVenta.getProperty("/oMaterialTotalFilter");
             var oMaterialEan = [];
             var oDetailStockSet = [];
-            oDataCargada.forEach(function(value, index){
+            oDataCargadaPrev.forEach(function(value, index){
                 var oFindStock = oMaterialTotalFilter.find(item => item.Ean11  === value.eanXsl);
                 value.Kbetr = "0";
+                value.Matnr = "";
+                value.Meins = "";
                 if(!that.isEmpty(oFindStock)){
                     value.Kbetr = oFindStock.Kbetr;
+                    value.descripcion = oFindStock.Maktg;
+                    value.Matnr = oFindStock.Matnr;
+                    value.Meins = oFindStock.Meins;
                     var jValue = {
                         "Type": "G",
                         "Matnr": oFindStock.Matnr,
@@ -536,11 +541,42 @@ sap.ui.define([
                     if(!that.isEmpty(oFindStock)){
                         value.Labst = oFindStock.Labst;
                         value.solSap = oFindStock.Labst;
-                        value.subtotalSap = (parseFloat(value.precioUnidSap)*parseFloat(oFindStock.solSap)).toString();
+                        value.subtotalSap = (parseFloat(value.precioUnidSap)*parseFloat(value.solSap)).toString();
+                    }
+                });
+
+                oMaterialEan.forEach(async function(value, index){
+                    value.status = "None";
+                    value.descripcionStatus = "OK";
+                    value.statusPrecio = "None";
+                    value.statusStock = "None";
+
+                    if(that.isEmpty(value.Matnr)){
+                        value.status = "Error";
+                        value.descripcionStatus = "MATERIAL NO ENCONTRADO";
+                    }else{
+                        var arrMsg = [];
+
+                        if(parseFloat(value.precioUnidXsl) > parseFloat(value.precioUnidSap)){
+                            value.status = "Error";
+                            value.statusPrecio = "Error";
+                            arrMsg.push("DIFERENCIA DE PRECIO");
+                        }
+
+                        if(parseFloat(value.solXsl) > parseFloat(value.solSap)){
+                            value.status = "Error";
+                            value.statusStock = "Error";
+                            arrMsg.push("STOCK INSUFICIENTE");
+                        }
+
+                        if(arrMsg.length>0){
+                            value.descripcionStatus = arrMsg.join();
+                        }
+                        
                     }
                 });
                 
-                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargada", oMaterialEan);
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargadaMost", oMaterialEan);
 
                 sap.ui.core.BusyIndicator.hide(0);
                 oSource.getParent().close();
