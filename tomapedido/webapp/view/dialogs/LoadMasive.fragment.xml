@@ -11,7 +11,7 @@
             </VBox>
         </content>
 		<buttons>
-			<Button text="{i18n>confirmPlantillaText}" press="_onAcceptMasive" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>confirmPlantillaText}" press="_onNextMasive" custom:custom="default" type="Accept"/>
 			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="AddMasiveProduct" type="Default"/>
 		</buttons>
 	</Dialog>

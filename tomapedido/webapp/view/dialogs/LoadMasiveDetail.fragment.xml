@@ -102,9 +102,10 @@
                                     <ObjectStatus text="{path:'oModelPedidoVenta>solSap', formatter: '.currencyFormat'}" 
                                         state="{oModelPedidoVenta>statusStock}"/>
                                 </HBox>
-                                <ObjectStatus text="{oModelPedidoVenta>descripcionStatus}" state="{oModelPedidoVenta>status}" />
+                                <ObjectStatus text="{oModelPedidoVenta>descripcionStatus}" 
+                                    state="{oModelPedidoVenta>status}" />
                                 <ComboBox id="slMotivo"  change="onValidateChange" width="100%" selectedKey="{oModelPedidoVenta>codeMotivo}"
-                                    items="{oModelGetPedidoVenta>/oMotivo}" visible="{=${oModelPedidoVenta>status}==='None'?false:true}">
+                                    items="{oModelGetPedidoVenta>/oMotivo}" visible="{=${oModelPedidoVenta>statusMotivo}==='E'?false:true}">
                                     <core:Item key="{oModelGetPedidoVenta>key}" text="{oModelGetPedidoVenta>desc}" />
                                 </ComboBox>
                             </cells>
@@ -114,7 +115,7 @@
             </VBox>
         </content> 
 		<buttons>
-			<Button id="btnNextAddManualProduct" text="{i18n>nextText}" press="_onSelectFamilia" custom:custom="default" type="Accept"/>
+			<Button id="btnNextAddManualProduct" text="{i18n>confirmProductText}" press="_onAcceptProductMasive" custom:custom="default" type="Accept"/>
 			<Button id="btnCloseAddManualProduct" text="{i18n>returnText}" press="_onPressClose" custom:custom="default" type="Default"/>
 		</buttons>
 	</Dialog>

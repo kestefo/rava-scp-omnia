@@ -257,7 +257,9 @@ sap.ui.define([
                 value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
-                value.status = "S";
+                value.status = "None";
+                value.codeMotivo = "";
+                value.descMotivo = "";
                 oMaterial.push(value);
             });
             
@@ -360,7 +362,9 @@ sap.ui.define([
                 value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
-                value.status = "S";
+                value.status = "None";
+                value.codeMotivo = "";
+                value.descMotivo = "";
                 oMaterial.push(value);
             });
             
@@ -385,7 +389,6 @@ sap.ui.define([
             this._onClearDataDialogDialog();
             this.setFragment("_dialogLoadMasive", this.frgIdLoadMasive, "LoadMasive", this);
         },
-        //Importar archivo excel tabla detalle
         _onImportPress: function (oEvent) {
             console.log(oEvent);
             var pUpload = $.Deferred();
@@ -489,7 +492,7 @@ sap.ui.define([
                 that.getMessageBox("success", that.getI18nText("msgGeneraImport"));
             }.bind(this));
         },
-        _onAcceptMasive: function(oEvent){
+        _onNextMasive: function(oEvent){
             var oSource = oEvent.getSource();
             var oMaterialSelectMasive = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive");
             var titulo = oMaterialSelectMasive.titulo;
@@ -550,27 +553,40 @@ sap.ui.define([
                     value.descripcionStatus = "OK";
                     value.statusPrecio = "None";
                     value.statusStock = "None";
+                    value.statusNoProduct = "S";
+                    value.statusMotivo = "E";
 
                     if(that.isEmpty(value.Matnr)){
                         value.status = "Error";
-                        value.descripcionStatus = "MATERIAL NO ENCONTRADO";
+                        value.statusNoProduct = "E";
+                        value.descripcionStatus = that.getI18nText("sDescStatusNoProduct");
                     }else{
                         var arrMsg = [];
 
                         if(parseFloat(value.precioUnidXsl) > parseFloat(value.precioUnidSap)){
                             value.status = "Error";
+                            value.statusNoProduct = "S";
                             value.statusPrecio = "Error";
-                            arrMsg.push("DIFERENCIA DE PRECIO");
+                            arrMsg.push(that.getI18nText("sDescStatusNoPrec"));
                         }
 
                         if(parseFloat(value.solXsl) > parseFloat(value.solSap)){
                             value.status = "Error";
+                            value.statusNoProduct = "S";
                             value.statusStock = "Error";
-                            arrMsg.push("STOCK INSUFICIENTE");
+                            arrMsg.push(that.getI18nText("sDescStatusNoStock"));
                         }
 
                         if(arrMsg.length>0){
                             value.descripcionStatus = arrMsg.join();
+                        }
+
+                        if(value.statusNoProduct === "E"){
+                            value.statusMotivo = "E"
+                        }else{
+                            if(value.statusPrecio === "Error" || value.statusStock === "Error"){
+                                value.statusMotivo = "S"
+                            }
                         }
                         
                     }
@@ -587,6 +603,86 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.hide(0);
             });
         },
+        _onAcceptProductMasive: function(oEvent){
+            var oSource = oEvent.getSource();
+            var tbMaterialesMasive = this._byId("frgIdLoadMasiveDetail--tbMaterialesMasive");
+            var oMaterialesSelected = [];
+
+            var oSelectItems = tbMaterialesMasive.getItems();
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+                return;
+            }
+
+            oSelectItems.forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                if(parseFloat(jObject.solXsl) > 0 && jObject.status == "None"){
+                    oMaterialesSelected.push(jObject);
+                }
+            });
+
+            if(oMaterialesSelected.length === 0){
+                that.getMessageBox("error", that.getI18nText("errorNotCant"));
+                return;
+            }
+
+            var booleanMotivo = false;
+            oMaterialesSelected.forEach(function(value, index){
+                if(that.isEmpty(value.codeMotivo) && value.statusMotivo === "S"){
+                    booleanMotivo = true;
+                }
+            });
+            if(booleanMotivo){
+                that.getMessageBox("error", that.getI18nText("sSelectMotivo"));
+                return;
+            }
+
+            var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMotivo = this.oModelGetPedidoVenta.getProperty("/oMotivo");
+
+            var booleanError = false;
+            oMaterialesSelected.forEach(function(value, index){
+                var oFindMotivo = oMotivo.find(item => item.key  === value.codeMotivo);
+                var descMotivo = "";
+                if(!that.isEmpty(oFindMotivo)){
+                    descMotivo = oFindMotivo.desc;
+                }
+                if(value.status == "Error"){
+                    booleanError = true;
+                }
+
+                var jMaterial = {
+                    "Codfa":"C06 S21",
+                    "Kbetr":value.solXsl,
+                    "Labst":value.solSap,
+                    "Maktg":value.descripcion,
+                    "Matnr":value.Matnr,
+                    "Meins":value.Matnr,
+                    "Txtfa":value.Txtfa,
+                    "Umrez":value.Umrez,
+                    "Vtweg":value.Vtweg,
+                    
+                    "codeMotivo": value.codeMotivo,
+                    "descMotivo": descMotivo,
+                    "icon":"sap-icon://inbox",
+                    "state":"Success",
+
+                    "cantidad":value.solXsl,
+                    "total": (parseFloat(value.precioUnidXsl) * parseFloat(value.solXsl)).toString(),
+                    "descuentos":"0%",
+                    "descuentosVolumen":"0%",
+                    "status":value.status
+                 }
+                oMaterial.push(jMaterial);
+            });
+            
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+
+            this._onClearDataDialogDialog();
+            
+            oSource.getParent().close();
+            this.onConteoMaterial();
+        },
         //Add Product Masive
 
         //FunctionDetail
@@ -594,12 +690,24 @@ sap.ui.define([
             var tbProductos = this._byId("tbProductos");
             var oItems = tbProductos.getItems();
             var oProductosValidos = [];
+            var booleanError = false;
             oItems.forEach(function(value, index){
                 var jObject = value.getBindingContext('oModelPedidoVenta').getObject();
-                if(jObject.status === "S"){
+                if(jObject.status === "None"){
                     oProductosValidos.push(jObject);
                 }
+
+                if(jObject.status === "Error"){
+                    booleanError = true;
+                }
             });
+
+            var columns = this._byId("tbProductos").getColumns();
+            if(booleanError){
+                columns[columns.length-1].setVisible(true);
+            }else{
+                columns[columns.length-1].setVisible(false);
+            }
 
             var total = 0;
             var cantidad = 0;
