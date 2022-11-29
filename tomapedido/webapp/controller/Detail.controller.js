@@ -21,6 +21,7 @@ sap.ui.define([
             this.frgIdAddProduct = "frgIdAddProduct";
             this.frgIdAddManualProduct = "frgIdAddManualProduct";
             this.frgIdLoadMasive = "frgIdLoadMasive";
+            this.frgIdLoadMasiveDetail = "frgIdLoadMasiveDetail";
             this.frgIdAddEan = "frgIdAddEan";
             this.frgIdAddPromotions = "frgIdAddPromotions";
         },
@@ -256,7 +257,9 @@ sap.ui.define([
                 value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
-                value.status = "S";
+                value.status = "None";
+                value.codeMotivo = "";
+                value.descMotivo = "";
                 oMaterial.push(value);
             });
             
@@ -359,7 +362,9 @@ sap.ui.define([
                 value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
-                value.status = "S";
+                value.status = "None";
+                value.codeMotivo = "";
+                value.descMotivo = "";
                 oMaterial.push(value);
             });
             
@@ -381,16 +386,19 @@ sap.ui.define([
                 "</a> "+ this.getI18nText("textCuartoCarga") +"</p>"
             }
             this.oModelPedidoVenta.setProperty("/textHtml", oModelHtml);
+            this._onClearDataDialogDialog();
             this.setFragment("_dialogLoadMasive", this.frgIdLoadMasive, "LoadMasive", this);
         },
-        //Importar archivo excel tabla detalle
         _onImportPress: function (oEvent) {
             console.log(oEvent);
             var pUpload = $.Deferred();
             var file = oEvent.getParameter("files")[0];
             if(file.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && file.type !="application/vnd.ms-excel"){
                 that.getMessageBox("error", that.getI18nText("msgErrorFormat"));
+                return;
             }
+
+            this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/titulo", file.name);
 
             if (file && window.FileReader) {
                 var reader = new FileReader();
@@ -433,13 +441,247 @@ sap.ui.define([
             pUpload.then(function (value) {
                 var oDataCampos = {};
                 oDataCampos.aItems = [];
+
+                var titulo = that.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive/titulo");
                 value.forEach(function (item) {
-
-
+                    var indiceTotus = titulo.indexOf("TOTTUS");
+                    var indiceInka = titulo.indexOf("INKA");
+                    var indiceSuper = titulo.indexOf("SUPER");
+                    item.eanXsl = "";
+                    item.precioUnidXsl = "0";
+                    item.subtotalXsl = "0";
+                    item.solXsl = "0";
+                    item.codigo = "";
+                    item.descripcion = "";
+                    item.status = "";
+                    item.descripcionStatus = "";
+                    item.codeMotivo = "";
+                    item.descMotivo = "";
+                    if(indiceTotus != -1){
+                        item.eanXsl = item.EAN;
+                        item.codigo = item[that.getI18nText("sCodeTottus")];
+                        item.descripcion = item[that.getI18nText("sDescTottus")];
+                        item.precioUnidXsl = item[that.getI18nText("sPrecioUnidTottus")];
+                        item.subtotalXsl = item[that.getI18nText("sSubTotalTottus")];
+                        item.solXsl = item[that.getI18nText("sSolTottus")];
+                    }else if(indiceInka != -1){
+                        item.eanXsl = item.EAN;
+                        item.codigo = item[that.getI18nText("sCodeInka")];
+                        item.descripcion = item[that.getI18nText("sDescInka")];
+                        item.precioUnidXsl = item[that.getI18nText("sPrecioUnidInka")];
+                        item.subtotalXsl = item[that.getI18nText("sSubTotalInka")];
+                        item.solXsl = item[that.getI18nText("sSolInka")];
+                    }else if(indiceSuper != -1){
+                        item.eanXsl = item.EAN;
+                        item.codigo = item[that.getI18nText("sCodeSuper")];
+                        item.descripcion = item[that.getI18nText("sDescSuper")];
+                        item.precioUnidXsl = item[that.getI18nText("sPrecioUnidSuper")];
+                        item.subtotalXsl = item[that.getI18nText("sSubTotalSuper")];
+                        item.solXsl = item[that.getI18nText("sSolSuper")];
+                    }else{
+                        item.codigo = "";
+                        item.descripcion = "";
+                        item.eanXsl = item.EAN;
+                        item.precioUnidXsl = "0";
+                        item.subtotalXsl = "0";
+                        item.solXsl = "0";
+                    }
                 }.bind(this));
 
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargadaPrev", value);
                 that.getMessageBox("success", that.getI18nText("msgGeneraImport"));
             }.bind(this));
+        },
+        _onNextMasive: function(oEvent){
+            var oSource = oEvent.getSource();
+            var oMaterialSelectMasive = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive");
+            var titulo = oMaterialSelectMasive.titulo;
+            var oDataCargadaPrev = oMaterialSelectMasive.oDataCargadaPrev;
+
+            if(oDataCargadaPrev.length === 0){
+                this.getMessageBox("error", this.getI18nText("errorNotProductMasive"));
+                return;
+            }
+
+            var oMaterialTotalFilter = that.oModelGetPedidoVenta.getProperty("/oMaterialTotalFilter");
+            var oMaterialEan = [];
+            var oDetailStockSet = [];
+            oDataCargadaPrev.forEach(function(value, index){
+                var oFindStock = oMaterialTotalFilter.find(item => item.Ean11  === value.eanXsl);
+                value.Kbetr = "0";
+                value.Matnr = "";
+                value.Meins = "";
+                if(!that.isEmpty(oFindStock)){
+                    value.Kbetr = oFindStock.Kbetr;
+                    value.descripcion = oFindStock.Maktg;
+                    value.Matnr = oFindStock.Matnr;
+                    value.Meins = oFindStock.Meins;
+                    var jValue = {
+                        "Type": "G",
+                        "Matnr": oFindStock.Matnr,
+                        "Meins": oFindStock.Meins,
+                        "Werks": "1020",
+                        "Lgort": "0201",
+                        "Labst": "0"
+                    }
+                    oDetailStockSet.push(jValue)
+                }
+                oMaterialEan.push(value);
+            });
+
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([that._getStockMateriales(oDetailStockSet)]).then((values) => {
+                var oStock = values[0].DetailStockSet.results;
+                var cont = 0;
+                oMaterialEan.forEach(async function(value, index){
+                    cont++;
+                    value.num = cont;
+                    var oFindStock = oStock.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins);
+                    value.Labst = "0";
+                    value.solSap = "0";
+                    value.precioUnidSap = value.Kbetr;
+                    value.subtotalSap = "0";
+                    if(!that.isEmpty(oFindStock)){
+                        value.Labst = oFindStock.Labst;
+                        value.solSap = oFindStock.Labst;
+                        value.subtotalSap = (parseFloat(value.precioUnidSap)*parseFloat(value.solSap)).toString();
+                    }
+                });
+
+                oMaterialEan.forEach(async function(value, index){
+                    value.status = "None";
+                    value.descripcionStatus = "OK";
+                    value.statusPrecio = "None";
+                    value.statusStock = "None";
+                    value.statusNoProduct = "S";
+                    value.statusMotivo = "E";
+
+                    if(that.isEmpty(value.Matnr)){
+                        value.status = "Error";
+                        value.statusNoProduct = "E";
+                        value.descripcionStatus = that.getI18nText("sDescStatusNoProduct");
+                    }else{
+                        var arrMsg = [];
+
+                        if(parseFloat(value.precioUnidXsl) > parseFloat(value.precioUnidSap)){
+                            value.status = "Error";
+                            value.statusNoProduct = "S";
+                            value.statusPrecio = "Error";
+                            arrMsg.push(that.getI18nText("sDescStatusNoPrec"));
+                        }
+
+                        if(parseFloat(value.solXsl) > parseFloat(value.solSap)){
+                            value.status = "Error";
+                            value.statusNoProduct = "S";
+                            value.statusStock = "Error";
+                            arrMsg.push(that.getI18nText("sDescStatusNoStock"));
+                        }
+
+                        if(arrMsg.length>0){
+                            value.descripcionStatus = arrMsg.join();
+                        }
+
+                        if(value.statusNoProduct === "E"){
+                            value.statusMotivo = "E"
+                        }else{
+                            if(value.statusPrecio === "Error" || value.statusStock === "Error"){
+                                value.statusMotivo = "S"
+                            }
+                        }
+                        
+                    }
+                });
+                
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive/oDataCargadaMost", oMaterialEan);
+
+                sap.ui.core.BusyIndicator.hide(0);
+                oSource.getParent().close();
+                that.setFragment("_dialogLoadMasiveDetail", that.frgIdLoadMasiveDetail, "LoadMasiveDetail", that);
+            }).catch(function (oError) {
+                console.log(oError);
+                that.getMessageBox("error", that.getI18nText("errorData"));
+                sap.ui.core.BusyIndicator.hide(0);
+            });
+        },
+        _onAcceptProductMasive: function(oEvent){
+            var oSource = oEvent.getSource();
+            var tbMaterialesMasive = this._byId("frgIdLoadMasiveDetail--tbMaterialesMasive");
+            var oMaterialesSelected = [];
+
+            var oSelectItems = tbMaterialesMasive.getItems();
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+                return;
+            }
+
+            oSelectItems.forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                if(parseFloat(jObject.solXsl) > 0 && jObject.status == "None"){
+                    oMaterialesSelected.push(jObject);
+                }
+            });
+
+            if(oMaterialesSelected.length === 0){
+                that.getMessageBox("error", that.getI18nText("errorNotCant"));
+                return;
+            }
+
+            var booleanMotivo = false;
+            oMaterialesSelected.forEach(function(value, index){
+                if(that.isEmpty(value.codeMotivo) && value.statusMotivo === "S"){
+                    booleanMotivo = true;
+                }
+            });
+            if(booleanMotivo){
+                that.getMessageBox("error", that.getI18nText("sSelectMotivo"));
+                return;
+            }
+
+            var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMotivo = this.oModelGetPedidoVenta.getProperty("/oMotivo");
+
+            var booleanError = false;
+            oMaterialesSelected.forEach(function(value, index){
+                var oFindMotivo = oMotivo.find(item => item.key  === value.codeMotivo);
+                var descMotivo = "";
+                if(!that.isEmpty(oFindMotivo)){
+                    descMotivo = oFindMotivo.desc;
+                }
+                if(value.status == "Error"){
+                    booleanError = true;
+                }
+
+                var jMaterial = {
+                    "Codfa":"C06 S21",
+                    "Kbetr":value.solXsl,
+                    "Labst":value.solSap,
+                    "Maktg":value.descripcion,
+                    "Matnr":value.Matnr,
+                    "Meins":value.Matnr,
+                    "Txtfa":value.Txtfa,
+                    "Umrez":value.Umrez,
+                    "Vtweg":value.Vtweg,
+                    
+                    "codeMotivo": value.codeMotivo,
+                    "descMotivo": descMotivo,
+                    "icon":"sap-icon://inbox",
+                    "state":"Success",
+
+                    "cantidad":value.solXsl,
+                    "total": (parseFloat(value.precioUnidXsl) * parseFloat(value.solXsl)).toString(),
+                    "descuentos":"0%",
+                    "descuentosVolumen":"0%",
+                    "status":value.status
+                 }
+                oMaterial.push(jMaterial);
+            });
+            
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+
+            this._onClearDataDialogDialog();
+            
+            oSource.getParent().close();
+            this.onConteoMaterial();
         },
         //Add Product Masive
 
@@ -448,12 +690,24 @@ sap.ui.define([
             var tbProductos = this._byId("tbProductos");
             var oItems = tbProductos.getItems();
             var oProductosValidos = [];
+            var booleanError = false;
             oItems.forEach(function(value, index){
                 var jObject = value.getBindingContext('oModelPedidoVenta').getObject();
-                if(jObject.status === "S"){
+                if(jObject.status === "None"){
                     oProductosValidos.push(jObject);
                 }
+
+                if(jObject.status === "Error"){
+                    booleanError = true;
+                }
             });
+
+            var columns = this._byId("tbProductos").getColumns();
+            if(booleanError){
+                columns[columns.length-1].setVisible(true);
+            }else{
+                columns[columns.length-1].setVisible(false);
+            }
 
             var total = 0;
             var cantidad = 0;

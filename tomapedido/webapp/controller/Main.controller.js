@@ -105,7 +105,7 @@ sap.ui.define([
                 oProgressIndicator = this._byId("frgIdLoadData--piAnimationLoadData");
 
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([this._getClientes(sCodeUser), this._getEstado()]).then(async values => {
+            Promise.all([this._getClientes(sCodeUser), this._getEstado(), this._getMotivo()]).then(async values => {
                 iCantTotal = values.length;
                 iCantSuccess = this.validateService(values);
                 iCantError = iCantTotal-iCantSuccess;
@@ -169,6 +169,13 @@ sap.ui.define([
                     that.oModelGetPedidoVenta.setProperty("/oEstado", oEstado);
                 }else{
                     that.oModelGetPedidoVenta.setProperty("/oEstado", []);
+                }
+
+                if(!that.isEmpty(values[2].oResults[0])){
+                    var oMotivo = values[2].oResults;
+                    that.oModelGetPedidoVenta.setProperty("/oMotivo", oMotivo);
+                }else{
+                    that.oModelGetPedidoVenta.setProperty("/oMotivo", []);
                 }
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
@@ -246,34 +253,15 @@ sap.ui.define([
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
 			}
 		},
-        _getEstado2: function (sUser) {
+        _getMotivo: function (sUser) {
 			try{
 				var user = sUser;
                 var oResp = {
-                    "sEstado": "E",
-                    "oResults": []
+                    "sEstado": "S",
+                    "oResults": models.JsonMotivo()
                 };
 				return new Promise(function (resolve, reject) {
-                    if(clouconnector){
-                        that.getModel("oModelServiceVendedor").read("/ZOSDD_CUSTOM_DATA", {
-                            async: false,
-                            // filters: [new Filter("Usuario", FilterOperator.Contains, sUser)],
-                            success: function (data) {
-                                oResp.sEstado = "S";
-                                oResp.oResults = data.results;
-                                resolve(oResp);
-                            },
-                            error: function (error) {
-                                oResp.sEstado = "E";
-                                oResp.oResults = models.JsonEstado();
-                                resolve(oResp);
-                            }
-                        });
-                    }else{
-                        oResp.sEstado = "E";
-                        oResp.oResults = models.JsonEstado();
-                        resolve(oResp);
-                    }
+                    resolve(oResp);
 				});
 			}catch(oError){
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));

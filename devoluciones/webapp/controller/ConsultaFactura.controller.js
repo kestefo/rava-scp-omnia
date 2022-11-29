@@ -144,7 +144,8 @@ sap.ui.define([
                 var detalleproducto = {
                     "Material": obj.Material,
                     "Cantidad": obj.cantsoldev,
-                    "UnidadMed": obj.UnidMedida
+                    "UnidadMed": obj.UnidMedida,
+                    "Posicion": obj.Posicion
                 }
                 arraydetallePed.push(detalleproducto);
             });
@@ -154,8 +155,8 @@ sap.ui.define([
                 "CodCli": oClientSelect.Kunnr,
                 "Tipo": "ZPDC",
                 "Canal": oClientSelect.Vtweg,
-                "Referencia": FacturaBoletaDetal.CodFact,
-                "NumDocMod": "",
+                "Referencia": FacturaBoletaDetal.mostFactura,
+                "NumDocMod": FacturaBoletaDetal.CodFact,
                 "CodVen": codVen,
                 "MotivoPed": KeyMotivo,
                 "DetallePedidosDevSet": arraydetallePed,

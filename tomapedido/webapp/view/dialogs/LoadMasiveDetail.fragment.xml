@@ -1,0 +1,122 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog title="{i18n>titleDialogLoadMasive}" contentHeight="auto" contentWidth="90%" afterOpen="_afterOpenAddPedido">
+        <content>
+            <VBox>
+                <Table id="tbMaterialesMasive" growingThreshold="20"
+                    items="{oModelPedidoVenta>/DataGeneral/oMaterialSelectMasive/oDataCargadaMost}">
+                    <columns>
+                        <Column width="2rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox>
+                                    <Label text="{i18n>titleAddColNumero}" design="Bold"/>
+                                    <Text text=""/>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="7rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox>
+                                    <Label text="{i18n>titleAddColCodigo}" design="Bold"/>
+                                    <Text text=""/>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox>
+                                    <Label text="{i18n>titleAddColDescripcion}" design="Bold"/>
+                                    <Text text=""/>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="10rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox width="100%" alignItems="Center">
+                                    <Label text="{i18n>titleAddColPrecioUnid}" design="Bold"/>
+                                    <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
+                                        <Text text="{i18n>titleAddColXls}"/>
+                                        <Text text="{i18n>titleAddColSap}"/>
+                                    </HBox>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="12rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox width="100%" alignItems="Center">
+                                    <Label text="{i18n>titleAddColSubTotal}" design="Bold"/>
+                                    <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
+                                        <Text text="{i18n>titleAddColXls}"/>
+                                        <Text text="{i18n>titleAddColSap}"/>
+                                    </HBox>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="10rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox width="100%" alignItems="Center">
+                                    <Label text="{i18n>titleAddColCant}" design="Bold"/>
+                                    <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
+                                        <Text text="{i18n>titleAddColSol}"/>
+                                        <Text text="{i18n>titleAddColStock}"/>
+                                    </HBox>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox>
+                                    <Text text=""/>
+                                    <Text text="{i18n>titleAddColEstado}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                </VBox>
+                            </header>
+                        </Column>
+                        <Column width="11rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <VBox>
+                                    <Text text=""/>
+                                    <Text text="{i18n>titleAddColMotivo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                </VBox>
+                            </header>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive">
+                            <cells>
+                                <Text text="{oModelPedidoVenta>num}"/>
+                                <Text text="{oModelPedidoVenta>codigo}"/>
+                                <Text text="{oModelPedidoVenta>descripcion}"/>
+                                <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>precioUnidXsl', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusPrecio}" />
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>precioUnidSap', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusPrecio}" />
+                                </HBox>
+                                <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
+                                    <Text text="{path:'oModelPedidoVenta>subtotalXsl', formatter: '.currencyFormat'}"/>
+                                    <Text text="{path:'oModelPedidoVenta>subtotalSap', formatter: '.currencyFormat'}"/>
+                                </HBox>
+                                <HBox width="100%" wrap="NoWrap" justifyContent="SpaceAround">
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>solXsl', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusStock}"/>
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>solSap', formatter: '.currencyFormat'}" 
+                                        state="{oModelPedidoVenta>statusStock}"/>
+                                </HBox>
+                                <ObjectStatus text="{oModelPedidoVenta>descripcionStatus}" 
+                                    state="{oModelPedidoVenta>status}" />
+                                <ComboBox id="slMotivo"  change="onValidateChange" width="100%" selectedKey="{oModelPedidoVenta>codeMotivo}"
+                                    items="{oModelGetPedidoVenta>/oMotivo}" visible="{=${oModelPedidoVenta>statusMotivo}==='E'?false:true}">
+                                    <core:Item key="{oModelGetPedidoVenta>key}" text="{oModelGetPedidoVenta>desc}" />
+                                </ComboBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content> 
+		<buttons>
+			<Button id="btnNextAddManualProduct" text="{i18n>confirmProductText}" press="_onAcceptProductMasive" custom:custom="default" type="Accept"/>
+			<Button id="btnCloseAddManualProduct" text="{i18n>returnText}" press="_onPressClose" custom:custom="default" type="Default"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

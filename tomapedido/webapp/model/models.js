@@ -125,6 +125,48 @@ sap.ui.define([
                 return oModel;
             },
 
+            JsonMotivo: function () {
+                var oModel = [
+                    {
+                        "key": "Z1",
+                        "desc": "Por falta de Disponibilidad"
+                    },
+                    {
+                        "key": "Z2",
+                        "desc": "Cliente no conforme con precio"
+                    },
+                    {
+                        "key": "Z3",
+                        "desc": "Mal calculo en la cubicación"
+                    },
+                    {
+                        "key": "Z4",
+                        "desc": "Cambios solicitados por cliente"
+                    },
+                    {
+                        "key": "Z5",
+                        "desc": "Por fecha vencimiento Corta"
+                    },
+                    {
+                        "key": "Z6",
+                        "desc": "Cliente moroso"
+                    },
+                    {
+                        "key": "Z7",
+                        "desc": "Error al hacer pedido cliente"
+                    },
+                    {
+                        "key": "Z8",
+                        "desc": "Datos Logísticos No Actualizados"
+                    },
+                    {
+                        "key": "Z9",
+                        "desc": "Otros"
+                    }
+                ]
+                return oModel;
+            },
+
             JsonCliente: function () {
                 var oModel = [
                     {

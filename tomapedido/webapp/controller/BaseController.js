@@ -604,6 +604,11 @@ sap.ui.define([
 					this._onClearComponentDialogEan();
 					oSource.getParent().close();
 					break;
+				case "AddMasiveProduct":
+					this._onClearComponentDialogMasive();
+					this._onClearDataDialogDialog();
+					oSource.getParent().close();
+					break;
 				default:
 					oSource.getParent().close();
 			}
@@ -622,7 +627,11 @@ sap.ui.define([
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sStatus", "");
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectEan", {});
-			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
+				titulo:"",
+				oDataCargadaPrev:[],
+				oDataCargadaMost:[]
+			});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});
@@ -647,6 +656,15 @@ sap.ui.define([
 		},
 		_onClearDataDialogEan: function(){
 			this.oModelGetPedidoVenta.setProperty("/oMaterialEanSelected",[]);
+		},
+		_onClearComponentDialogMasive: function(){
+		},
+		_onClearDataDialogDialog: function(){
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
+				titulo:"",
+				oDataCargadaPrev:[],
+				oDataCargadaMost:[]
+			});
 		},
         goNavConTo: function (sFragmentId, sNavId, sPageId) {
 			// Fragment.byId(sFragmentId, "btnIdNavDialog").setVisible(true);
@@ -912,6 +930,14 @@ sap.ui.define([
 			var b = s.split(/\D/);
 			return b.reverse().join('/');
 		},
+		formatDayRayDateSl: function(){
+			if (e) {
+				var date = split[0].replaceAll("-","/");
+				return fechaf;
+			}else{
+				return "";
+			}
+		}
 
 	});
 
