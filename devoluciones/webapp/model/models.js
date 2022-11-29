@@ -514,9 +514,30 @@ sap.ui.define([
             JsonMarcaProduct:function(){
              var oModel=[{
                  "Id":"01",
-                "Descripcion":"Placenta Life - Radiant",
-                "NombreProducto":"Acconditioner Placenta"
-             }];   
+                "Descripcion":"AMAZONIC",
+               "NombreProducto":"Acconditioner Placenta"
+                
+             },{
+                "Id":"02",
+               "Descripcion":"BABYLISS",
+               "NombreProducto":"Acconditioner Placenta"
+               
+            },{
+                "Id":"02",
+               "Descripcion":"BE NATURAL",
+               "NombreProducto":"Acconditioner Placenta"
+               
+            },{
+                "Id":"02",
+               "Descripcion":"BEI BEI HORSE",
+               "NombreProducto":"Acconditioner Placenta"
+               
+            },{
+                "Id":"02",
+               "Descripcion":"BELESTA",
+               "NombreProducto":"Acconditioner Placenta"
+               
+            }];   
 
              return oModel;
             },

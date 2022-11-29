@@ -25,7 +25,7 @@
         <content>
             <VBox width="auto" class="sapUiSmallMargin">
                 <VBox class="sapUiSmallMargin">
-                    <!-- <VBox width="auto">
+                    <VBox width="auto">
                         <items>
                             <Title xmlns="sap.m" text="{i18n>textMarca}" level="H4" />
                             <ComboBox id="slMarca" items="{oModelDevolucion>/AddSelectMarca}" width="100%" change="_onChangeMarca" selectedKey="{oModelDevolucion>/keyMarca}">
@@ -40,10 +40,10 @@
                         </ComboBox>
                     </VBox>
                     <VBox width="auto">
-                        <Title text="{i18n>textLote}" level="H4" />
-                        <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad" />
+                        <!-- <Title text="{i18n>textLote}" level="H4" />
+                        <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad" /> -->
                         <Button text="{i18n>txtbtnBuscarProduct}" visible="true" press="_SearchPedido" type="Emphasized" icon="sap-icon://search" />
-                    </VBox> -->
+                    </VBox>
                     <Table items="{oModelDevolucion>/AddProducto}" growingThreshold="20">
                         <columns>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">

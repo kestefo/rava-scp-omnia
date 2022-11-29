@@ -196,7 +196,7 @@ sap.ui.define([
                     oModelDevolucion.setProperty("/KeyAddUser", "");
                     tablaCliente02.removeSelections(true);
 
-                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") + datos.Pedido, {
+                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") + datos.Pedido +".", {
                         actions: [that.getI18nText("acceptText")],
                         emphasizedAction: "",
                         onClose: function (sAction) {
