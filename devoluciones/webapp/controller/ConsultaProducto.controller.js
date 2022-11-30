@@ -142,6 +142,7 @@ sap.ui.define([
                              sap.ui.core.BusyIndicator.hide(0);
 
                         }else{
+                            oModelDevolucion.setProperty("/AddProducto", []);
                             MessageBox.warning(that.getI18nText("txtErrorFacturaProduc"));
                              sap.ui.core.BusyIndicator.hide(0);
                         }
@@ -248,8 +249,8 @@ sap.ui.define([
             selected.DetalleBuscaReceiptSet.results.forEach(function(items){
                 items.sumTotalPos = (parseFloat(items.Impuesto) + parseFloat(items.ImpNeto)).toString();
                 items.cantsoldev = "0";
-                contTotal   += parseFloat(items.Cantidad);
-                contMonto   += parseFloat(items.montonc);
+                contCantidad   += parseFloat(items.Cantidad);
+                contTotal   += parseFloat(items.sumTotalPos);
 
                 items.montonc = (parseFloat(items.cantsoldev) * parseFloat(items.sumTotalPos)).toString();
             });
@@ -258,19 +259,19 @@ sap.ui.define([
                 contadorMonto += parseFloat(element.montonc); 
             });
 
-            if (isNaN(contTotal) || contCantidad === "0") {
-                contTotal = "0.00";
+            if (isNaN(contCantidad) || contCantidad === "0") {
+                contCantidad = "0.00";
             }
             if (isNaN(contTotal) || contTotal === "0") {
-                contMonto = "0.00";
-            }
-            if (isNaN(contTotal) || contMonto === "0") {
                 contTotal = "0.00";
+            }
+            if (isNaN(contMonto) || contMonto === "0") {
+                contMonto = "0.00";
             }
 
             oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toString());
             oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
-            oModelDevolucion.setProperty("/totalMontoDetProduct", contMonto.toFixed(2));
+            oModelDevolucion.setProperty("/totalMontoDetProduct", contadorMonto.toFixed(2));//Cambio Claudia
 
             oModelDevolucion.setProperty("/ProductDetal", oSelected);
 
@@ -443,7 +444,7 @@ sap.ui.define([
                 contaMontoNC+=parseFloat(obs.montonc);
             });
              //revision hacer claudia
-            // oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
+            oModelDevolucion.setProperty("/totalMontoDetProduct",contaMontoNC.toFixed(2));
 
         },
 

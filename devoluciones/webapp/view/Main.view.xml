@@ -1,6 +1,6 @@
 <mvc:View controllerName="devoluciones.controller.Main" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns:fb="sap.ui.comp.filterbar" xmlns="sap.m">
     <Shell>
-        <Page id="page" title="{i18n>title}">
+        <Page id="page" title="{i18n>title}" titleLevel="H4">
             <headerContent>
                 <Button press="_onbtnRefresh" type="Transparent" text="{i18n>textRefresh}" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}" />
                 <Button press="_onbtnHome" type="Transparent" text="{i18n>textHome}" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}" />

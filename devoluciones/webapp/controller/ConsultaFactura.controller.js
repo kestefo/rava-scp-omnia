@@ -282,7 +282,7 @@ sap.ui.define([
                 contaMontoNC+=parseFloat(obs.montonc);
             });
             //revision hacer claudia
-            // oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
+             oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
 
         },
     });

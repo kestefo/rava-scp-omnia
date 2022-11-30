@@ -5,7 +5,7 @@
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
                         <ToolbarSpacer width="15px" />
-                        <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseProduct" type="Default" icon="sap-icon://navigation-left-arrow"/>
+                        <Button text="{i18n>cancelText}" visible="true" press="_onPressCloseProduct" type="Default" icon="sap-icon://navigation-left-arrow" />
 
                         <HBox wrap="Wrap" width="auto">
                             <HBox wrap="NoWrap" width="50%" alignItems="Center">
@@ -67,14 +67,13 @@
                         </Table>
                         <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
                             <items>
-                                
                                 <Text text="{i18n>titleTotal}" width="auto" wrapping="false" textAlign="Right" />
-                                <Text text="" width="" wrapping="false" />
-                                <Text text="{oModelDevolucion>/totalCantidadDetProd}" wrapping="false" width="auto" textAlign="Right" />
-                                <Text text="" width="" wrapping="false" />
-                                <Text text="{oModelDevolucion>/totalProduct}" wrapping="false" width="auto" textAlign="End" visible="true" />
-                                <Text text="" width="" wrapping="false" />
-                                <!-- <Text text="{oModelDevolucion>/totalMontoDetProduct}" wrapping="false" width="auto" textAlign="End" visible="true" />  //revision hacer claudia-->
+                                <Text text="{oModelDevolucion>/totalCantidadDetProd}" width="6.9rem" wrapping="false"  textAlign="Right" />
+                                <Text text="{oModelDevolucion>/totalProduct}" wrapping="false" width="20rem" textAlign="End" visible="true" />
+                                 <Text text="" width="22rem" wrapping="false" textAlign="End"/>
+                                 <!-- //revision hacer claudia -->
+                                <Text text="{oModelDevolucion>/totalMontoDetProduct}" wrapping="false" width="auto" textAlign="End" visible="true" />  
+                                
                             </items>
                         </VBox>
                     </VBox>
