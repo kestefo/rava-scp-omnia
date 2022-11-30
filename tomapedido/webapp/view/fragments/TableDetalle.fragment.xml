@@ -64,7 +64,7 @@
                 <cells>
                     <Text text="{oModelPedidoVenta>Maktg}"/>
                     <Text text="{path:'oModelPedidoVenta>cantidad', formatter: '.formatInteger'}"/>
-                    <Text text="{path:'oModelPedidoVenta>Kbetr', formatter: '.currencyFormat'}"/>
+                    <Text text="{path:'oModelPedidoVenta>Kbetr', formatter: '.currencyFormatIGV'}"/>
                     <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormat'}"/>
                     <Text text="{oModelPedidoVenta>descuentos}"/>
                     <Text text="{oModelPedidoVenta>descuentosVolumen}"/>

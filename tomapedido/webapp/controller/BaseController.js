@@ -21,6 +21,7 @@ sap.ui.define([
 		formatter: Formatter,
         local: window.location.href.indexOf('launchpad') == -1 ? true : false,
 		userSet: "liderdeproyecto1@omniasolution.com",
+		igv:1.18,
         getUserLoged: function(){
 			var user = "";
 			if(this.isEmpty(sap.ushell.Container)){
@@ -525,6 +526,15 @@ sap.ui.define([
 			if(value){
 				var sNumberReplace = value.replaceAll(",","");
 				var iNumber = parseFloat(sNumberReplace);
+				return iNumber.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			}else{
+				return "0.00";
+			}
+		},
+		currencyFormatIGV: function (value) {
+			if(value){
+				var sNumberReplace = value.replaceAll(",","");
+				var iNumber = parseFloat(sNumberReplace) * this.igv;
 				return iNumber.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 			}else{
 				return "0.00";

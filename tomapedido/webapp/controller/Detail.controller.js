@@ -221,7 +221,7 @@ sap.ui.define([
             var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
 
             oMaterialesSelected.forEach(function(value, index){
-                value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
+                value.total = (parseFloat(value.cantidad) * (parseFloat(value.Kbetr)*that.igv)).toString();
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
                 value.status = "None";
@@ -326,7 +326,7 @@ sap.ui.define([
 
             oMaterialesSelected.forEach(function(value, index){
                 delete value["__metadata"];
-                value.total = (parseFloat(value.cantidad) * parseFloat(value.Kbetr)).toString();
+                value.total = (parseFloat(value.cantidad) * (parseFloat(value.Kbetr)*that.igv)).toString();
                 value.descuentos = "0%";
                 value.descuentosVolumen = "0%";
                 value.status = "None";
@@ -429,22 +429,43 @@ sap.ui.define([
                         item.codigo = item[that.getI18nText("sCodeTottus")];
                         item.descripcion = item[that.getI18nText("sDescTottus")];
                         item.precioUnidXsl = item[that.getI18nText("sPrecioUnidTottus")];
-                        item.subtotalXsl = item[that.getI18nText("sSubTotalTottus")];
                         item.solXsl = item[that.getI18nText("sSolTottus")];
+                        if(that.isEmpty(item.precioUnidXsl)){
+                            item.precioUnidXsl = "0"
+                        }
+                        if(that.isEmpty(item.solXsl)){
+                            item.solXsl = "0"
+                        }
+                        // item.subtotalXsl = item[that.getI18nText("sSubTotalTottus")];
+                        item.subtotalXsl =( (parseFloat(item.precioUnidXsl)*that.igv) * parseFloat(item.precioUnidXsl) ).toString();
                     }else if(indiceInka != -1){
                         item.eanXsl = item.EAN;
                         item.codigo = item[that.getI18nText("sCodeInka")];
                         item.descripcion = item[that.getI18nText("sDescInka")];
                         item.precioUnidXsl = item[that.getI18nText("sPrecioUnidInka")];
-                        item.subtotalXsl = item[that.getI18nText("sSubTotalInka")];
                         item.solXsl = item[that.getI18nText("sSolInka")];
+                        if(that.isEmpty(item.precioUnidXsl)){
+                            item.precioUnidXsl = "0"
+                        }
+                        if(that.isEmpty(item.solXsl)){
+                            item.solXsl = "0"
+                        }
+                        // item.subtotalXsl = item[that.getI18nText("sSubTotalInka")];
+                        item.subtotalXsl =( (parseFloat(item.precioUnidXsl)*that.igv) * parseFloat(item.precioUnidXsl) ).toString();
                     }else if(indiceSuper != -1){
                         item.eanXsl = item.EAN;
                         item.codigo = item[that.getI18nText("sCodeSuper")];
                         item.descripcion = item[that.getI18nText("sDescSuper")];
                         item.precioUnidXsl = item[that.getI18nText("sPrecioUnidSuper")];
-                        item.subtotalXsl = item[that.getI18nText("sSubTotalSuper")];
                         item.solXsl = item[that.getI18nText("sSolSuper")];
+                        if(that.isEmpty(item.precioUnidXsl)){
+                            item.precioUnidXsl = "0"
+                        }
+                        if(that.isEmpty(item.solXsl)){
+                            item.solXsl = "0"
+                        }
+                        // item.subtotalXsl = item[that.getI18nText("sSubTotalSuper")];
+                        item.subtotalXsl =( (parseFloat(item.precioUnidXsl)*that.igv) * parseFloat(item.precioUnidXsl) ).toString();
                     }else{
                         item.codigo = "";
                         item.descripcion = "";

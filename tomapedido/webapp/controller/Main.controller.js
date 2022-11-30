@@ -407,10 +407,10 @@ sap.ui.define([
             var oParent = oSource.getParent();
             var jSelected = oParent.getBindingContext("oModelPedidoVenta").getObject();
 
-            if(jSelected.oMateriales.results.length === 0){
-                that.getMessageBox("error", that.getI18nText("errorProductNoSearch"));
-                return;
-            }
+            // if(jSelected.oMateriales.results.length === 0){
+            //     that.getMessageBox("error", that.getI18nText("errorProductNoSearch"));
+            //     return;
+            // }
 
             var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
             sap.ui.core.BusyIndicator.show(0);

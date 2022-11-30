@@ -64,7 +64,7 @@
                     <Text text="{path:'oModelPedidoVenta>fechacrea', formatter:'.formatYYYYMMDDAbap'}"/>
                     <ObjectStatus text="{oModelPedidoVenta>estado}" icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>estate}" />
                     <Text text="{oModelPedidoVenta>comprobante}"/>
-                    <Text text="{path:'oModelPedidoVenta>importe', formatter:'.currencyFormat'}"/>
+                    <Text text="{path:'oModelPedidoVenta>importe', formatter:'.currencyFormatIGV'}"/>
                     <Text text="{path:'oModelPedidoVenta>fechaentrega', formatter:'.reformatDateString'}"/>
                     <!-- <Button text="" icon="sap-icon://edit" press="_onPressEditPedido" tooltip="{i18n>tooltipbtnEditar}"/> -->
                     <Button text="" icon="sap-icon://add-product" press="_onPressDetailProduct" type="Success"/>
