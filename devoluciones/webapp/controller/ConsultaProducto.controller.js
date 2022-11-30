@@ -283,6 +283,7 @@ sap.ui.define([
 
         },
         _onPressCloseDetalleProducto: function (oEvent) {
+            sap.ui.core.BusyIndicator.show();
             var oSource         = oEvent.getSource();
             var sCustom         = oSource.data("custom");
             var that            = this;
@@ -314,6 +315,7 @@ sap.ui.define([
 
             if(oPosDetailPermited.length === 0){
                 MessageBox.warning(that.getI18nText("txtMensajeCantDev"));
+                sap.ui.core.BusyIndicator.hide(0);
                 return;
             }
 
@@ -384,7 +386,9 @@ sap.ui.define([
                                 }
                                 oModelDevolucion.setProperty("/AddProductoDetail", []);
                                 oModelDevolucion.setProperty("/KeyMotivo", "");
-                                that.AbrirProducto.close();
+                                sap.ui.core.BusyIndicator.hide(0);
+                                that.getOwnerComponent().getRouter().navTo("Main");
+                                //that.AbrirProducto.close();
                             }
                         });
                            

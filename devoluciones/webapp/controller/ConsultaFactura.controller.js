@@ -31,6 +31,7 @@ sap.ui.define([
             //     this.getOwnerComponent().getRouter().navTo("Main");
             // 	return;
             // }
+            
 
         },
         handleRouteMatched: function () {
@@ -104,6 +105,7 @@ sap.ui.define([
 
         },
         _onPressCloseDetalle: function (oEvent) {
+            sap.ui.core.BusyIndicator.show();
             var oSource         = oEvent.getSource();
             var sCustom         = oSource.data("custom");
             var that            = this;
@@ -133,6 +135,7 @@ sap.ui.define([
             })
             if(oPosDetailPermited.length === 0){
                 MessageBox.warning(that.getI18nText("txtMensajeCantDev"));
+                sap.ui.core.BusyIndicator.hide(0);
                 return;
             }
             
@@ -206,37 +209,15 @@ sap.ui.define([
                             }
                             oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
                             oModelDevolucion.setProperty("/KeyMotivo", "");
-                            that.AddFactBol.close();
+                            sap.ui.core.BusyIndicator.hide(0);
+                            that.getOwnerComponent().getRouter().navTo("Main");
+                           // that.AddFactBol.close();
 
                         }
                     });
 
                 });
             });
-
-
-          
-                    // jQuery.ajax({
-                    //     type: "POST",
-                    //     cache: false,
-                    //     headers: {
-                    //         "Accept": "application/json"
-                    //     },
-                    //     contentType: "application/json",
-                    //     url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
-                    //     async: true,
-                    //     data: JSON.stringify(datos),
-                    //     success: function (data, textStatus, jqXHR) {
-                    //         var datos = data.d;
-                    //         that.oModelDevolucion.setProperty("/AddFacturaBoleta", models.JsonFactura());
-                    //         that.getOwnerComponent().getRouter().navTo("ConsultaFactura");
-                    //         that.oModelDevolucion.setProperty("/KeyAddUser", "");
-
-                    //     },
-                    //     error: function () {
-                    //         MessageBox.error("Ocurrio un error al obtener los datos");
-                    //     }
-                    // });
 
         },
         getI18nText: function (sText) {
