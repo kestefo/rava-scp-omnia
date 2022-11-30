@@ -7,7 +7,7 @@
                 <content>
                     <VBox width="auto" class="sapUiSmallMargin">
                         <Text text="{i18n>titleAddDescripcionRuc}" />
-                        <ComboBox id="slRuc" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeProducto" selectedKey="{oModelDevolucion>/keyProducto}">
+                        <ComboBox id="slUsuarioProduct" items="{oModelDevolucion>/AddNombreProduct}" width="100%" change="_onChangeProducto" selectedKey="{oModelDevolucion>/keyProducto}">
                             <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Stcd1} {oModelDevolucion>Namec}" />
                         </ComboBox>
                     </VBox>

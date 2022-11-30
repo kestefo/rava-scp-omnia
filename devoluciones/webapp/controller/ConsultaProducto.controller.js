@@ -40,12 +40,33 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             // this.getOwnerComponent().getRouter().navTo("Main");
         },
         _SearchPedido:function(){
+            sap.ui.core.BusyIndicator.show();
             var oView = this.getView();
             var oModelDevolucion = oView.getModel("oModelDevolucion");
             var keyMarca  =oModelDevolucion.getProperty("/keyMarca");
             var keyNombProduct = oModelDevolucion.getProperty("/keyNombProduct");
             var datosLote     =oModelDevolucion.getProperty("/datosLote");
             var contValidacion= 0;
+            var that                = this;
+           var keyProducto         = oModelDevolucion.getProperty("/keyProducto");
+            var e                   = new Date()
+            var day                 = e.getDate().toString();
+            var mes                 = e.getMonth()+1
+            var SumaMes             ="";
+            var Dia                 ="";
+            var AddNombreProduct    =oModelDevolucion.getProperty("/AddNombreProduct");
+            var Añoactual           = e.getFullYear().toString();
+            var SumaFecha           = e.getMonth()+1;
+           
+            if (day < 10) {
+                 Dia = "0" + e.getDate().toString();
+            } else {
+                 Dia = e.getDate().toString();
+            }
+
+            if (mes < 10) {
+                mes = "0" + mes.toString();
+            }
 
             if(keyMarca === undefined || keyMarca === ""){
                 contValidacion++;
@@ -53,17 +74,85 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             if(keyNombProduct === undefined || keyNombProduct === ""){
                 contValidacion++;
             }
-            if(datosLote === undefined || datosLote === ""){
-                contValidacion++; 
-            }
-
+            
             if(contValidacion > 0){
                 MessageBox.warning(this.getI18nText("txtMensBuscarProduct"));
+                sap.ui.core.BusyIndicator.hide(0);
                 return;
             }
 
-            var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
-            jQuery.ajax({
+            
+            e.setMonth(e.getMonth() - 6)// se utiliza la función set month para realizar el incremento de los meses
+            var SumaFecha = e.getMonth()+1;
+
+            if(SumaFecha < 10){
+            SumaMes="0" + SumaFecha.toString();
+           }else{
+               SumaMes = SumaFecha;
+           }
+             
+            var SumaFechas = e.getFullYear().toString() + (SumaMes) + Dia;
+            var FechaActual = Añoactual+ mes.toString()+Dia;
+
+            console.log(SumaFechas +"-"+ FechaActual);
+           
+
+                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"' and Material eq '"+keyNombProduct+"')&$expand=DetalleBuscaReceiptSet";
+               // var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"')&$expand=DetalleBuscaReceiptSet";
+                jQuery.ajax({
+                    type: "GET",
+                    cache: false,
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    contentType: "application/json",
+                    url: url,
+                    async: true,
+                    success: function (data, textStatus, jqXHR) {
+                        var datos = data.d.results;
+                        if(datos.selected > 0){
+                            AddNombreProduct.forEach(function(items){
+                                datos.forEach(function(obj){
+                                    if(keyNombProduct === items.Kunnr){
+                                        obj.NombreClient=obj1.Namec; 
+                                      obj.Fechaformat = obj.FechaFact.substring(6,8)+"/"+ obj.FechaFact.substring(6,4)+"/"+obj.FechaFact.substring(4,0);
+                                    }
+          
+                                  });
+                            });
+                            oModelDevolucion.setProperty("/AddProducto", datos);
+                            oModelDevolucion.setProperty("/keyProducto", "");
+                            oModelDevolucion.setProperty("/keyNombProduct", "");
+                             sap.ui.core.BusyIndicator.hide(0);
+
+                        }else{
+                            MessageBox.warning(that.getI18nText("txtErrorFacturaProduc"));
+                             sap.ui.core.BusyIndicator.hide(0);
+                        }
+                       
+                        
+                    },
+                    error: function () {
+                        MessageBox.error("Ocurrio un error al obtener los datos");
+                        sap.ui.core.BusyIndicator.hide(0);
+                    }
+                });
+
+
+        },
+        _onChangeMarca:function(oEvent){
+            sap.ui.core.BusyIndicator.show();  
+            var kSelected       =oEvent.getSource().getSelectedKey();
+			var sSelected       =oEvent.getSource().getValue();
+            var vista           = this.getView();
+            var oModelDevolucion = vista.getModel("oModelDevolucion");
+            var CodigoCanal      =oModelDevolucion.getProperty("/CodigoCanal");
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+
+            var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ConsultaMarcaSet?$filter=Mvgr1 eq '"+ kSelected +"' and Vtweg eq '"+ CodigoCanal +"'";
+            
+             jQuery.ajax({
                 type: "GET",
                 cache: false,
                 headers: {
@@ -73,39 +162,36 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                 url: url,
                 async: true,
                 success: function (data, textStatus, jqXHR) {
-                    var datos = data.d;
-                    oModelDevolucion.setProperty("/AddProducto", models.JsonFactura());
-
+                    var datos = data.d.results;
+                    oModelDevolucion.setProperty("/AddSelectProducto", datos);
+                    oModelDevolucion.setProperty("/keyNombProduct", "");
+                    sap.ui.core.BusyIndicator.hide(0);  
                 },
                 error: function () {
                     MessageBox.error("Ocurrio un error al obtener los datos");
+                    sap.ui.core.BusyIndicator.hide(0); 
                 }
             });
-
-        },
-        _onChangeMarca:function(oEvent){
-            var kSelected=oEvent.getSource().getSelectedKey();
-			var sSelected=oEvent.getSource().getValue();
-			if (kSelected !== '') {
-				oEvent.getSource().setValue(sSelected);
 			}else{
 				if(oEvent.getSource().getValue()){
 					MessageBox.error( this.getI18nText("sErrorSelect"));
+                    sap.ui.core.BusyIndicator.hide(0); 
 				}
 				oEvent.getSource().setValue("");
+                sap.ui.core.BusyIndicator.hide(0); 
 			}
         },
-        _onChangeProductoBol:function(oEvent){
+        _onChangeProductoBol:function(oEvent){//Cambio de Claudia por el momento 29/11/2022
             var kSelected=oEvent.getSource().getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
-			if (kSelected !== '') {
-				oEvent.getSource().setValue(sSelected);
-			}else{
-				if(oEvent.getSource().getValue()){
-					MessageBox.error(this.getI18nText("sErrorSelect"));
-				}
-				oEvent.getSource().setValue("");
-			}  
+			// if (kSelected !== '') {
+			// 	oEvent.getSource().setValue(sSelected);
+			// }else{
+			// 	if(oEvent.getSource().getValue()){
+			// 		MessageBox.error(this.getI18nText("sErrorSelect"));
+			// 	}
+			// 	oEvent.getSource().setValue("");
+			// }  
         },
         changeMotivoProduct:function(oEvent){
             var kSelected=oEvent.getSource().getSelectedKey();
@@ -242,7 +328,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                           var datos = data.d.ResultPedidosDevSet.results[0];
                           oModelDevolucion.setProperty("/KeyAddUser", "");
                         tablaCliente02.removeSelections(true);
-                        MessageBox.success(that.getI18nText("txtbtnBuscarCancelar")+  datos.Pedido, {
+                        MessageBox.success(that.getI18nText("txtbtnBuscarCancelar")+" "+ datos.Pedido+" .", {
                             actions: [that.getI18nText("acceptText")],
                             emphasizedAction: "",
                             onClose: function (sAction) {

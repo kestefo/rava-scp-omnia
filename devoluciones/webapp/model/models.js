@@ -513,29 +513,135 @@ sap.ui.define([
             },
             JsonMarcaProduct:function(){
              var oModel=[{
-                 "Id":"01",
-                "Descripcion":"AMAZONIC",
-               "NombreProducto":"Acconditioner Placenta"
+                 "Id":"M02",
+                "Descripcion":"BABYLISS"
+               
                 
              },{
-                "Id":"02",
-               "Descripcion":"BABYLISS",
-               "NombreProducto":"Acconditioner Placenta"
+                "Id":"M03",
+               "Descripcion":"BE NATURAL"
+               
                
             },{
-                "Id":"02",
-               "Descripcion":"BE NATURAL",
-               "NombreProducto":"Acconditioner Placenta"
+                "Id":"M04",
+               "Descripcion":"BEI BEI HORSE"
+               
+               
+            },
+
+            {
+                "Id":"M05",
+               "Descripcion":"BELESTA"
+               
                
             },{
-                "Id":"02",
-               "Descripcion":"BEI BEI HORSE",
-               "NombreProducto":"Acconditioner Placenta"
+                "Id":"M06",
+               "Descripcion":"CORPORACIÓN LIFE"
+               
                
             },{
-                "Id":"02",
-               "Descripcion":"BELESTA",
-               "NombreProducto":"Acconditioner Placenta"
+                "Id":"M07",
+               "Descripcion":"DORCO"
+               
+               
+            },{
+                "Id":"M08",
+               "Descripcion":"HANNA CABALL"
+               
+               
+            },{
+                "Id":"M09",
+               "Descripcion":"HUSH"
+               
+               
+            },{
+                "Id":"M10",
+               "Descripcion":"KERATIMASK"
+               
+               
+            },{
+                "Id":"M11",
+               "Descripcion":"KERATIMASK PROFESIONAL"
+               
+               
+            },{
+                "Id":"M12",
+               "Descripcion":"KINETICS"
+               
+               
+            },{
+                "Id":"M13",
+               "Descripcion":"KOKETA"
+               
+               
+            },{
+                "Id":"M14",
+               "Descripcion":"LIFE FOR MEN"
+               
+               
+            },{
+                "Id":"M15",
+               "Descripcion":"MR. CLASSIC"
+               
+               
+            },{
+                "Id":"M16",
+               "Descripcion":"NEW YOU"
+               
+               
+            },{
+                "Id":"M17",
+               "Descripcion":"PLACENTA LIFE"
+               
+               
+            },{
+                "Id":"M18",
+               "Descripcion":"RADIANT"
+               
+               
+            },{
+                "Id":"M19",
+               "Descripcion":"SMOLL"
+               
+               
+            },{
+                "Id":"M20",
+               "Descripcion":"TONNO"
+               
+               
+            },{
+                "Id":"M21",
+               "Descripcion":"TONNO PLUS"
+               
+               
+            },{
+                "Id":"M22",
+               "Descripcion":"NEW U"
+               
+               
+            },{
+                "Id":"M23",
+               "Descripcion":"DERMALIFE"
+               
+               
+            },{
+                "Id":"M24",
+               "Descripcion":"FLOPPY"
+               
+               
+            },{
+                "Id":"M25",
+               "Descripcion":"INSPIRATION"
+               
+               
+            },{
+                "Id":"M26",
+               "Descripcion":"OMYGAD"
+               
+               
+            },{
+                "Id":"M27",
+               "Descripcion":"STONE HEAD "
                
             }];   
 

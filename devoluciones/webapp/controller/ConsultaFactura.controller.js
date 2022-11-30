@@ -169,7 +169,7 @@ sap.ui.define([
                 ]
             }
 
-            return
+            //return
 
             $.ajax({
                 url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
@@ -197,7 +197,7 @@ sap.ui.define([
                     oModelDevolucion.setProperty("/KeyAddUser", "");
                     tablaCliente02.removeSelections(true);
 
-                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") + datos.Pedido +".", {
+                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") +" "+ datos.Pedido +" .", {
                         actions: [that.getI18nText("acceptText")],
                         emphasizedAction: "",
                         onClose: function (sAction) {
