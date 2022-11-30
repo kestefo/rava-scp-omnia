@@ -1,4 +1,6 @@
-sap.ui.define(["sap/ui/core/mvc/Controller",
+sap.ui.define([
+    "devoluciones/controller/BaseController",
+    "sap/ui/core/mvc/Controller",
     "sap/m/MessageBox",
     "sap/ui/core/routing/History",
     'sap/m/MessageToast',
@@ -6,11 +8,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
     "devoluciones/model/models",
     "sap/ui/core/Core",
     "sap/ui/core/mvc/Controller",
-    "devoluciones/controller/BaseController",
-    
-
-
-], function (Controller, MessageBox, History, MessageToast, Fragment, models, Core, BaseController) {
+], function (BaseController,Controller, MessageBox, History, MessageToast, Fragment, models, Core) {
     "use strict";
     var Device = "";
     return BaseController.extend("devoluciones.controller.ConsultaProducto", {
@@ -48,6 +46,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var datosLote     =oModelDevolucion.getProperty("/datosLote");
             var contValidacion= 0;
             var that                = this;
+            var oClientSelect      = this.getModel("oModelDevolucion").getProperty("/oClientSelect");
            var keyProducto         = oModelDevolucion.getProperty("/keyProducto");
             var e                   = new Date()
             var day                 = e.getDate().toString();
@@ -97,7 +96,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             console.log(SumaFechas +"-"+ FechaActual);
            
 
-                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"' and Material eq '"+keyNombProduct+"')&$expand=DetalleBuscaReceiptSet";
+                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ 
+                    SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ oClientSelect.Kunnr +"' and Material eq '"+
+                    keyNombProduct+"')&$expand=DetalleBuscaReceiptSet";
                // var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"')&$expand=DetalleBuscaReceiptSet";
                 jQuery.ajax({
                     type: "GET",
@@ -110,16 +111,31 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                     async: true,
                     success: function (data, textStatus, jqXHR) {
                         var datos = data.d.results;
-                        if(datos.selected > 0){
-                            AddNombreProduct.forEach(function(items){
+                        var oClientSelect = that.getModel("oModelDevolucion").getProperty("/AddSelectUser");
+                        if(datos.length > 0){
+                            // AddNombreProduct.forEach(function(items){
                                 datos.forEach(function(obj){
-                                    if(keyNombProduct === items.Kunnr){
-                                        obj.NombreClient=obj1.Namec; 
-                                      obj.Fechaformat = obj.FechaFact.substring(6,8)+"/"+ obj.FechaFact.substring(6,4)+"/"+obj.FechaFact.substring(4,0);
-                                    }
+                                    // if(keyNombProduct === items.Kunnr){
+                                        // obj.NombreCliente=obj1.Namec; 
+                                        // obj.Fechaformat = obj.FechaFact.substring(6,8)+"/"+ obj.FechaFact.substring(6,4)+"/"+obj.FechaFact.substring(4,0);
+                                        var jFindMaterial = oClientSelect.find(item => item.Kunnr  === obj.CodCli);
+                                        if(jFindMaterial){
+                                            obj.NombreCliente = jFindMaterial.Namec;
+                                        }
+                                    // }
           
                                   });
+                            // });
+
+                            datos.forEach(function(value, index){
+                                //Claudia factura a mostrar en sus detalles
+                                value.mostFactura = "";
+                                if(value.Referencia != "0000000000000000"){
+                                    value.mostFactura = value.Referencia;
+                                }
+                                value.mostMont = (parseFloat(value.MonGlobal) + parseFloat(value.ImpGlobal)).toString();
                             });
+
                             oModelDevolucion.setProperty("/AddProducto", datos);
                             oModelDevolucion.setProperty("/keyProducto", "");
                             oModelDevolucion.setProperty("/keyNombProduct", "");
@@ -219,7 +235,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var contCantidad    =0;
             var contTotal       =0;
             var contMonto       =0;
+            var contadorMonto   =0;
             var oModelDevolucion = oView.getModel("oModelDevolucion");
+            var oSelected = oEvent.getSource().getBindingContext("oModelDevolucion").getObject();
             var productPath      = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
             var selected        = oView.getModel("oModelDevolucion").getProperty(productPath);
 
@@ -228,11 +246,16 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             
 
             selected.DetalleBuscaReceiptSet.results.forEach(function(items){
-
-                contTotal += 0.00;
+                items.sumTotalPos = (parseFloat(items.Impuesto) + parseFloat(items.ImpNeto)).toString();
+                items.cantsoldev = "0";
                 contTotal   += parseFloat(items.Cantidad);
                 contMonto   += parseFloat(items.montonc);
 
+                items.montonc = (parseFloat(items.cantsoldev) * parseFloat(items.sumTotalPos)).toString();
+            });
+
+            selected.DetalleBuscaReceiptSet.results.forEach(function (element) {
+                contadorMonto += parseFloat(element.montonc); 
             });
 
             if (isNaN(contTotal) || contCantidad === "0") {
@@ -249,6 +272,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
             oModelDevolucion.setProperty("/totalMontoDetProduct", contMonto.toFixed(2));
 
+            oModelDevolucion.setProperty("/ProductDetal", oSelected);
+
             if (!that.AbrirProducto) {
                 that.AbrirProducto = sap.ui.xmlfragment("devoluciones.view.dialogs.DetalleProduct", that);
                 oView.addDependent(that.AbrirProducto);
@@ -264,45 +289,66 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
             var oModelDevolucion = vista.getModel("oModelDevolucion");
             var tablaCliente    = sap.ui.getCore().byId("frgIdAddClient--IdTablaClients01");
             var tablaCliente02  = sap.ui.getCore().byId("IdTablaProducts");
-            var KeyMotivoProd   = oModelDevolucion.getProperty("/KeyMotivoProd");
+            var KeyMotivo   = oModelDevolucion.getProperty("/KeyMotivoProd");
             var AddProductoDetail = oModelDevolucion.getProperty("/AddProductoDetail");
             var arraypedido          =[];
             var keyCliente          =oModelDevolucion.getProperty("/keyCliente");
             var textDataDocumento   =oModelDevolucion.getProperty("/textDataDocumento");
             var oUser               =oModelDevolucion.getProperty("/oUser");
 
-            if(KeyMotivoProd !== "" && KeyMotivoProd !== undefined){
+            if (KeyMotivo === undefined || KeyMotivo === "") {
+                MessageBox.warning(that.getI18nText("txtMensajeDevolucion"));
+                return;
+            }
 
-                AddProductoDetail.forEach(function(obj){
-  
-                    var detalleproducto={
-                        "Material": obj.Desc,
-                        "Cantidad": obj.Cantidad,
-                        "UnidadMed": ""
+            //nuevos cambios
+            
+            var oPosDetailNotPermited = AddProductoDetail;
+            var oPosDetailPermited = [];
+            oPosDetailNotPermited.forEach(function(value, index){
+                if(parseFloat(value.cantsoldev) > 0){
+                    oPosDetailPermited.push(value);
+                }
+            })
+
+            if(oPosDetailPermited.length === 0){
+                MessageBox.warning(that.getI18nText("txtMensajeCantDev"));
+                return;
+            }
+
+            var ProductDetal = oModelDevolucion.getProperty("/ProductDetal");
+            var oClientSelect = oModelDevolucion.getProperty("/oClientSelect");
+            var codVen = oModelDevolucion.getProperty("/codVen");
+
+            var arraydetallePed = [];
+            oPosDetailPermited.forEach(function (obj) {
+
+                var detalleproducto = {
+                    "Material": obj.Material,
+                    "Cantidad": obj.cantsoldev,
+                    "UnidadMed": obj.UnidMedida,
+                    "Posicion": obj.Posicion
+                }
+                arraydetallePed.push(detalleproducto);
+            });
         
+            var datos = {
+                "CodCli": oClientSelect.Kunnr,
+                "Tipo": "ZPDC",
+                "Canal": oClientSelect.Vtweg,
+                "Referencia": ProductDetal.mostFactura,
+                "NumDocMod": ProductDetal.CodFact,
+                "CodVen": codVen,
+                "MotivoPed": KeyMotivo,
+                "DetallePedidosDevSet": arraydetallePed,
+                "ResultPedidosDevSet": [
+                    {
+                        "Pedido": "",
+                        "Type": "",
+                        "Msg": ""
                     }
-                    arraypedido.push(detalleproducto);
-                  });
-        
-                    var datos= {
-                        "CodCli": keyCliente,
-                        "Tipo": "1",
-                        "Canal": "2",
-                        "Referencia": textDataDocumento,
-                        "NumDocMod": "0214589632",
-                        "CodVen": oUser,
-                        "MotivoPed": "12",
-                        "DetallePedidosDevSet": arraypedido
-                        
-                        ,
-                        "ResultPedidosDevSet": [
-                        {
-                            "Pedido": "",
-                            "Type": "",
-                            "Msg": ""
-                        }
-                        ]
-                    }
+                ]
+            }
         
                     $.ajax({
                         url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
@@ -343,11 +389,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
                            
                     });
                   });
-
-            }else{
-                MessageBox.warning(this.getI18nText("txtMensajeDevolucion"));
-                return;
-            }
            
         },
         getI18nText: function (sText) {
@@ -363,6 +404,46 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
         // vista.byId("idTablaPrincipal").removeSelections(true);
 
             this.getOwnerComponent().getRouter().navTo("Main");
+
+        },
+
+        //Metodos nuevos Kassiel Estefo 26/11/2022
+        _onLiveChangeCantidad:function(oEvent){
+            var oSource = oEvent.getSource();
+            var oParent = oSource.getParent();
+            var vista           = this.getView();
+            var oModelDevolucion = vista.getModel("oModelDevolucion");
+            var values = oSource.getValue();
+            var contaMontoNC = 0;
+            var regex = /[^\d]/g;
+			var x = values.replace(/[^\d]/g, '');
+            var datosDetalle = oModelDevolucion.getProperty("/AddProductoDetail");
+			if(values.match(regex)){
+				var x = values;
+			}else{
+				var x = values.substring(0, values.length - 1);
+			}
+			var x = parseInt(values);
+			var sValueUsed = isNaN(x) ? '0' : x;
+
+            var oModelContext = oParent.getBindingContext("oModelDevolucion");
+            var oObject = oModelContext.getObject();
+            var cantSumDev = parseFloat(oObject.CantDevuelta) + parseFloat(sValueUsed);
+
+            if(parseFloat(oObject.Cantidad) >= parseFloat(cantSumDev)){
+                oObject.montonc = (parseFloat(oObject.sumTotalPos)*parseFloat(sValueUsed)).toString();
+                oSource.setValue(sValueUsed);
+            }else{
+                this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
+                oObject.montonc = "0";
+                oSource.setValue("0");
+            }
+
+            datosDetalle.forEach(function(obs){
+                contaMontoNC+=parseFloat(obs.montonc);
+            });
+             //revision hacer claudia
+            // oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
 
         },
 

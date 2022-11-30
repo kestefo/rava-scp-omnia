@@ -107,19 +107,19 @@ sap.ui.define([
                 var oModel = [
                     {
                         "key": "01",
-                        "desc": "PEDIDO"
+                        "desc": "Pedido"
                     },
                     {
                         "key": "02",
-                        "desc": "ENTREGA"
+                        "desc": "Entrega"
                     },
                     {
                         "key": "03",
-                        "desc": "DESPACHADO"
+                        "desc": "Despachado"
                     },
                     {
                         "key": "04",
-                        "desc": "FACTURADO"
+                        "desc": "Facturado"
                     }
                 ]
                 return oModel;

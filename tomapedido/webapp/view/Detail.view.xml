@@ -43,17 +43,17 @@
                             <HBox width="100%" justifyContent="SpaceBetween" wrap="Wrap">
                                 <HBox alignItems="Center" alignContent="Center">
                                     <Label text="{i18n>textPedido}:" class="MyTextLabelSize"/>
-                                    <ObjectStatus text="{oModelPedidoVenta>/DataGeneral/sNumPedido}" state="Information" class="MyTextLabelSize"/>
+                                    <ObjectStatus text="{path:'oModelPedidoVenta>/DataGeneral/sNumPedido', formatter: '.formatInteger'}" state="Information" class="MyTextLabelSize"/>
                                 </HBox>
                                 <HBox wrap="Wrap">
-                                    <Button text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
+                                    <Button id="btnAgregarDetail" text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                    <Button text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
+                                    <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                    <Button text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
+                                    <Button id="btnSaveDetail" text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                    <Button text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
+                                    <!-- <Button id="btnCerrarDetail" text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/> -->
                                     <Button text="{i18n>textbtnEditar}" type="Transparent" icon="sap-icon://edit" press="_onPressAddEdit" 
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
                                 </HBox>

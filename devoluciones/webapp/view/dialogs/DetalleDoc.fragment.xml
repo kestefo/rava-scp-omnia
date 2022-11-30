@@ -75,7 +75,7 @@
                                 <Text text="{oModelDevolucion>/totalCantidadDet}" wrapping="false" width="6.9rem" textAlign="Right" />
                                  <Text text="{oModelDevolucion>/totalCantSolic}" wrapping="false" width="20rem" textAlign="End" visible="true" />
                                 <Text text="" width="22rem" wrapping="false" textAlign="End"/>
-                                <Text text="{oModelDevolucion>/totalMontoDet}" wrapping="false" width="auto" textAlign="End" visible="true" />
+                                <!-- <Text text="{oModelDevolucion>/totalMontoDet}" wrapping="false" width="auto" textAlign="End" visible="true" />  //revision hacer claudia-->
                             </items>
                         </VBox>
                     </VBox>

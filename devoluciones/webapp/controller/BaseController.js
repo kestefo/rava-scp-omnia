@@ -533,6 +533,17 @@ sap.ui.define([
 			}
 		},
 
+		formatYYYYMMDDAbap: function (e) {
+			if (e) {
+				var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+					pattern: "dd/MM/yyyy"
+				});
+				var fecha = new Date(e.substr(0, 4) + "/" + e.substr(4, 2) + "/" + e.substr(6, 2));
+				var fechaf = dateFormat.format(fecha);
+				return fechaf;
+			}
+		},
+
 		formatDayRayDateSl: function (value) {
 			if(value){
 				var date = value.replaceAll("-","/");

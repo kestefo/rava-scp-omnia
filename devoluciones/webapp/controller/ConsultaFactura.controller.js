@@ -281,8 +281,8 @@ sap.ui.define([
             datosDetalle.forEach(function(obs){
                 contaMontoNC+=parseFloat(obs.montonc);
             });
-
-            oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
+            //revision hacer claudia
+            // oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
 
         },
     });

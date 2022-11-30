@@ -454,6 +454,9 @@ sap.ui.define([
             },
 
             BusquedaProducto: function () {
+                var oItemSelect = this._byId("frgIdAddProduct--slUsuarioProduct").getSelectedItem();
+                var oClientSelect = oItemSelect.getBindingContext("oModelDevolucion").getObject()
+                sap.ui.core.BusyIndicator.show();
                 var that                = this;
                 var oView               = this.getView();
                 var oModelDevolucion    = oView.getModel("oModelDevolucion");
@@ -496,7 +499,7 @@ sap.ui.define([
                 oModelDevolucion.setProperty("/CodigoCanal" , oClientProductSelect.Vtweg);
 
                 if (keyProducto !== undefined && keyProducto !== "") {
-
+                    that.oModelDevolucion.setProperty("/oClientSelect", oClientSelect);
                 //     var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"' and Material eq '000000001200000225')&$expand=DetalleBuscaReceiptSet";
                 //    // var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"')&$expand=DetalleBuscaReceiptSet";
                 //     jQuery.ajax({

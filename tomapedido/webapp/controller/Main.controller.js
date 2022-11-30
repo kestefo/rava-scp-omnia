@@ -29,7 +29,8 @@ sap.ui.define([
         },
         handleRouteMatched: function(oEvent){
             Promise.all([that._getUsers()]).then((values) => {
-                this.getModel("oModelPedidoVenta").setProperty("/DataGeneral", models.createDataGeneralModel());
+                that._byId("dpDateFilterHasta").setEnabled(false);
+                that.getModel("oModelPedidoVenta").setProperty("/DataGeneral", models.createDataGeneralModel());
                 that.oModelVendedor = this.getModel("oModelServiceVendedor");
                 that.oModelMaestro = this.getModel("oModelServiceMaestro");
                 that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
@@ -219,7 +220,7 @@ sap.ui.define([
                     "oResults": []
                 };
 				return new Promise(function (resolve, reject) {
-                    var sCodeUser = '9600000068';
+                    // var sCodeUser = '9600000068';
                     var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
                     Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
@@ -271,6 +272,8 @@ sap.ui.define([
         
         //Limpiar
         _onClear: function (oEvent) {
+            this._byId("dpDateFilterHasta").setEnabled(false);
+            this.oModelPedidoVenta.setProperty("/PedidosCreados", []);
 			var oFilterBar = that._byId("idFilterBar");
 			var oItems = oFilterBar.getAllFilterItems(true);
 			that
@@ -300,75 +303,225 @@ sap.ui.define([
             var sHasta = this._byId("dpDateFilterHasta").getDateValue();
                 
             var aFilter = [];
-            if (!this.isEmpty(cbCliente)) {
-                aFilter.push(new Filter("Cliente", "EQ", cbCliente));
+            if (this.isEmpty(sDesde)) {
+                // aFilter.push(new Filter("Desde", "EQ", sDesde));
+                that.getMessageBox("error", that.getI18nText("errorFechaDesde"));
+                return;
             }
-            if (!this.isEmpty(cbEstado)) {
-                aFilter.push(new Filter("Estado", "EQ", cbEstado));
+            if (this.isEmpty(sHasta)) {
+                // aFilter.push(new Filter("Hasta", "EQ", sHasta));
+                that.getMessageBox("error", that.getI18nText("errorFechaHasta"));
+                return;
             }
-            if (!this.isEmpty(sDesde)) {
-                aFilter.push(new Filter("Desde", "EQ", sDesde));
+            if (this.isEmpty(cbCliente)) {
+                // aFilter.push(new Filter("Cliente", "EQ", cbCliente));
+                that.getMessageBox("error", that.getI18nText("errorSelectClient"));
+                return;
             }
-            if (!this.isEmpty(sHasta)) {
-                aFilter.push(new Filter("Hasta", "EQ", sHasta));
-            }
+            // if (!this.isEmpty(cbEstado)) {
+            //     // aFilter.push(new Filter("Estado", "EQ", cbEstado));
+            // }
 
             sap.ui.core.BusyIndicator.show();
-            //moment
-            if (!navigator.onLine) {
-                this.getValuesPedidoAS(sPath, aFilter, that);
-            } else {
-                this.oModelPedidoVenta.setProperty("/PedidosCreados", models.JsonPedidos());
-                that.getMessageBox("error", that.getI18nText("warningInternet"));
-                sap.ui.core.BusyIndicator.hide();
-            }
+            this.getValuesPedidoAS(sPath, aFilter, that);
         },
         getValuesPedidoAS: function (sPath, aFilter, that) {
-            return new Promise(function (resolve, reject) {
-                if (navigator.onLine) {
-                    var urlParameters = {
-                        "$expand": "EquipmentContentASearchSet,MessageSet"
-                    }
-                    ServiceOdata.oDataConsult("read", sPath, "", aFilter, "1", that, urlParameters)
-                        .then(function (result) {
-                            sap.ui.core.BusyIndicator.hide();
-                            resolve(result);
-                        }, function (error) {
-                            sap.ui.core.BusyIndicator.hide();
-                            reject(error);
+            var filter = this.oModelPedidoVenta.getProperty("/DataGeneral/filter");
+            var sDesde = "";
+            var sHasta = "";
+            var sEstado = "";
+            var sCliente = "";
+            var sCanal
+            sDesde = this.formatDaySlDateRay(this.reformatDateString(filter.sDesde));
+            sHasta = this.formatDaySlDateRay(this.reformatDateString(filter.sHasta));
+            sCliente = filter.sCliente;
+
+            if(!this.isEmpty(filter.sEstado)){
+                sEstado = filter.sEstado;
+            }
+            
+            var sPath = jQuery.sap.getModulePath("tomapedido")+
+            "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaPedidoSet?$filter=Erdat ge '"+sDesde+"' and Erdat le '"+sHasta+"' "+
+            "and Estado eq '"+sEstado+"' and Kunnr eq '"+sCliente+"' and Type eq 'L'&$expand=DetalleBuscaPedidoSet";
+            Services.getoDataERPSync(that, sPath, function (result) {
+                util.response.validateAjaxGetERPNotMessage(result, {
+                    success: function (oData, message) {
+                        var oResp = oData.data;
+                        var oClientePorVendedor = that.oModelGetPedidoVenta.getProperty("/oClientePorVendedor");
+                        var oPedido = [];
+
+                        
+                        oResp.forEach(function(value, index){
+                            var jPedido = {
+                                "codeCliente": value.Kunnr,
+                                "pedido": value.Vbeln,
+                                "razonsocial": "",
+                                "Kdgrp": "",
+                                "Txtfv": "",
+                                "oDireccion": [],
+                                "oCondPago": [],
+                                "fechacrea": value.Erdat,
+                                "tipodoc": value.Stcd1,
+                                "importe": value.Netwr,
+                                "comprobante": value.Xblnr,
+                                "fechaentrega": value.Lfdat,
+                                "estado": value.Estado,
+                                "canal": value.Vtweg,
+                                "icon": "sap-icon://pending",
+                                "estate": "Warning",
+                                "oMateriales": value.DetalleBuscaPedidoSet
+                            };
+                            var oFindCliente = oClientePorVendedor.find(item => item.Kunnr  === value.Kunnr);
+                            if(oFindCliente){
+                                jPedido.tipodoc = oFindCliente.Stcd1;
+                                jPedido.razonsocial = oFindCliente.Namec;
+                                jPedido.oDireccion = oFindCliente.oDireccion;
+                                jPedido.oCondPago = oFindCliente.oCondPago;
+                                jPedido.Kdgrp = oFindCliente.Kdgrp;
+                                jPedido.Txtfv = oFindCliente.Txtfv;
+                                oPedido.push(jPedido);
+                            }
                         });
-                } else {
-                    that.oModelVendedor.read(sPath, {
-                        filters: aFilter,
-                        success: function (result) {
-                            sap.ui.core.BusyIndicator.hide();
-                            resolve(result);
-                        },
-                        error: function (error) {
-                            sap.ui.core.BusyIndicator.hide();
-                            reject(error);
-                        }
-                    });
-                }
-            }).then(function (resolve) {
 
-                if (navigator.onLine) {
-                    resolve = resolve.results[0];
-                } else {
+                        var cbCliente = that._byId("cbFilterCliente");
+                        var oClienteSelected = cbCliente.getSelectedItem().getBindingContext("oModelGetPedidoVenta").getObject();
+                        oPedido = oPedido.filter(function(value, index){
+                            if(oClienteSelected.Vtweg === value.canal){
+                                return value;
+                            }else{
+                                return !value;
+                            }
+                        });
+                        that.oModelPedidoVenta.setProperty("/PedidosCreados", oPedido);
+                        sap.ui.core.BusyIndicator.hide();
+                    },
+                    error: function (message) {
+                        that.getMessageBox("error", that.getI18nText("warningInternet"));
+                        sap.ui.core.BusyIndicator.hide();
+                    }
+                });
+            });
+        },
+        _onPressDetailProduct: function(oEvent){
+            var oSource = oEvent.getSource();
+            var oParent = oSource.getParent();
+            var jSelected = oParent.getBindingContext("oModelPedidoVenta").getObject();
 
-                }
+            if(jSelected.oMateriales.results.length === 0){
+                that.getMessageBox("error", that.getI18nText("errorProductNoSearch"));
+                return;
+            }
 
-                sap.ui.core.BusyIndicator.hide();
-            }, function (error) {
-                sap.ui.core.BusyIndicator.hide();
-                var bValidate = that.validateInternet();
-                if (!bValidate) {
-                    that.getMessageBox("error", JSON.stringify(error));
+            var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([that._getLineaCredito(jSelected)]).then((values) => {
+                values[0].sCredito = values[0].CreditLimit;
+                values[0].sConsumo = values[0].Amount;
+                values[0].sSaldo = (parseFloat(values[0].sCredito) - parseFloat(values[0].sConsumo)).toString();
+
+                var oLineaCredito = values[0];
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
+
+                var oMaterialFilter = oMaterialTotal.filter(function(value,index){
+                    if(jSelected.canal == value.Vtweg){
+                        return value;
+                    }else{
+                        return !value;
+                    }
+                });
+
+                var oFamiliaMateriales = [];
+                $.each(that._groupBy(oMaterialFilter,'Codfa'), function (x, y) {
+                    var jFamilia = {
+                        "codeFamilia": y[0].Codfa,
+                        "textFamilia": y[0].Txtfa,
+                        "materiales": y
+                    };
+                    oFamiliaMateriales.push(jFamilia);
+                });
+                that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
+                that.oModelGetPedidoVenta.setProperty("/oMaterialTotalFilter", oMaterialFilter);
+
+                var date = that.reformatDateString(jSelected.fechaentrega);
+                var sFlete = "0";
+                if(jSelected.canal === "10"){
+                    if(jSelected.Kdgrp === "12"){
+                        sFlete = "10";
+                    }else if(jSelected.Kdgrp === "13"){ // falta poner menor a 450
+                        sFlete = "10 por monto menor a 450";
+                    }
                 }
-                // $.oLog.push({
-                //     error: reject,
-                //     date: new Date()
-                // });
+                var oChangeParameterSelected = {
+                    "sNumeroPedido": jSelected.pedido,
+                    "sTextDescContacto": "",
+                    "sTextTelContacto": "",
+                    "rucCliente": jSelected.tipodoc,
+                    "codeCliente": jSelected.codeCliente,
+                    "nameCliente": jSelected.razonsocial,
+                    "codeCanal": jSelected.canal,
+                    "TextCanal": "",
+                    "codeGrupoCliente": jSelected.Kdgrp,
+                    "textGrupoCliente": jSelected.Txtfv,
+                    "codeDirecccion": "1",
+                    "textDirecccion": "",
+                    "oDireccion": jSelected.oDireccion,
+                    "oCondPago": jSelected.oCondPago,
+                    "codePuntoVenta": "",
+                    "textPuntoVenta": "",
+                    "codeCondPago": "",
+                    "textCondPago": "",
+                    "textFlete": sFlete,
+                    "textFechaEntrega": date,
+                    "codeComprobante": 0,
+                    "textComprobante": jSelected.comprobante,
+                    "textOrdenCompra": "",
+                    "textObservacion": "",
+                    "textPardm": "",
+                    "textKundm": ""
+                };
+
+                that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "M");
+                that.oModelPedidoVenta.setProperty("/DataGeneral/sNumPedido", jSelected.pedido);
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
+
+                var oMaterial=[];
+                jSelected.oMateriales.results.forEach(function(value, index){
+                    var jMaterial={
+                        "Labst":"",
+                        "Codfa":"",
+                        "Kbetr":value.Precio,
+                        "Matnr":value.Matnr,
+                        "Maktg":"",
+                        "Meins":"",
+                        "Txtfa":"",
+                        "Umrez":"",
+                        "Vtweg":"",
+                        "icon":"sap-icon://inbox",
+                        "state":"Success",
+                        "cantidad":value.Totca,
+                        "total":value.Totim,
+                        "descuentos":"0%",
+                        "descuentosVolumen":"0%",
+                        "status":"None",
+                        "codeMotivo":"",
+                        "descMotivo":""
+                    };
+                    var jFindMaterial = oMaterialFilter.find(item => item.Matnr  === value.Matnr);
+                    if(jFindMaterial){
+                        jMaterial.Codfa = jFindMaterial.Codfa;
+                        jMaterial.Maktg = jFindMaterial.Maktg;
+                        jMaterial.Meins = jFindMaterial.Meins;
+                        jMaterial.Txtfa = jFindMaterial.Txtfa;
+                        jMaterial.Umrez = jFindMaterial.Umrez;
+                        jMaterial.Vtweg = jFindMaterial.Vtweg;
+                        oMaterial.push(jMaterial);
+                    }
+                });
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+                sap.ui.core.BusyIndicator.hide(0);
+                that.oRouter.navTo("Detail", {
+                    app: "2"
+                });
             });
         },
         //Buscar
@@ -693,10 +846,6 @@ sap.ui.define([
         _onPressEditContact: function(){
             this.setFragment("_dialogEditContact", this.frgIdEditContact, "EditContact", this);
         },
-        _onPressAddProducto: function(){
-            this.oRouter.navTo("Detail", {
-                app: "2"
-            });
-        }
+
     });
 });

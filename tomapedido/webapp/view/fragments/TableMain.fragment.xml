@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
-    <Table items="{oModelPedidoVenta>/PedidosCreados}"  mode="MultiSelect" growingThreshold="20">
+    <Table items="{oModelPedidoVenta>/PedidosCreados}"  mode="None" growingThreshold="20">
         <headerToolbar>
             <Toolbar>
                 <ToolbarSpacer/>
@@ -9,34 +9,24 @@
             </Toolbar>
         </headerToolbar>
         <columns>
-            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleColPedidos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleColCliente}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                <header>
-                    <Text text="{i18n>titleColVencimiento}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                </header>
-            </Column>
-            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="8rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleColTipoDocumento}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="6rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleColRazonSocial}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                </header>
-            </Column>
-            <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                <header>
-                    <Text text="{i18n>titleColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleColFechaCrea}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
             <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -46,27 +36,38 @@
             </Column>
             <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleColEditar}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleColCompr}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
             <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleColAgregarProductos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                </header>
+            </Column>
+            <Column width="6rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                <header>
+                    <Text text="{i18n>titleColFechaEnt}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                </header>
+            </Column>
+            <Column width="5rem" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                <header>
+                    <Text text="{i18n>titleColDetalle}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
         </columns>
         <items>
             <ColumnListItem type="Inactive">
                 <cells>
-                    <Text text="{oModelPedidoVenta>pedido}"/>
-                    <Text text="{oModelPedidoVenta>fecha}"/>
-                    <Text text="{oModelPedidoVenta>vencimiento}"/>
-                    <Text text="{oModelPedidoVenta>tipodoc}"/>
+                    <Text text="{path:'oModelPedidoVenta>pedido', formatter:'.formatInteger'}"/>
                     <Text text="{oModelPedidoVenta>razonsocial}"/>
-                    <Text text="{oModelPedidoVenta>importe}"/>
+                    <Text text="{oModelPedidoVenta>tipodoc}"/>
+                    <Text text="{path:'oModelPedidoVenta>fechacrea', formatter:'.formatYYYYMMDDAbap'}"/>
                     <ObjectStatus text="{oModelPedidoVenta>estado}" icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>estate}" />
-                    <Button text="" icon="sap-icon://edit" press="_onPressEditPedido" tooltip="{i18n>tooltipbtnEditar}"/>
-                    <Button text="" icon="sap-icon://add-product" press="_onPressAddProducto" type="Success"/>
+                    <Text text="{oModelPedidoVenta>comprobante}"/>
+                    <Text text="{path:'oModelPedidoVenta>importe', formatter:'.currencyFormat'}"/>
+                    <Text text="{path:'oModelPedidoVenta>fechaentrega', formatter:'.reformatDateString'}"/>
+                    <!-- <Button text="" icon="sap-icon://edit" press="_onPressEditPedido" tooltip="{i18n>tooltipbtnEditar}"/> -->
+                    <Button text="" icon="sap-icon://add-product" press="_onPressDetailProduct" type="Success"/>
                 </cells>
             </ColumnListItem>
         </items>

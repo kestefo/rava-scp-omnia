@@ -13,21 +13,21 @@
                     <fb:filterItems>
                         <fb:FilterItem name="A" label="{i18n>lblDesde}">
                             <fb:control>
-                                <DatePicker id="dpDateFilterDesde" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy"
-                                    value="{oModelPedidoVenta>/DataGeneral/filter/sDesde}" change="onInvoiceDateChange"/>
+                                <DatePicker id="dpDateFilterDesde" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy" required="true" 
+                                    value="{oModelPedidoVenta>/DataGeneral/filter/sDesde}" change="_onChangeDateDesde"/>
                             </fb:control>
                         </fb:FilterItem>
                         
                         <fb:FilterItem name="B" label="{i18n>lblHasta}">
                             <fb:control>
-                                <DatePicker id="dpDateFilterHasta" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy"
-                                    value="{oModelPedidoVenta>/DataGeneral/filter/sHasta}" change="onInvoiceDateChange"/>
+                                <DatePicker id="dpDateFilterHasta" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy" required="true" 
+                                    value="{oModelPedidoVenta>/DataGeneral/filter/sHasta}" change="_onChangeDateHasta" navigate="_onNavigateDateHasta"/>
                             </fb:control>
                         </fb:FilterItem>
                         
                         <fb:FilterItem name="D" label="{i18n>lblCliente}">
                             <fb:control>
-                                <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" 
+                                <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" required="true" 
                                     items="{oModelGetPedidoVenta>/oClientePorVendedor}" change="onValidateChange">
                                     <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Stcd1} {oModelGetPedidoVenta>Namec}"/>
                                 </ComboBox>
@@ -38,7 +38,7 @@
                             <fb:control>
                                 <ComboBox id="cbFilterEstado" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sEstado}" 
                                     items="{oModelGetPedidoVenta>/oEstado}" change="onValidateChange">
-                                    <core:ListItem key="{oModelGetPedidoVenta>key}" text="{oModelGetPedidoVenta>desc}"/>
+                                    <core:ListItem key="{oModelGetPedidoVenta>desc}" text="{oModelGetPedidoVenta>desc}"/>
                                 </ComboBox>
                             </fb:control>
                         </fb:FilterItem>

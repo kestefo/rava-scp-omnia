@@ -55,11 +55,12 @@
                                 <ColumnListItem type="Inactive">
                                     <cells>
                                         <Text text="{oModelDevolucion>Desc}" />
-                                        <Text text="{oModelDevolucion>cantorig}" />
-                                        <Text text="{oModelDevolucion>CantDevuelta}" />
-                                        <Text text="{oModelDevolucion>Cantidad}" />
-                                        <Input value="{oModelDevolucion>cantsoldev}" />
-                                        <Text text="{oModelDevolucion>montonc}" />
+                                        <!-- <Text text="{oModelDevolucion>Lote}" /> -->
+                                        <Text text="{path:'oModelDevolucion>Cantidad', formatter: '.currencyFormat'}" />
+                                        <Text text="{path:'oModelDevolucion>CantDevuelta', formatter: '.currencyFormat'}" />
+                                        <Text text="{path:'oModelDevolucion>sumTotalPos', formatter: '.currencyFormat'}" />
+                                        <Input value="{oModelDevolucion>cantsoldev}" liveChange="_onLiveChangeCantidad" />
+                                        <Text text="{path:'oModelDevolucion>montonc', formatter: '.currencyFormat'}" />
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -73,7 +74,7 @@
                                 <Text text="" width="" wrapping="false" />
                                 <Text text="{oModelDevolucion>/totalProduct}" wrapping="false" width="auto" textAlign="End" visible="true" />
                                 <Text text="" width="" wrapping="false" />
-                                <Text text="{oModelDevolucion>/totalMontoDetProduct}" wrapping="false" width="auto" textAlign="End" visible="true" />
+                                <!-- <Text text="{oModelDevolucion>/totalMontoDetProduct}" wrapping="false" width="auto" textAlign="End" visible="true" />  //revision hacer claudia-->
                             </items>
                         </VBox>
                     </VBox>

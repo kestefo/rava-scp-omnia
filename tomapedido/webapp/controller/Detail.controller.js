@@ -30,13 +30,11 @@ sap.ui.define([
 				that.oModelPedidoVenta = this.getModel("oModelPedidoVenta");
                 that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
 
-                var oProductosSave = values[0];
-                if(that.isEmpty(oProductosSave)){
+                var oProductosSave = that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+                if(oProductosSave.length > 0){
                     // that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
                     // that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
-
-                    that._byId("lTotalProductos").setText(this.currencyFormat("0"));
-                    that._byId("lCantidadProductos").setText(this.currencyFormat("0"));
+                    this.onConteoMaterial("S");
                 }else{
                     // that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat("0"));
                     // that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat("0"));
@@ -44,37 +42,6 @@ sap.ui.define([
                     that._byId("lTotalProductos").setText(this.currencyFormat("0"));
                     that._byId("lCantidadProductos").setText(this.currencyFormat("0"));
                 }
-                // var oData = models.JsonProductos();
-                // var iCounter = this._byId("siContador").getValue();
-                // this.oModelPedidoVenta.setProperty("/ProductoCreados", oData.slice(0, iCounter));
-
-                // var oLength = oData.length;
-                // var oActual = oLength / iCounter;
-                // var oCalculation = (oActual % 1 == 0);
-                // var oValue = 0;
-                // if (oCalculation == true) {
-                //     oValue = oActual;
-                // } else {
-                //     oValue = parseInt(oActual) + 1;
-                // }
-                // var oPaginator = new sap.ui.commons.Paginator({
-                //     visible: true,
-                //     numberOfPages: oValue,
-                //     page: function(oEvent) {
-                //         var oTargetPage = oEvent.getParameter("targetPage");
-                //         var oTargetValue = oTargetPage * iCounter;
-                //         var oSourceValue = oTargetValue - iCounter;
-                //         var oTotalData = models.JsonProductos();
-                //         var oSelectedData = oTotalData.slice(oSourceValue, oTargetValue);
-                //         that.oModelPedidoVenta.setProperty("/ProductoCreados", oSelectedData);
-                //     }
-                // });
-                // var VBox = new sap.m.VBox({
-                //     alignItems: "Center",
-                //     items: [oPaginator]
-                // });
-
-                // this._byId("vbTableDetalle").addItem(VBox);
 			}).catch(function (oError) {
 				sap.ui.core.BusyIndicator.hide(0);
 			});
@@ -686,7 +653,7 @@ sap.ui.define([
         //Add Product Masive
 
         //FunctionDetail
-        onConteoMaterial: function(){
+        onConteoMaterial: function(sParameter){
             var tbProductos = this._byId("tbProductos");
             var oItems = tbProductos.getItems();
             var oProductosValidos = [];
@@ -723,11 +690,13 @@ sap.ui.define([
             that._byId("lTotalProductos").setText( this.currencyFormat(total.toString()));
             that._byId("lCantidadProductos").setText( this.currencyFormat(cantidad.toString()));
 
-            var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
-            oSelectedLineaCredito.sConsumo = (parseFloat(oSelectedLineaCredito.Amount) + parseFloat(total)).toString();
-            oSelectedLineaCredito.sSaldo = (parseFloat(oSelectedLineaCredito.CreditLimit) - parseFloat(oSelectedLineaCredito.sConsumo)).toString();
-
-            that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oSelectedLineaCredito);
+            if(this.isEmpty(sParameter)){
+                var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
+                oSelectedLineaCredito.sConsumo = (parseFloat(oSelectedLineaCredito.Amount) + parseFloat(total)).toString();
+                oSelectedLineaCredito.sSaldo = (parseFloat(oSelectedLineaCredito.CreditLimit) - parseFloat(oSelectedLineaCredito.sConsumo)).toString();
+    
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oSelectedLineaCredito);    
+            }
         },
         onUpdateMaterial: function(oMaterialesSelected){
             
@@ -760,6 +729,16 @@ sap.ui.define([
 
             this.onConteoMaterial();
         },
+        _onPressAddEdit: function(oEvent){
+            var oSource = oEvent.getSource();
+            this._byId("btnAgregarDetail").setVisible(true);
+            this._byId("btnDeleteDetail").setVisible(true);
+            this._byId("btnSaveDetail").setVisible(true);
+            
+            oSource.setVisible(false);
+            // this._byId("btnCerrarDetail").setVisible(false);
+            this._byId("tbProductos").setMode("MultiSelect");
+        },
         _onPressSave: function(){
             var tbProductos = this._byId("tbProductos");
             var oSelectItems = tbProductos.getItems();
@@ -771,12 +750,13 @@ sap.ui.define([
             var oMaterial = [];
             var oMaterialSap = [];
             
+            var sStatus = that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus");
             var cont = 0;
             oSelectItems.forEach(function(value, index){
                 cont = cont + 10;
                 var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
                 var jDataSap = {
-                    "Type": "C",
+                    "Type": sStatus,
                     "Posnr": that.zfill(cont,6),
                     "Matnr": jObject.Matnr,
                     "Werks": "1020",
@@ -790,43 +770,75 @@ sap.ui.define([
 
             utilUI.messageBox(this.getI18nText("sTextConfirm"),"C", function(value){
                 if(value){
-                    var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
-                    var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
-                    var date = that.reformatDateString(that.getYYYYMMDD(new Date()));
-                    var dateFormat = date;
-
-                    var sComprobante = parseFloat(oSelectedCliente.codeComprobante) == 0 ? "BB":"FA";
-                    var sPardm = oSelectedCliente.textPardm;
-                    var sKundm = oSelectedCliente.textKundm;
-                    var sKundm = oSelectedCliente.textKundm;
-                    var sCondPago = oSelectedCliente.codeCondPago === 'C001' ? oSelectedCliente.codeCondPago: '';
-
-                    var oDataSap={
-                        "Type": "C",
-                        "Kunnr": oSelectedCliente.codeCliente,
-                        "Vkorg": "1000",
-                        "Vtweg": oSelectedCliente.codeCanal,
-                        "Spart": "XX",
-                        "Bstdk": date,
-                        "Waerk": "PEN",
-                        "ReqDt": oSelectedCliente.textFechaEntrega,
-                        "Bstkd": oSelectedCliente.textOrdenCompra,
-                        "Obser": oSelectedCliente.textObservacion,
-                        "Pardm": sPardm,
-                        "Kundm": sKundm,
-                        "TipCo": sComprobante,
-                        "Zterm": sCondPago,
-                        "Vbeln": "",
-                        "DetailSOSet": oMaterialSap,
-                        "ResultSOSet": [
-                            {
-                                "Type": "C",
-                                "Posnr": "",
-                                "Msage": ""
-                            }
-                        ]
-                    };
-                    
+                    var sStatus = that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus");
+                    var sNumPedido = that.oModelPedidoVenta.getProperty("/DataGeneral/sNumPedido");
+                    var oDataSap={};
+                    if(sStatus === "C"){
+                        var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+                        var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
+                        var date = that.reformatDateString(that.getYYYYMMDD(new Date()));
+                        var dateFormat = date;
+    
+                        var sComprobante = parseFloat(oSelectedCliente.codeComprobante) == 0 ? "BB":"FA";
+                        var sPardm = oSelectedCliente.textPardm;
+                        var sKundm = oSelectedCliente.textKundm;
+                        var sKundm = oSelectedCliente.textKundm;
+                        var sCondPago = oSelectedCliente.codeCondPago === 'C001' ? oSelectedCliente.codeCondPago: '';
+    
+                        oDataSap={
+                            "Type": "C",
+                            "Kunnr": oSelectedCliente.codeCliente,
+                            "Vkorg": "1000",
+                            "Vtweg": oSelectedCliente.codeCanal,
+                            "Spart": "XX",
+                            "Bstdk": date,
+                            "Waerk": "PEN",
+                            "ReqDt": oSelectedCliente.textFechaEntrega,
+                            "Bstkd": oSelectedCliente.textOrdenCompra,
+                            "Obser": oSelectedCliente.textObservacion,
+                            "Pardm": sPardm,
+                            "Kundm": sKundm,
+                            "TipCo": sComprobante,
+                            "Zterm": sCondPago,
+                            "Vbeln": "",
+                            "DetailSOSet": oMaterialSap,
+                            "ResultSOSet": [
+                                {
+                                    "Type": "C",
+                                    "Posnr": "",
+                                    "Msage": ""
+                                }
+                            ]
+                        };
+                    }else if(sStatus === "M"){
+                        oDataSap={
+                            "Type": sStatus,
+                            "Kunnr": "",
+                            "Vkorg": "",
+                            "Vtweg": "",
+                            "Spart": "",
+                            "Bstdk": "",
+                            "Waerk": "",
+                            "ReqDt": "",
+                            "Bstkd": "",
+                            "Obser": "",
+                            "Pardm": "",
+                            "Kundm": "",
+                            "TipCo": "",
+                            "Zterm": "",
+                            "Vbeln": sNumPedido,
+                            "DetailSOSet": oMaterialSap,
+                            "ResultSOSet": [
+                                {
+                                    "Type": sStatus,
+                                    "Posnr": "",
+                                    "Msage": ""
+                                }
+                            ]
+                        };
+                    }
+                    console.log(oDataSap);
+                    return;
                     sap.ui.core.BusyIndicator.show(0);
                     Promise.all([that._postProductos(oDataSap)]).then((values) => {
 
@@ -930,7 +942,6 @@ sap.ui.define([
 
             this._byId("vbTableDetalle").addItem(VBox);
         },
-        
         
         _onPressPromotion: function(){
             var navCon = this.byId("navcIdGroupPromotions");

@@ -930,14 +930,81 @@ sap.ui.define([
 			var b = s.split(/\D/);
 			return b.reverse().join('/');
 		},
-		formatDayRayDateSl: function(){
-			if (e) {
-				var date = split[0].replaceAll("-","/");
-				return fechaf;
+		formatDayRayDateSl: function (value) {
+			if(value){
+				var date = value.replaceAll("-","/");
+				return date;
 			}else{
 				return "";
 			}
-		}
+		},
+		formatDaySlDateRay: function(value){
+			if(value){
+				var date = value.replaceAll("/","-");
+				return date;
+			}else{
+				return "";
+			}
+		},
+		_onChangeDateDesde: function (oEvent) {
+			var oSource = oEvent.getSource();
+			var sValue = oSource.getValue()
+			if (!this.isEmpty(sValue)) {
+				var sFechaInicio = "";
+				var bFechaInicio = "";
+				
+				sFechaInicio = sValue.trim();
+				
+				var booleanValidateFirst = this.ValidateFormatDate(sFechaInicio);
+				if(!booleanValidateFirst){
+					this.getMessageBox('error', this.getI18nText("sErrorChangeDatePicker") + sValue);
+					oSource.setValue("");
+					this._byId("dpDateFilterHasta").setValue("");
+					this._byId("dpDateFilterHasta").setEnabled(true);
+					this._byId("dpDateFilterHasta").setEnabled(true);
+					return;
+				}
+
+				oSource.setValue(sValue);
+				this._byId("dpDateFilterHasta").setValue("");
+				this._byId("dpDateFilterHasta").setEnabled(true);
+			} else {
+				oSource.setValue("");
+				this._byId("dpDateFilterHasta").setValue("");
+				this._byId("dpDateFilterHasta").setEnabled(true);
+			}
+		},
+		_onChangeDateHasta: function (oEvent) {
+			var oSource = oEvent.getSource();
+			var sValue = oSource.getValue()
+			if (!this.isEmpty(sValue)) {
+				var sFechaInicio = "";
+				var bFechaInicio = "";
+				
+				sFechaInicio = sValue.trim();
+				
+				var booleanValidateFirst = this.ValidateFormatDate(sFechaInicio);
+				if(!booleanValidateFirst){
+					this.getMessageBox('error', this.getI18nText("sErrorChangeDatePicker") + sValue);
+					oSource.setValue("");
+					return;
+				}
+
+				oSource.setValue(sValue);
+				this._byId("dpDateFilterHasta").setEnabled(true);
+			} else {
+				oSource.setValue("");
+			}
+		},
+		_onNavigateDateHasta:function(oEvent){
+			var oSource = oEvent.getSource();
+			var sValueDesde = this._byId("dpDateFilterDesde").getValue();
+			var sValueDesdeSplit = sValueDesde.split("/");
+			var year = parseInt(sValueDesdeSplit[2]);
+			var mount = parseInt(sValueDesdeSplit[1]);
+			var day = parseInt(sValueDesdeSplit[0]);
+			oSource.setMinDate(new Date(year, mount-1, day));
+		},
 
 	});
 

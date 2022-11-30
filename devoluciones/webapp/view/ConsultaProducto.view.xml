@@ -91,12 +91,12 @@
                         <items>
                             <ColumnListItem type="Inactive" press="_onNavDetalleProducto">
                                 <cells>
-                                    <Text text="{oModelDevolucion>NombreClient}" />
+                                    <Text text="{oModelDevolucion>NombreCliente}" />
                                     <Text text="{oModelDevolucion>mostFactura}" />
-                                    <Text text="{oModelDevolucion>Fechaformat}" />
+                                    <Text text="{path:'oModelDevolucion>FechaFact', formatter:'.formatYYYYMMDDAbap'}" />
                                     <!-- <Text text="{oModelDevolucion>lote}" /> -->
                                     <!-- <Text text="{oModelDevolucion>cantidad}" /> -->
-                                    <Text text="{oModelDevolucion>kjkjjk}" />
+                                    <Text text="{path:'oModelDevolucion>mostMont', formatter:'.currencyFormat'}" />
                                     <Button icon="sap-icon://show" press="onDetalleDocFact" />
                                     <!-- <Text text="{oModelDevolucion>tipo}" /> -->
                                 </cells>
