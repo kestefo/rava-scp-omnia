@@ -164,6 +164,7 @@ sap.ui.define([
             var vista           = this.getView();
             var oModelDevolucion = vista.getModel("oModelDevolucion");
             var CodigoCanal      =oModelDevolucion.getProperty("/CodigoCanal");
+            var that            = this;
 			if (kSelected !== '') {
 				oEvent.getSource().setValue(sSelected);
 
@@ -180,9 +181,18 @@ sap.ui.define([
                 async: true,
                 success: function (data, textStatus, jqXHR) {
                     var datos = data.d.results;
-                    oModelDevolucion.setProperty("/AddSelectProducto", datos);
-                    oModelDevolucion.setProperty("/keyNombProduct", "");
-                    sap.ui.core.BusyIndicator.hide(0);  
+                    if(datos.length > 0){
+                        oModelDevolucion.setProperty("/AddSelectProducto", datos);
+                        oModelDevolucion.setProperty("/keyNombProduct", "");
+                        sap.ui.core.BusyIndicator.hide(0);
+                    }else{
+                        oModelDevolucion.setProperty("/AddSelectProducto", []);
+                        oModelDevolucion.setProperty("/keyNombProduct", "");
+                        oModelDevolucion.setProperty("/AddProducto", []);
+                        sap.ui.core.BusyIndicator.hide(0);  
+                        MessageBox.warning( that.getI18nText("sErrorSelectProducto"));
+                    }
+                      
                 },
                 error: function () {
                     MessageBox.error("Ocurrio un error al obtener los datos");
@@ -191,7 +201,7 @@ sap.ui.define([
             });
 			}else{
 				if(oEvent.getSource().getValue()){
-					MessageBox.error( this.getI18nText("sErrorSelect"));
+					MessageBox.error( that.getI18nText("sErrorSelect"));
                     sap.ui.core.BusyIndicator.hide(0); 
 				}
 				oEvent.getSource().setValue("");
@@ -201,14 +211,14 @@ sap.ui.define([
         _onChangeProductoBol:function(oEvent){//Cambio de Claudia por el momento 29/11/2022
             var kSelected=oEvent.getSource().getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
-			// if (kSelected !== '') {
-			// 	oEvent.getSource().setValue(sSelected);
-			// }else{
-			// 	if(oEvent.getSource().getValue()){
-			// 		MessageBox.error(this.getI18nText("sErrorSelect"));
-			// 	}
-			// 	oEvent.getSource().setValue("");
-			// }  
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					MessageBox.error(this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}  
         },
         changeMotivoProduct:function(oEvent){
             var kSelected=oEvent.getSource().getSelectedKey();
@@ -242,7 +252,8 @@ sap.ui.define([
             var productPath      = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
             var selected        = oView.getModel("oModelDevolucion").getProperty(productPath);
 
-            oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
+            // oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
+            oModelDevolucion.setProperty("/textDataDocumento", selected.mostFactura);//Cambio Claudia Romero
             oModelDevolucion.setProperty("/AddProductoDetail", selected.DetalleBuscaReceiptSet.results);
             
 

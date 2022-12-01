@@ -153,38 +153,38 @@ sap.ui.define([
                 }
 
                 if (contador > 0) {
-                    MessageBox.error(mensaje);
+                    MessageBox.warning(mensaje);
                     sap.ui.core.BusyIndicator.hide(0);
                     return;
                 }
 
-                // var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
-                // jQuery.ajax({
-                //     type: "GET",
-                //     cache: false,
-                //     headers: {
-                //         "Accept": "application/json"
-                //     },
-                //     contentType: "application/json",
-                //     url: url,
-                //     async: true,
-                //     success: function (data, textStatus, jqXHR) {
-                //         var datos = data.d;
-                //         that.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
-                //         oModelDevolucion.setProperty("/KeyCliente", "");
-                //         oView.byId("formatFecha").setValue("");
-                //         oView.byId("sfechaComprobante20").setValue("");
-
-                //     },
-                //     error: function () {
-                //         MessageBox.error("Ocurrio un error al obtener los datos");
-                //     }
-                // });
-                this.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
-                oModelDevolucion.setProperty("/KeyCliente", "");
-                oView.byId("formatFecha").setValue("");
-                oView.byId("sfechaComprobante20").setValue("");
-                sap.ui.core.BusyIndicator.hide(0);
+                var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+                jQuery.ajax({
+                    type: "GET",
+                    cache: false,
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    contentType: "application/json",
+                    url: url,
+                    async: true,
+                    success: function (data, textStatus, jqXHR) {
+                        var datos = data.d;
+                        that.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
+                        oModelDevolucion.setProperty("/KeyCliente", "");
+                        oView.byId("formatFecha").setValue("");
+                        oView.byId("sfechaComprobante20").setValue("");
+                        sap.ui.core.BusyIndicator.hide(0);
+                    },
+                    error: function () {
+                        MessageBox.error("Ocurrio un error al obtener los datos");
+                    }
+                });
+                // this.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
+                // oModelDevolucion.setProperty("/KeyCliente", "");
+                // oView.byId("formatFecha").setValue("");
+                // oView.byId("sfechaComprobante20").setValue("");
+                // sap.ui.core.BusyIndicator.hide(0);
 
             },
 
