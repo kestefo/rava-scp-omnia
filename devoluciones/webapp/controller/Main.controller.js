@@ -35,8 +35,8 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.show();
                     this.oModelDevolucion = this.getModel("oModelDevolucion");
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
-                    // var sCodeUser = values[0].value;
-                    var sCodeUser ="9600000065";// cambio 25/11/2022
+                     var sCodeUser = values[0].value;
+                    //var sCodeUser ="9600000065";// cambio 25/11/2022
                     if(!that.isEmpty(sCodeUser)){
                         that.filtroCliente(sCodeUser);
                        
@@ -116,17 +116,48 @@ sap.ui.define([
                 // tracks.forEach((track) => track.stop());
                 // videoElem.srcObject = null;
             },
+            consultaMateriales:function(canal){
+                var oView            = this.getView();
+                var oModelDevolucion = oView.getModel("oModelDevolucion");
+               
+                var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ConsultaMarcaSet?$filter=Mvgr1 eq '' and Vtweg eq '"+ canal +"'";
+            
+                jQuery.ajax({
+                   type: "GET",
+                   cache: false,
+                   headers: {
+                       "Accept": "application/json"
+                   },
+                   contentType: "application/json",
+                   url: url,
+                   async: true,
+                   success: function (data, textStatus, jqXHR) {
+                       var datos = data.d.results;
+                       oModelDevolucion.setProperty("/Materialesdetalle",datos);
+                       sap.ui.core.BusyIndicator.hide(0);
+                       
+                         
+                   },
+                   error: function () {
+                       MessageBox.error("Ocurrio un error al obtener los datos");
+                       sap.ui.core.BusyIndicator.hide(0); 
+                   }
+                });
+            },
+            
             onBuscar: function () {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var FechaComprobante1 = oView.byId("formatFecha").getValue();
                 var FechaComprobante = oView.byId("sfechaComprobante20").getValue();
-                var formatoDesde = FechaComprobante1.substring(6, 10) + FechaComprobante1.substring(3, 5) + FechaComprobante1.substring(0, 2);
-                var formatoHasta = FechaComprobante.substring(6, 10) + FechaComprobante.substring(3, 5) + FechaComprobante.substring(0, 2);
+                var formatoDesde = FechaComprobante1.substring(6, 10) +"-"+ FechaComprobante1.substring(3, 5) +"-"+ FechaComprobante1.substring(0, 2);
+                var formatoHasta = FechaComprobante.substring(6, 10) +"-"+ FechaComprobante.substring(3, 5) +"-"+ FechaComprobante.substring(0, 2);
                 var KeyCliente = oModelDevolucion.getProperty("/KeyCliente");
+                var FiltroCliente = oModelDevolucion.getProperty("/FiltroCliente");
                 var contador = 0;
                 var that = this;
                 var mensaje = "";
+                var canal ="";
                 var RegExPattern = /^(?:(?:(?:0?[1-9]|1\d|2[0-8])[/](?:0?[1-9]|1[0-2])|(?:29|30)[/](?:0?[13-9]|1[0-2])|31[/](?:0?[13578]|1[02]))[/](?:0{2,3}[1-9]|0{1,2}[1-9]\d|0?[1-9]\d{2}|[1-9]\d{3})|29[/]0?2[/](?:\d{1,2}(?:0[48]|[2468][048]|[13579][26])|(?:0?[48]|[13579][26]|[2468][048])00))$/;
                 sap.ui.core.BusyIndicator.show();
                 if ((FechaComprobante1.match(RegExPattern) === null)) {
@@ -158,7 +189,8 @@ sap.ui.define([
                     return;
                 }
 
-                var url = "/sap/opu/odata/sap/ZOSDD_CUSTOM_VENDOR_CDS/";
+                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaPedidoSet?$filter=Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"' "+
+                "and Estado eq '' and Kunnr eq '"+KeyCliente+"' and Type eq 'D'&$expand=DetalleBuscaPedidoSet";
                 jQuery.ajax({
                     type: "GET",
                     cache: false,
@@ -169,29 +201,37 @@ sap.ui.define([
                     url: url,
                     async: true,
                     success: function (data, textStatus, jqXHR) {
-                        var datos = data.d;
-                        that.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
+                       
+                        var datos = data.d.results;
+                        FiltroCliente.forEach(function(items){
+                            datos.forEach(function(obj){
+                                if(obj.Kunnr === items.Kunnr){
+                                    obj.Cliente = items.Namec;
+                                    obj.ruc =items.Stcd1;
+                                    canal = items.Vtweg;
+                                }
+
+                            }) ;
+                        });
+                        that.oModelDevolucion.setProperty("/DevolucionesCreados", datos);
                         oModelDevolucion.setProperty("/KeyCliente", "");
                         oView.byId("formatFecha").setValue("");
                         oView.byId("sfechaComprobante20").setValue("");
-                        sap.ui.core.BusyIndicator.hide(0);
+                        that.consultaMateriales(canal);
+                        
                     },
                     error: function () {
                         MessageBox.error("Ocurrio un error al obtener los datos");
+                        sap.ui.core.BusyIndicator.hide(0);
                     }
                 });
-                // this.oModelDevolucion.setProperty("/DevolucionesCreados", models.JsonDevolucionesCreados());
-                // oModelDevolucion.setProperty("/KeyCliente", "");
-                // oView.byId("formatFecha").setValue("");
-                // oView.byId("sfechaComprobante20").setValue("");
-                // sap.ui.core.BusyIndicator.hide(0);
-
+               
             },
 
             onRefreshCliente:function(){
                 var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
-                //var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
-                var sCodeUser = "9600000065";//cambio 25/11/2022
+                var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+                //var sCodeUser = "9600000065";//cambio 25/11/2022
                 sap.ui.core.BusyIndicator.show();
                this.filtroCliente(sCodeUser);
                MessageBox.success(that.getI18nText("sucessActualizacion"));
@@ -324,12 +364,14 @@ sap.ui.define([
 
             },
             onDetalleDevolucion: function (oEvent) {
-                var that = this;
-                var oView = this.getView();
-                var productPath = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
-                var selected = oView.getModel("oModelDevolucion").getProperty(productPath);
-                var contadorMonto = 0;
-                var contadorCant = 0;
+                var that              = this;
+                var oView             = this.getView();
+                var oModelDevolucion =oView.getModel("oModelDevolucion");
+                var productPath       = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
+                var selected          = oView.getModel("oModelDevolucion").getProperty(productPath);
+                var contadorMonto     = 0;
+                var contadorCant      = 0;
+                var Materialesdetalle = oModelDevolucion.getProperty("/Materialesdetalle");
 
                 if (selected.estado !== "Pedido") {
                     this.oModelDevolucion.setProperty("/editableNroCredt", false);
@@ -339,8 +381,18 @@ sap.ui.define([
                     this.oModelDevolucion.setProperty("/editableNroCredt", true);
                     this.oModelDevolucion.setProperty("/editableDescripMot", true);
                 }
+                var datosDetalle = selected.DetalleBuscaPedidoSet.results;
 
-                this.oModelDevolucion.setProperty("/AddDetalleDev", models.jsonDetalleDevolucion());
+                Materialesdetalle.forEach(function(items){
+                    datosDetalle.forEach(function(obj){
+                        if(obj.Matnr === items.Matnr){
+                            obj.descripcion =items.Maktx;
+                        }
+                    });
+
+                });
+
+                this.oModelDevolucion.setProperty("/AddDetalleDev", datosDetalle);
                 this.oModelDevolucion.setProperty("/NroCredito", selected.NroCredito);
                 this.oModelDevolucion.setProperty("/DescripMotivo", selected.Motivos);
 

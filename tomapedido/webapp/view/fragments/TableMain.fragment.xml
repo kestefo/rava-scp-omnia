@@ -62,7 +62,7 @@
                     <Text text="{oModelPedidoVenta>razonsocial}"/>
                     <Text text="{oModelPedidoVenta>tipodoc}"/>
                     <Text text="{path:'oModelPedidoVenta>fechacrea', formatter:'.formatYYYYMMDDAbap'}"/>
-                    <ObjectStatus text="{oModelPedidoVenta>estado}" icon="{oModelPedidoVenta>icon}" state="{oModelPedidoVenta>estate}" />
+                    <ObjectStatus text="{oModelPedidoVenta>estado}" icon="sap-icon://pending" state="{oModelPedidoVenta>estate}" />
                     <Text text="{oModelPedidoVenta>comprobante}"/>
                     <Text text="{path:'oModelPedidoVenta>importe', formatter:'.currencyFormatIGV'}"/>
                     <Text text="{path:'oModelPedidoVenta>fechaentrega', formatter:'.reformatDateString'}"/>
