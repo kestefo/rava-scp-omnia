@@ -430,8 +430,24 @@ sap.ui.define([
                     }
                 });
 
+                var oMaterialesGroupPred = [];
+                $.each(that._groupBy(oMaterialFilter,'Matnr'), function (x, y) {
+                    var jMaterial = {};
+                    var booleanPrecio = false;
+                    y.forEach(function(value,index){
+                        if(parseFloat(value.Kbetr)>0){
+                            jMaterial = value;
+                            booleanPrecio = true;
+                        }
+                    });
+                    if(!booleanPrecio){
+                        jMaterial = y[0]
+                    }
+                    oMaterialesGroupPred.push(jMaterial);
+                });
+
                 var oFamiliaMateriales = [];
-                $.each(that._groupBy(oMaterialFilter,'Codfa'), function (x, y) {
+                $.each(that._groupBy(oMaterialesGroupPred,'Codfa'), function (x, y) {
                     var jFamilia = {
                         "codeFamilia": y[0].Codfa,
                         "textFamilia": y[0].Txtfa,
@@ -499,7 +515,7 @@ sap.ui.define([
                         "icon":"sap-icon://inbox",
                         "state":"Success",
                         "cantidad":value.Totca,
-                        "total":value.Totim,
+                        "total":  ((value.Precio * that.igv)*parseFloat(value.Totca)).toString(),
                         "descuentos":"0%",
                         "descuentosVolumen":"0%",
                         "status":"None",
@@ -620,8 +636,24 @@ sap.ui.define([
                     }
                 });
 
+                var oMaterialesGroupPred = [];
+                $.each(that._groupBy(oMaterialFilter,'Matnr'), function (x, y) {
+                    var jMaterial = {};
+                    var booleanPrecio = false;
+                    y.forEach(function(value,index){
+                        if(parseFloat(value.Kbetr)>0){
+                            jMaterial = value;
+                            booleanPrecio = true;
+                        }
+                    });
+                    if(!booleanPrecio){
+                        jMaterial = y[0]
+                    }
+                    oMaterialesGroupPred.push(jMaterial);
+                });
+
                 var oFamiliaMateriales = [];
-                $.each(that._groupBy(oMaterialFilter,'Codfa'), function (x, y) {
+                $.each(that._groupBy(oMaterialesGroupPred,'Codfa'), function (x, y) {
                     var jFamilia = {
                         "codeFamilia": y[0].Codfa,
                         "textFamilia": y[0].Txtfa,

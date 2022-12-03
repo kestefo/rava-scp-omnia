@@ -3,9 +3,12 @@
 	<Dialog title="{i18n>titleAddManual}" contentHeight="auto" contentWidth="500px" afterOpen="_afterOpenAddPedido">
         <content>
             <HBox width="auto" class="sapUiSmallMargin" wrap="Wrap" justifyContent="SpaceBetween">
-                <Button text="{i18n>textbtnManual}" type="Default" icon="sap-icon://add-document" press="_onPressAddManual"/>
-                <Button text="{i18n>textbtnEan}" type="Default" icon="sap-icon://add" press="_onPressAddEan"/>
-                <Button text="{i18n>textbtnIngMasivo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressLoadMasive"/>
+                <Button text="{i18n>textbtnManual}" type="Default" icon="sap-icon://add-document" press="_onPressAddManual" 
+                    />
+                <Button text="{i18n>textbtnEan}" type="Default" icon="sap-icon://add" press="_onPressAddEan" 
+                    />
+                <Button text="{i18n>textbtnIngMasivo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressLoadMasive" 
+                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?false:true}"/>
             </HBox>
         </content>
 		<buttons>

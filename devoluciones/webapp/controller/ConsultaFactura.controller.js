@@ -202,7 +202,7 @@ sap.ui.define([
                         emphasizedAction: "",
                         onClose: function (sAction) {
                             if (sAction === that.getI18nText("acceptText")) {
-
+                                that.getOwnerComponent().getRouter().navTo("Main");
                             }
                             oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
                             oModelDevolucion.setProperty("/KeyMotivo", "");

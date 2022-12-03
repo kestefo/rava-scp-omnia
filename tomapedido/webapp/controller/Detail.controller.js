@@ -46,7 +46,51 @@ sap.ui.define([
 				sap.ui.core.BusyIndicator.hide(0);
 			});
         },
+        onAfterRendering: function(){
+            var URL="";
+            // if (mapType === "H") {
+            if (true) {
+                URL = "https://mt.google.com/vt/lyrs=m&x={X}&y={Y}&z={LOD}"; //google layer for hybrid
+            } else {
+                URL = "https://mt.google.com/vt/lyrs=s,m&x={X}&y={Y}&z={LOD}"; //google layer for satelite
+            }
+            var oGeoMap = this.getView().byId("vbi");
+            var oMapConfig = {
+                "MapProvider":[
+                   {
+                      "name":"GMAP",
+                      "description":"Map Provider",
+                      "tileX":"256",
+                      "tileY":"256",
+                      "maxLOD":"20",
+                      "copyright":"Tiles Courtesy of Google Maps",
+                      "Source":[
+                         {
+                            "id":"s1",
+                            "url":URL
+                         }
+                      ]
+                   }
+                ],
+                "MapLayerStacks":[
+                   {
+                      "name":"GOOGLE",
+                      "MapLayer":{
+                         "name":"layer2",
+                         "refMapProvider":"GMAP",
+                         "opacity":"6.0",
+                         "colBkgnd":"RGB(255,255,255)"
+                      }
+                   }
+                ]
+             }
+            oGeoMap.setMapConfiguration(oMapConfig);
+            oGeoMap.setRefMapLayerStack("GOOGLE");
+            oGeoMap.setInitialZoom(13);
+            oGeoMap.setInitialPosition("-97.57;35.57;0");
+        },
         _onPressNavButtonDetail: function(){
+            this.oModelPedidoVenta.setProperty("/PedidosCreados", []);
             this._onClearDataDetailClient();
             this.oRouter.navTo("Main");
         },
@@ -604,7 +648,7 @@ sap.ui.define([
 
             oSelectItems.forEach(function(value, index){
                 var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
-                if(parseFloat(jObject.solXsl) > 0 && jObject.status == "None"){
+                if(parseFloat(jObject.solXsl) > 0 && jObject.statusNoProduct == "S"){
                     oMaterialesSelected.push(jObject);
                 }
             });
@@ -641,11 +685,11 @@ sap.ui.define([
 
                 var jMaterial = {
                     "Codfa":"C06 S21",
-                    "Kbetr":value.solXsl,
+                    "Kbetr":value.precioUnidXsl,
                     "Labst":value.solSap,
                     "Maktg":value.descripcion,
                     "Matnr":value.Matnr,
-                    "Meins":value.Matnr,
+                    "Meins":value.Meins,
                     "Txtfa":value.Txtfa,
                     "Umrez":value.Umrez,
                     "Vtweg":value.Vtweg,
@@ -656,7 +700,7 @@ sap.ui.define([
                     "state":"Success",
 
                     "cantidad":value.solXsl,
-                    "total": (parseFloat(value.precioUnidXsl) * parseFloat(value.solXsl)).toString(),
+                    "total": ((parseFloat(value.precioUnidXsl)*that.igv) * parseFloat(value.solXsl)).toString(),
                     "descuentos":"0%",
                     "descuentosVolumen":"0%",
                     "status":value.status
@@ -776,6 +820,10 @@ sap.ui.define([
             oSelectItems.forEach(function(value, index){
                 cont = cont + 10;
                 var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                var sCodeMotivo = "";
+                if(!that.isEmpty(jObject.codeMotivo)){
+                    sCodeMotivo = jObject.codeMotivo;
+                }
                 var jDataSap = {
                     "Type": sStatus,
                     "Posnr": that.zfill(cont,6),
@@ -783,7 +831,8 @@ sap.ui.define([
                     "Werks": "1020",
                     "Lgort": "0201",//por revisar
                     "Fkimg": jObject.cantidad,
-                    "Meins": jObject.Meins
+                    "Meins": jObject.Meins,
+                    "Abgru": sCodeMotivo
                 };
 				oMaterial.push(jObject);
                 oMaterialSap.push(jDataSap);
@@ -859,7 +908,7 @@ sap.ui.define([
                         };
                     }
                     console.log(oDataSap);
-                    return;
+                    // return;
                     sap.ui.core.BusyIndicator.show(0);
                     Promise.all([that._postProductos(oDataSap)]).then((values) => {
 

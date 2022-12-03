@@ -379,7 +379,7 @@ sap.ui.define([
                             emphasizedAction: "",
                             onClose: function (sAction) {
                                 if (sAction === that.getI18nText("acceptText")) {
-                                    
+                                    that.getOwnerComponent().getRouter().navTo("Main");
                                 }
                                 oModelDevolucion.setProperty("/AddProductoDetail", []);
                                 oModelDevolucion.setProperty("/KeyMotivo", "");

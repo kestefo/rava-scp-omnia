@@ -35,8 +35,8 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.show();
                     this.oModelDevolucion = this.getModel("oModelDevolucion");
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
-                    // var sCodeUser = values[0].value;
-                    var sCodeUser ="9600000065";// cambio 25/11/2022
+                    var sCodeUser = values[0].value;
+                    // var sCodeUser ="9600000065";// cambio 25/11/2022
                     if(!that.isEmpty(sCodeUser)){
                         that.filtroCliente(sCodeUser);
                        

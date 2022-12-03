@@ -23,6 +23,11 @@
                     </Column>
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                         <header>
+                            <Text text="{i18n>titleAddColCodSap}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                        </header>
+                    </Column>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <header>
                             <Text text="{i18n>titleAddColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                         </header>
                     </Column>
@@ -58,6 +63,7 @@
                         <cells>
                             <Text text="{oModelDevolucion>NombreCliente}"/>
                             <Text text="{oModelDevolucion>mostFactura}"/>
+                            <Text text="{oModelDevolucion>CodFact}"/>
                             <Text text="{path:'oModelDevolucion>Fechaformat', formatter:'.formatDayRayDateSl'}"/>
                             <!-- <Text text="{oModelDevolucion>lote}" /> -->
 

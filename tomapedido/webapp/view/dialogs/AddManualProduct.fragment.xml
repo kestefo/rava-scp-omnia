@@ -16,6 +16,11 @@
                     <columns>
                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
+                                <Text text="{i18n>titleAddColCodeSap}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
                                 <Text text="{i18n>titleAddColProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                             </header>
                         </Column>
@@ -43,6 +48,7 @@
                     <items>
                         <ColumnListItem type="Inactive">
                             <cells>
+                                <Text text="{path:'oModelGetPedidoVenta>Matnr', formatter:'.formatInteger'}"/>
                                 <Text text="{oModelGetPedidoVenta>Maktg}"/>
                                 <Text text="{path:'oModelGetPedidoVenta>Kbetr', formatter:'.currencyFormat'}"/>
                                 <Text text="{path:'oModelGetPedidoVenta>Labst', formatter:'.formatInteger'}"/>
