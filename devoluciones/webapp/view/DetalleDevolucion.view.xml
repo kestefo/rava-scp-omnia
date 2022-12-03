@@ -60,7 +60,7 @@
                     <items>
                         <ColumnListItem type="Inactive" press="_onNavDetalleFacturaBoleta">
                             <cells>
-                                <Text text="{oModelDevolucion>Producto}" />
+                                <Text text="{oModelDevolucion>descripcion}" />
                                 <Text text="{oModelDevolucion>Lote}" />
                                 <Text text="{oModelDevolucion>Cantidad}" />
                                 <Text text="{oModelDevolucion>Monto}" />
@@ -70,10 +70,11 @@
                 </Table>
                 <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
                     <items>
-                        <Text text="" width="" wrapping="false" />
-                        <Text text="{i18n>titleTotal}" wrapping="false" width="auto" textAlign="Initial" />
-                        <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="auto" textAlign="Center" />
-                        <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="auto" textAlign="Center" visible="true" />
+                        
+                        <Text text="{i18n>titleTotal}" wrapping="false" width="3.5rem" textAlign="Right" />
+                        <Text text="" wrapping="false" width="6rem" textAlign="Right" />
+                        <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="10rem" textAlign="Right" />
+                        <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="18rem" textAlign="Right" visible="true" />
                     </items>
                 </VBox>
             </VBox>

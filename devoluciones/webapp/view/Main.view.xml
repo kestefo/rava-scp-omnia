@@ -1,6 +1,6 @@
 <mvc:View controllerName="devoluciones.controller.Main" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns:fb="sap.ui.comp.filterbar" xmlns="sap.m">
     <Shell>
-        <Page id="page" title="{i18n>title}">
+        <Page id="page" title="{i18n>title}" titleLevel="H4">
             <headerContent>
                 <Button press="_onbtnRefresh" type="Transparent" text="{i18n>textRefresh}" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}" />
                 <Button press="_onbtnHome" type="Transparent" text="{i18n>textHome}" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}" />
@@ -56,7 +56,7 @@
                                 <items>
                                     <Label text="{i18n>txtSelectCliente}" required="true" />
                                     <ComboBox id="selectCajadER01" width="" selectedKey="{oModelDevolucion>/KeyCliente}" items="{oModelDevolucion>/FiltroCliente}" placeholder="---Seleccionar---" change="onPressSelect">
-                                        <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Kunnr} {oModelDevolucion>Namec}" />
+                                        <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Stcd1} {oModelDevolucion>Namec}" />
                                     </ComboBox>
                                 </items>
                             </VBox>
@@ -128,22 +128,22 @@
 
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColDetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
                         </columns>
                         <items>
                             <ColumnListItem type="Inactive">
                                 <cells>
-                                    <Text text="{oModelDevolucion>nguia}" />
-                                    <Text text="{oModelDevolucion>cliente}" />
-                                    <Text text="{oModelDevolucion>RUC}" />
-                                    <Text text="{oModelDevolucion>fecha}" />
-                                    <ObjectStatus text="{oModelDevolucion>estado}" icon="{oModelDevolucion>icon}" state="{oModelDevolucion>estate}" />
-                                    <Text text="{oModelDevolucion>Comprobante}" />
-                                    <Text text="{oModelDevolucion>Monto}" />
+                                    <Text text="{oModelDevolucion>Vbeln}" />
+                                    <Text text="{oModelDevolucion>Cliente}" />
+                                    <Text text="{oModelDevolucion>ruc}" />
+                                    <Text text="{oModelDevolucion>Erdat}" />
+                                    <ObjectStatus text="{oModelDevolucion>Estado}" icon="sap-icon://pending" state="Warning" />
+                                    <Text text="{oModelDevolucion>Xblnr}" />
+                                    <Text text="{oModelDevolucion>Netwr}" />
                                     <Text text="{oModelDevolucion>FechaEmi}" />
-                                    <Link text="{oModelDevolucion>Detalle}" press="onDetalleDevolucion" />
+                                    <Button text="{oModelDevolucion>Detalle}" press="onDetalleDevolucion" icon="sap-icon://show"/>
                                 </cells>
                             </ColumnListItem>
                         </items>

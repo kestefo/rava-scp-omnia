@@ -142,6 +142,7 @@ sap.ui.define([
                              sap.ui.core.BusyIndicator.hide(0);
 
                         }else{
+                            oModelDevolucion.setProperty("/AddProducto", []);
                             MessageBox.warning(that.getI18nText("txtErrorFacturaProduc"));
                              sap.ui.core.BusyIndicator.hide(0);
                         }
@@ -163,6 +164,7 @@ sap.ui.define([
             var vista           = this.getView();
             var oModelDevolucion = vista.getModel("oModelDevolucion");
             var CodigoCanal      =oModelDevolucion.getProperty("/CodigoCanal");
+            var that            = this;
 			if (kSelected !== '') {
 				oEvent.getSource().setValue(sSelected);
 
@@ -179,9 +181,18 @@ sap.ui.define([
                 async: true,
                 success: function (data, textStatus, jqXHR) {
                     var datos = data.d.results;
-                    oModelDevolucion.setProperty("/AddSelectProducto", datos);
-                    oModelDevolucion.setProperty("/keyNombProduct", "");
-                    sap.ui.core.BusyIndicator.hide(0);  
+                    if(datos.length > 0){
+                        oModelDevolucion.setProperty("/AddSelectProducto", datos);
+                        oModelDevolucion.setProperty("/keyNombProduct", "");
+                        sap.ui.core.BusyIndicator.hide(0);
+                    }else{
+                        oModelDevolucion.setProperty("/AddSelectProducto", []);
+                        oModelDevolucion.setProperty("/keyNombProduct", "");
+                        oModelDevolucion.setProperty("/AddProducto", []);
+                        sap.ui.core.BusyIndicator.hide(0);  
+                        MessageBox.warning( that.getI18nText("sErrorSelectProducto"));
+                    }
+                      
                 },
                 error: function () {
                     MessageBox.error("Ocurrio un error al obtener los datos");
@@ -190,7 +201,7 @@ sap.ui.define([
             });
 			}else{
 				if(oEvent.getSource().getValue()){
-					MessageBox.error( this.getI18nText("sErrorSelect"));
+					MessageBox.error( that.getI18nText("sErrorSelect"));
                     sap.ui.core.BusyIndicator.hide(0); 
 				}
 				oEvent.getSource().setValue("");
@@ -200,14 +211,14 @@ sap.ui.define([
         _onChangeProductoBol:function(oEvent){//Cambio de Claudia por el momento 29/11/2022
             var kSelected=oEvent.getSource().getSelectedKey();
 			var sSelected=oEvent.getSource().getValue();
-			// if (kSelected !== '') {
-			// 	oEvent.getSource().setValue(sSelected);
-			// }else{
-			// 	if(oEvent.getSource().getValue()){
-			// 		MessageBox.error(this.getI18nText("sErrorSelect"));
-			// 	}
-			// 	oEvent.getSource().setValue("");
-			// }  
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+			}else{
+				if(oEvent.getSource().getValue()){
+					MessageBox.error(this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}  
         },
         changeMotivoProduct:function(oEvent){
             var kSelected=oEvent.getSource().getSelectedKey();
@@ -241,15 +252,16 @@ sap.ui.define([
             var productPath      = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
             var selected        = oView.getModel("oModelDevolucion").getProperty(productPath);
 
-            oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
+            // oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
+            oModelDevolucion.setProperty("/textDataDocumento", selected.mostFactura);//Cambio Claudia Romero
             oModelDevolucion.setProperty("/AddProductoDetail", selected.DetalleBuscaReceiptSet.results);
             
 
             selected.DetalleBuscaReceiptSet.results.forEach(function(items){
                 items.sumTotalPos = (parseFloat(items.Impuesto) + parseFloat(items.ImpNeto)).toString();
                 items.cantsoldev = "0";
-                contTotal   += parseFloat(items.Cantidad);
-                contMonto   += parseFloat(items.montonc);
+                contCantidad   += parseFloat(items.Cantidad);
+                contTotal   += parseFloat(items.sumTotalPos);
 
                 items.montonc = (parseFloat(items.cantsoldev) * parseFloat(items.sumTotalPos)).toString();
             });
@@ -258,19 +270,19 @@ sap.ui.define([
                 contadorMonto += parseFloat(element.montonc); 
             });
 
-            if (isNaN(contTotal) || contCantidad === "0") {
-                contTotal = "0.00";
+            if (isNaN(contCantidad) || contCantidad === "0") {
+                contCantidad = "0.00";
             }
             if (isNaN(contTotal) || contTotal === "0") {
-                contMonto = "0.00";
-            }
-            if (isNaN(contTotal) || contMonto === "0") {
                 contTotal = "0.00";
+            }
+            if (isNaN(contMonto) || contMonto === "0") {
+                contMonto = "0.00";
             }
 
             oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toString());
             oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
-            oModelDevolucion.setProperty("/totalMontoDetProduct", contMonto.toFixed(2));
+            oModelDevolucion.setProperty("/totalMontoDetProduct", contadorMonto.toFixed(2));//Cambio Claudia
 
             oModelDevolucion.setProperty("/ProductDetal", oSelected);
 
@@ -282,6 +294,7 @@ sap.ui.define([
 
         },
         _onPressCloseDetalleProducto: function (oEvent) {
+            sap.ui.core.BusyIndicator.show();
             var oSource         = oEvent.getSource();
             var sCustom         = oSource.data("custom");
             var that            = this;
@@ -313,6 +326,7 @@ sap.ui.define([
 
             if(oPosDetailPermited.length === 0){
                 MessageBox.warning(that.getI18nText("txtMensajeCantDev"));
+                sap.ui.core.BusyIndicator.hide(0);
                 return;
             }
 
@@ -383,7 +397,9 @@ sap.ui.define([
                                 }
                                 oModelDevolucion.setProperty("/AddProductoDetail", []);
                                 oModelDevolucion.setProperty("/KeyMotivo", "");
-                                that.AbrirProducto.close();
+                                sap.ui.core.BusyIndicator.hide(0);
+                                that.getOwnerComponent().getRouter().navTo("Main");
+                                //that.AbrirProducto.close();
                             }
                         });
                            
@@ -443,7 +459,7 @@ sap.ui.define([
                 contaMontoNC+=parseFloat(obs.montonc);
             });
              //revision hacer claudia
-            // oModelDevolucion.setProperty("/totalMontoDet",contaMontoNC.toFixed(2));
+            oModelDevolucion.setProperty("/totalMontoDetProduct",contaMontoNC.toFixed(2));
 
         },
 
