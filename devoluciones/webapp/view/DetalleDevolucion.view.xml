@@ -36,14 +36,14 @@
             <VBox width="auto" class="sapUiSmallMargin">
                 <Table id="id12" items="{oModelDevolucion>/AddDetalleDev}" growingThreshold="20">
                     <columns>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
-                                <Text text="{i18n>titleAddProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                <Text text="{i18n>txtCodSap}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                             </header>
                         </Column>
                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
-                                <Text text="{i18n>titleAddColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                <Text text="{i18n>titleAddProducto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                             </header>
                         </Column>
                         <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -56,25 +56,29 @@
                                 <Text text="{i18n>titleAddMonto}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                             </header>
                         </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddImporteTotal}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            </header>
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Inactive" press="_onNavDetalleFacturaBoleta">
                             <cells>
-                                <Text text="{oModelDevolucion>descripcion}" />
-                                <Text text="{oModelDevolucion>Lote}" />
-                                <Text text="{oModelDevolucion>Cantidad}" />
-                                <Text text="{oModelDevolucion>Monto}" />
+                                <Text text="{oModelDevolucion>Matnr}" />
+                                <Text text="{oModelDevolucion>Material}" />
+                                <Text text="{oModelDevolucion>formatCantidad}" />
+                                <Text text="{oModelDevolucion>preciounitario}" />
+                                <Text text="{oModelDevolucion>ImporteTotal}" />
                             </cells>
                         </ColumnListItem>
                     </items>
                 </Table>
                 <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
                     <items>
-                        
                         <Text text="{i18n>titleTotal}" wrapping="false" width="3.5rem" textAlign="Right" />
-                        <Text text="" wrapping="false" width="6rem" textAlign="Right" />
-                        <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="10rem" textAlign="Right" />
-                        <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="18rem" textAlign="Right" visible="true" />
+                     <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="350px" textAlign="Right" />
+                       <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="350px" textAlign="Right" visible="true" />
                     </items>
                 </VBox>
             </VBox>

@@ -253,13 +253,18 @@ sap.ui.define([
             var selected        = oView.getModel("oModelDevolucion").getProperty(productPath);
 
             // oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
-            oModelDevolucion.setProperty("/textDataDocumento", selected.mostFactura);//Cambio Claudia Romero
+            oModelDevolucion.setProperty("/textDataDocumento", selected.CodFact);//Cambio Claudia Romero
             oModelDevolucion.setProperty("/AddProductoDetail", selected.DetalleBuscaReceiptSet.results);
+            oModelDevolucion.setProperty("/FacturaSap", selected.mostFactura);
+            
             
 
             selected.DetalleBuscaReceiptSet.results.forEach(function(items){
                 items.sumTotalPos = (parseFloat(items.Impuesto) + parseFloat(items.ImpNeto)).toString();
                 items.cantsoldev = "0";
+                items.totalunitario = (parseFloat(items.sumTotalPos)/ parseFloat(items.Cantidad)).toFixed(3);
+                var formatoMaterial = parseFloat(items.Material).toString();
+                items.codigoMaterial = formatoMaterial.substring(0,2) +"-" + formatoMaterial.substring(2,10);
                 contCantidad   += parseFloat(items.Cantidad);
                 contTotal   += parseFloat(items.sumTotalPos);
 
@@ -280,7 +285,7 @@ sap.ui.define([
                 contMonto = "0.00";
             }
 
-            oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toString());
+            oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toFixed(2));
             oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
             oModelDevolucion.setProperty("/totalMontoDetProduct", contadorMonto.toFixed(2));//Cambio Claudia
 
@@ -447,7 +452,7 @@ sap.ui.define([
             var cantSumDev = parseFloat(oObject.CantDevuelta) + parseFloat(sValueUsed);
 
             if(parseFloat(oObject.Cantidad) >= parseFloat(cantSumDev)){
-                oObject.montonc = (parseFloat(oObject.sumTotalPos)*parseFloat(sValueUsed)).toString();
+                oObject.montonc = (parseFloat(oObject.totalunitario)*parseFloat(sValueUsed)).toString();
                 oSource.setValue(sValueUsed);
             }else{
                 this.getMessageBox("error", this.getI18nText("errorSupPermitido"));

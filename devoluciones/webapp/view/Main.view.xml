@@ -71,16 +71,15 @@
                     </HBox>
                 </fb:FilterBar>
                 <VBox width="auto" class="sapUiSmallMargin">
-                    <Table id="idTablaPrincipal" items="{oModelDevolucion>/DevolucionesCreados}" mode="MultiSelect" growingThreshold="20">
+                    <Table id="idTablaPrincipal" items="{oModelDevolucion>/DevolucionesCreados}" mode="None" growingThreshold="20">
                         <headerToolbar>
                             <Toolbar>
                                 <Text text="{i18n>textNuevaSolicitudDevolucion}" />
                                 <ToolbarSpacer />
                                 <Button text="{i18n>txtbtnFacturaBoleta}" press="_onPressAddFacturaBoleta" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}" />
                                 <Button text="{i18n>txtbtnProducto}" press="_onPressAddProducto" type="Success" icon="sap-icon://add" tooltip="{i18n>tooltipbtnAdd}" />
-                                <Button press="_onPressDeletePedido" type="Reject" icon="sap-icon://delete" tooltip="{i18n>tooltipbtnDelete}" />
-                                <Button press="onpresPrint" type="Default" icon="" text="{i18n>tooltipbtnImprimir}" />
-                                <Button press="onpressCaptura" type="Default" icon="" text="{i18n>tooltipbtnCaptura}" />
+                                <!-- <Button press="onpresPrint" type="Default" icon="" text="{i18n>tooltipbtnImprimir}" />
+                                <Button press="onpressCaptura" type="Default" icon="" text="{i18n>tooltipbtnCaptura}" /> -->
                             </Toolbar>
                         </headerToolbar>
                         <columns>

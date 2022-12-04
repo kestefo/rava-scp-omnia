@@ -46,11 +46,17 @@
                     </VBox>
                     <Table items="{oModelDevolucion>/AddProducto}" growingThreshold="20">
                         <columns>
-                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
                                     <Text text="{i18n>titleColCliente}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleAddColTipoDoc}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                           
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
                                     <Text text="{i18n>titleAddColDocumento01}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
@@ -58,30 +64,21 @@
                             </Column>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
+                                    <Text text="{i18n>titleAddColDocumento}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
                                     <Text text="{i18n>titleAddColFecha}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
-                            <!-- <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                <header>
-                                    <Text text="{i18n>titleAddColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
-                                </header>
-                            </Column> -->
 
-                            <!-- <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                <header>
-                                    <Text text="{i18n>titleAddColCantidad}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
-                                </header>
-                            </Column> -->
                             <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
                                     <Text text="{i18n>titleAddColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
-                            <!-- <Column width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                <header>
-                                    <Text text="{i18n>titleAddColTipo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
-                                </header>
-                            </Column> -->
+
                             <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
                                     <Text text="{i18n>titledetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
@@ -91,14 +88,13 @@
                         <items>
                             <ColumnListItem type="Inactive" press="_onNavDetalleProducto">
                                 <cells>
-                                    <Text text="{oModelDevolucion>NombreCliente}" />
+                                <Text text="{oModelDevolucion>NombreCliente}" />
+                                    <Text text="{oModelDevolucion>Desc}" />
+                                    <Text text="{oModelDevolucion>CodFact}" />
                                     <Text text="{oModelDevolucion>mostFactura}" />
                                     <Text text="{path:'oModelDevolucion>FechaFact', formatter:'.formatYYYYMMDDAbap'}" />
-                                    <!-- <Text text="{oModelDevolucion>lote}" /> -->
-                                    <!-- <Text text="{oModelDevolucion>cantidad}" /> -->
                                     <Text text="{path:'oModelDevolucion>mostMont', formatter:'.currencyFormat'}" />
                                     <Button icon="sap-icon://show" press="onDetalleDocFact" />
-                                    <!-- <Text text="{oModelDevolucion>tipo}" /> -->
                                 </cells>
                             </ColumnListItem>
                         </items>

@@ -57,10 +57,14 @@ sap.ui.define([
             oDetailSelected.forEach(function (element) {
                 element.sumTotalPos = (parseFloat(element.Impuesto) + parseFloat(element.ImpNeto)).toString();
                 element.cantsoldev = "0";
+                element.totalunitario = (parseFloat(element.sumTotalPos)/ parseFloat(element.Cantidad)).toFixed(3);
+                var formatoMaterial = parseFloat(element.Material).toString();
+                element.codigoMaterial = formatoMaterial.substring(0,2) +"-" + formatoMaterial.substring(2,10);
                 contadorCant += parseFloat(element.Cantidad);
                 contadorTotal += parseFloat(element.sumTotalPos);
 
-                element.montonc = (parseFloat(element.cantsoldev) * parseFloat(element.sumTotalPos)).toString();
+
+                element.montonc = (parseFloat(element.cantsoldev) * parseFloat(element.totalunitario)).toString();
             });
 
             oDetailSelected.forEach(function (element) {
@@ -68,11 +72,12 @@ sap.ui.define([
 
             });
 
-            oModelDevolucion.setProperty("/totalCantidadDet", contadorCant.toString());
+            oModelDevolucion.setProperty("/totalCantidadDet", contadorCant.toFixed(2));
             oModelDevolucion.setProperty("/totalCantSolic", contadorTotal.toFixed(2));
             oModelDevolucion.setProperty("/totalMontoDet", contadorMonto.toFixed(2));
 
             oModelDevolucion.setProperty("/FacturaBoletaDetal", oSelected);
+            oModelDevolucion.setProperty("/textDataDocumento", oSelected.CodFact);//Cambio Claudia Romero
 
             if (!that.AddFactBol) {
                 that.AddFactBol = sap.ui.xmlfragment("devoluciones.view.dialogs.DetalleDoc", that);
@@ -251,7 +256,8 @@ sap.ui.define([
             var cantSumDev = parseFloat(oObject.CantDevuelta) + parseFloat(sValueUsed);
 
             if(parseFloat(oObject.Cantidad) >= parseFloat(cantSumDev)){
-                oObject.montonc = (parseFloat(oObject.sumTotalPos)*parseFloat(sValueUsed)).toString();
+             
+                oObject.montonc = (parseFloat(oObject.totalunitario)*parseFloat(sValueUsed)).toString();
                 oSource.setValue(sValueUsed);
             }else{
                 this.getMessageBox("error", this.getI18nText("errorSupPermitido"));

@@ -532,6 +532,7 @@ sap.ui.define([
 				return "0.00";
 			}
 		},
+	
 
 		formatYYYYMMDDAbap: function (e) {
 			if (e) {
