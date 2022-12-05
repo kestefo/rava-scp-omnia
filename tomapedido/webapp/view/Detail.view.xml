@@ -56,13 +56,14 @@
                                     <!-- <Button id="btnCerrarDetail" text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/> -->
                                     <Button text="{i18n>textbtnEditar}" type="Transparent" icon="sap-icon://edit" press="_onPressAddEdit" 
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/>
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
                                 </HBox>
                             </HBox>
                             <IconTabBar
                                 id="idIconTabBarDetail"
+                                select = "_onSelectIconTabBar"
                                 headerMode="Inline"
-                                expanded="{device>/isNoPhone}">
+                                expandable="false">
                                 <items>
                                     <IconTabFilter icon="sap-icon://create-form"  key="keyDetail" text="{i18n>textIconTabDetalle}">
                                         <VBox id="vbTableDetalle" height="100%">
@@ -87,7 +88,20 @@
                                                     <Label design="Bold" text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textDirecccion}"/>
                                                 </HBox>
                                             </HBox>
-                                            <vbm:GeoMap id="vbi" width="100%" height="15rem"/>
+                                            <vbm:GeoMap id="vbi" width="100%" height="15rem">
+                                                <vbm:vos>
+                                                    <vbm:Spots click="onClickItem" posChangeable="true"
+                                                        scaleChangeable="false" contextMenu="onContextMenuItem" 
+                                                        items="{oModelPedidoVenta>/DataGeneral/Spots/items}">
+                                                        <vbm:items>
+                                                            <vbm:Spot id="Spot" labelPos="5" position="{oModelPedidoVenta>pos}"
+                                                                tooltip="{oModelPedidoVenta>tooltip}" labelType="{oModelPedidoVenta>type}" labelText="{oModelPedidoVenta>text}"
+                                                                labelArrow="true">
+                                                            </vbm:Spot>
+                                                        </vbm:items>
+                                                    </vbm:Spots>
+                                                </vbm:vos>
+                                            </vbm:GeoMap>
                                             <HBox width="100%" class="sapUiTinyMargin">
                                                 <HBox width="20%">
                                                     <Label design="Bold"  text="{i18n>textObservaciones}"/>

@@ -322,7 +322,7 @@ sap.ui.define([
             //     // aFilter.push(new Filter("Estado", "EQ", cbEstado));
             // }
 
-            sap.ui.core.BusyIndicator.show();
+            sap.ui.core.BusyIndicator.show(0);
             this.getValuesPedidoAS(sPath, aFilter, that);
         },
         getValuesPedidoAS: function (sPath, aFilter, that) {
@@ -414,10 +414,20 @@ sap.ui.define([
 
             var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([that._getLineaCredito(jSelected)]).then((values) => {
+            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected)]).then((values) => {
                 values[0].sCredito = values[0].CreditLimit;
                 values[0].sConsumo = values[0].Amount;
                 values[0].sSaldo = (parseFloat(values[0].sCredito) - parseFloat(values[0].sConsumo)).toString();
+                var sStras = "";
+                var sOrt01 = "";
+                var sOrt02 = "";
+                var sObs = "";
+                if(!that.isEmpty(values[1])){
+                    sStras = values[1].Stras;
+                    sOrt01 = values[1].Ort01;
+                    sOrt02 = values[1].Ort02;
+                    sObs = values[1].Text;
+                }
 
                 var oLineaCredito = values[0];
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
@@ -479,7 +489,9 @@ sap.ui.define([
                     "codeGrupoCliente": jSelected.Kdgrp,
                     "textGrupoCliente": jSelected.Txtfv,
                     "codeDirecccion": "1",
-                    "textDirecccion": "",
+                    "textDirecccion": sStras,
+                    "sOrt01": sOrt01,
+                    "sOrt02": sOrt02,
                     "oDireccion": jSelected.oDireccion,
                     "oCondPago": jSelected.oCondPago,
                     "codePuntoVenta": "",
@@ -491,7 +503,7 @@ sap.ui.define([
                     "codeComprobante": 0,
                     "textComprobante": jSelected.comprobante,
                     "textOrdenCompra": "",
-                    "textObservacion": "",
+                    "textObservacion": sObs,
                     "textPardm": "",
                     "textKundm": ""
                 };
@@ -857,6 +869,25 @@ sap.ui.define([
 			try{
 				return new Promise(function (resolve, reject) {
                     var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/CreditoSet?$filter=(Kunnr eq '"+oValue.codeCliente+"' and Segme eq 'ZCR01')";
+                    Services.getoDataERPSync(that, sPath, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                resolve(oData.data[0]);
+                            },
+                            error: function (message) {
+                                reject(message);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        _getDataDetail: function (oValue) {
+			try{
+				return new Promise(function (resolve, reject) {
+                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ConsultaDatosEntregaSet?$filter=Vbeln eq '"+oValue.pedido+"'";
                     Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
                             success: function (oData, message) {

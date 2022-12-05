@@ -36,7 +36,10 @@ sap.ui.define([
                         titulo: "",
                         oDataCargada: []
                     },
-                    oMaterial:[]
+                    oMaterial:[],
+                    Spots: {
+                        items:[]
+                    }
                 };
                 return oModel;
             },

@@ -642,6 +642,9 @@ sap.ui.define([
 				oDataCargadaPrev:[],
 				oDataCargadaMost:[]
 			});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/Spots", {
+				items:[{}]
+			});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/objects", {});

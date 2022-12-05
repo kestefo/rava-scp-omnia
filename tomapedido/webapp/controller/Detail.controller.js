@@ -42,6 +42,9 @@ sap.ui.define([
                     that._byId("lTotalProductos").setText(this.currencyFormat("0"));
                     that._byId("lCantidadProductos").setText(this.currencyFormat("0"));
                 }
+
+                that._byId("idIconTabBarDetail").setSelectedKey("keyDetail");
+                that.onFunctionDireccion();
 			}).catch(function (oError) {
 				sap.ui.core.BusyIndicator.hide(0);
 			});
@@ -83,11 +86,45 @@ sap.ui.define([
                       }
                    }
                 ]
-             }
+            }
             oGeoMap.setMapConfiguration(oMapConfig);
             oGeoMap.setRefMapLayerStack("GOOGLE");
             oGeoMap.setInitialZoom(13);
-            oGeoMap.setInitialPosition("-97.57;35.57;0");
+        },
+        onFunctionDireccion: function(){
+            var geocoder = new google.maps.Geocoder();
+            var oSelectedCliente = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oSelectedCliente");
+            var sDireccion = "";
+            var oGeoMap = this.getView().byId("vbi");
+            
+            if(oSelectedCliente){
+                sDireccion = oSelectedCliente.textDirecccion;
+                if(!this.isEmpty(sDireccion)){
+                    geocoder.geocode({
+                        "address": sDireccion + ", Perú"
+                    }, function (results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            var location = results[0].geometry.location;
+                            var sSpots = location.lng().toString()+";"+location.lat().toString()+";0";
+                            var sSpotsInverse = location.lat().toString()+";"+location.lng().toString()+";0";
+                            var oSpots =[{
+                                "pos": sSpots,
+                                "tooltip": "Moscow",
+                                "type": "Default",
+                                "text": sDireccion
+                            }];
+                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/Spots/items",oSpots);
+                            oGeoMap.setInitialZoom(13);
+                            console.log(results); 
+                        }else{
+                            oGeoMap.setVisible(false);
+                        }
+                    });
+                }
+            }else{
+                oGeoMap.setVisible(false);
+            }
+            
         },
         _onPressNavButtonDetail: function(){
             this.oModelPedidoVenta.setProperty("/PedidosCreados", []);
@@ -1069,6 +1106,20 @@ sap.ui.define([
             this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
             var dataFilter=models.JsonPromocionDetail();
             this.oModelPedidoVenta.setProperty("/PromocionesDetail", dataFilter);
+        },
+        _onSelectIconTabBar: function(oEvent){
+            var oSource = oEvent.getSource();
+            var sSelectedKey = oSource.getSelectedKey();
+            if(sSelectedKey === "keyDatoEntrega"){
+                var oGeoMap = this.getView().byId("vbi");
+                var oSpots = that.getModel("oModelPedidoVenta").getProperty("/DataGeneral/Spots/items");
+                if(oSpots){
+                    oGeoMap.setVisible(true);
+                    oGeoMap.setInitialPosition(oSpots[0].pos);
+                }else{
+                    oGeoMap.setVisible(false);
+                }
+            }
         }
     });
 });
