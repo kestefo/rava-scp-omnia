@@ -85,7 +85,7 @@
                         <columns>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="{i18n>titleColNumGuia}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColNumGuia}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -95,7 +95,7 @@
                             </Column>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="{i18n>titleColRucDNI}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColRucDNI}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -105,29 +105,34 @@
                             </Column>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="{i18n>titleColEstado}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColEstado}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="{i18n>titleColComprobante}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColComprobante}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                </header>
+                            </Column>
+                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                <header>
+                                    <Text text="{i18n>titleColnumerolegal}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
 
                             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="{i18n>titleColMontoNC}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColMontoNC}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
-                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Column width="auto" hAlign="Initial" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
                                     <Text text="{i18n>titleColReFechaEm}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
 
-                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Column width="4.5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                                 <header>
-                                    <Text text="{i18n>titleColDetalle}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                                    <Text text="{i18n>titleColDetalle}" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true" />
                                 </header>
                             </Column>
                         </columns>
@@ -137,11 +142,12 @@
                                     <Text text="{oModelDevolucion>Vbeln}" />
                                     <Text text="{oModelDevolucion>Cliente}" />
                                     <Text text="{oModelDevolucion>ruc}" />
-                                    <Text text="{oModelDevolucion>Erdat}" />
+                                    <Text text="{oModelDevolucion>formatFecha}" />
                                     <ObjectStatus text="{oModelDevolucion>Estado}" icon="sap-icon://pending" state="Warning" />
+                                    <Text text="{oModelDevolucion>CodFact}" />
                                     <Text text="{oModelDevolucion>Xblnr}" />
-                                    <Text text="{oModelDevolucion>Netwr}" />
-                                    <Text text="{oModelDevolucion>FechaEmi}" />
+                                    <Text text="{oModelDevolucion>Importe}" />
+                                    <Text text="{oModelDevolucion>FechaEmision}" />
                                     <Button text="{oModelDevolucion>Detalle}" press="onDetalleDevolucion" icon="sap-icon://show"/>
                                 </cells>
                             </ColumnListItem>

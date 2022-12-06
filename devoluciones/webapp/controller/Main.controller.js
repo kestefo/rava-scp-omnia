@@ -122,8 +122,8 @@ sap.ui.define([
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
                 var FechaComprobante1 = oView.byId("formatFecha").getValue();
                 var FechaComprobante = oView.byId("sfechaComprobante20").getValue();
-                var formatoDesde = FechaComprobante1.substring(6, 10) +"-"+ FechaComprobante1.substring(3, 5) +"-"+ FechaComprobante1.substring(0, 2);
-                var formatoHasta = FechaComprobante.substring(6, 10) +"-"+ FechaComprobante.substring(3, 5) +"-"+ FechaComprobante.substring(0, 2);
+                var formatoDesde = FechaComprobante1.substring(6, 10) + FechaComprobante1.substring(3, 5) + FechaComprobante1.substring(0, 2);
+                var formatoHasta = FechaComprobante.substring(6, 10) + FechaComprobante.substring(3, 5) + FechaComprobante.substring(0, 2);
                 var KeyCliente = oModelDevolucion.getProperty("/KeyCliente");
                 var FiltroCliente = oModelDevolucion.getProperty("/FiltroCliente");
                 var contador = 0;
@@ -160,7 +160,9 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.hide(0);
                     return;
                 }
-                var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"' and Estado eq '' and Kunnr eq '"+KeyCliente+"' and Type eq 'D'&$expand=DetalleListadoPedDevSet"
+
+                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=((Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"') and Kunnr eq '"+KeyCliente+"')&$expand=DetalleListadoPedDevSet";
+                // var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"' and Estado eq '' and Kunnr eq '"+KeyCliente+"' and Type eq 'D'&$expand=DetalleListadoPedDevSet"
 
                 jQuery.ajax({
                     type: "GET",
@@ -181,6 +183,11 @@ sap.ui.define([
                                         obj.Cliente = items.Namec;
                                         obj.ruc =items.Stcd1;
                                         canal = items.Vtweg;
+                                        obj.formatFecha = obj.Erdat.substring(6,8)+"/"+ obj.Erdat.substring(6,4)+"/"+obj.Erdat.substring(4,0);
+                                        obj.FechaEmision =obj.FechaFact.substring(6,8)+"/"+ obj.FechaFact.substring(6,4)+"/"+obj.FechaFact.substring(4,0)
+                                        obj.Importe = (parseFloat(obj.Netwr) * 1.18 ).toFixed(2);
+                                       
+                                        
                                     }
                                    
                                 }) ;
@@ -354,35 +361,48 @@ sap.ui.define([
                 var contadorMonto     = 0;
                 var contadorCant      = 0;
                 var Materialesdetalle = oModelDevolucion.getProperty("/Materialesdetalle");
+                var AddMotivo          =oModelDevolucion.getProperty("/AddMotivo");
+                var DescripcionMotiv   ="";
 
-                if (selected.estado !== "Pedido") {
-                    this.oModelDevolucion.setProperty("/editableNroCredt", false);
-                    this.oModelDevolucion.setProperty("/editableDescripMot", false);
+                // if ((selected.Estado).toLowerCase() !== "pedido") { // Convierte el texto de mayuscula a minuscula .
+                //     this.oModelDevolucion.setProperty("/editableNroCredt", false);
+                //     this.oModelDevolucion.setProperty("/editableDescripMot", false);
 
-                } else {
-                    this.oModelDevolucion.setProperty("/editableNroCredt", true);
-                    this.oModelDevolucion.setProperty("/editableDescripMot", true);
-                }
+                // } else {
+                //     this.oModelDevolucion.setProperty("/editableNroCredt", true);
+                //     this.oModelDevolucion.setProperty("/editableDescripMot", true);
+                // }
                 var datosDetalle = selected.DetalleListadoPedDevSet.results;
 
                 
                     datosDetalle.forEach(function(obj){
                         obj.Material =parseFloat(obj.Matnr).toString();
                         obj.formatCantidad = parseFloat(obj.Totca).toFixed(2);
-                        obj.preciounitario= (parseFloat(obj.Precio) * 1.18).toFixed(3);
+                        obj.preciounitario= ((parseFloat(obj.Netwr) / parseFloat(obj.formatCantidad)) * 1.18).toFixed(2);
                         obj.ImporteTotal =  (parseFloat(obj.Totca) * parseFloat(obj.preciounitario)).toFixed(2);
 			 
                     });
 
+                    AddMotivo.forEach(function(ob){
+                        datosDetalle.forEach(function(items){
+                            if(ob.key === items.Augru){
+                                DescripcionMotiv = ob.descripcion;
+                            }
+                            
+                        });
+                    });
+
                 this.oModelDevolucion.setProperty("/AddDetalleDev", datosDetalle);
-                this.oModelDevolucion.setProperty("/NroCredito", selected.NroCredito);
-                this.oModelDevolucion.setProperty("/DescripMotivo", selected.Motivos);
+                this.oModelDevolucion.setProperty("/NroCredito", selected.CodFact);//Número de credito.
+                this.oModelDevolucion.setProperty("/NroLegal", selected.Xblnr);//Número legal.
+                this.oModelDevolucion.setProperty("/DescripMotivo", DescripcionMotiv);
 
                 datosDetalle.forEach(function (element) {
                     contadorCant += parseFloat(element.Totca);
                     contadorMonto += parseFloat(element.ImporteTotal);
 
                 });
+
 
                 this.oModelDevolucion.setProperty("/totalCantidad", contadorCant.toFixed(2));
                 this.oModelDevolucion.setProperty("/totalMonto", contadorMonto.toFixed(2));
