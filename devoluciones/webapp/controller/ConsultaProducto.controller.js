@@ -398,12 +398,13 @@ sap.ui.define([
                             emphasizedAction: "",
                             onClose: function (sAction) {
                                 if (sAction === that.getI18nText("acceptText")) {
+                                    oModelDevolucion.setProperty("/AddProductoDetail", []);
+                                    oModelDevolucion.setProperty("/KeyMotivo", "");
                                     that.getOwnerComponent().getRouter().navTo("Main");
+                                    sap.ui.core.BusyIndicator.hide(0);
                                 }
-                                oModelDevolucion.setProperty("/AddProductoDetail", []);
-                                oModelDevolucion.setProperty("/KeyMotivo", "");
-                                sap.ui.core.BusyIndicator.hide(0);
-                                that.getOwnerComponent().getRouter().navTo("Main");
+                                
+                              
                                 //that.AbrirProducto.close();
                             }
                         });

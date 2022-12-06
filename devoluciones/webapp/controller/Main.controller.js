@@ -554,34 +554,12 @@ sap.ui.define([
 
                 if (keyProducto !== undefined && keyProducto !== "") {
                     that.oModelDevolucion.setProperty("/oClientSelect", oClientSelect);
-                //     var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"' and Material eq '000000001200000225')&$expand=DetalleBuscaReceiptSet";
-                //    // var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"')&$expand=DetalleBuscaReceiptSet";
-                //     jQuery.ajax({
-                //         type: "GET",
-                //         cache: false,
-                //         headers: {
-                //             "Accept": "application/json"
-                //         },
-                //         contentType: "application/json",
-                //         url: url,
-                //         async: true,
-                //         success: function (data, textStatus, jqXHR) {
-                //             var datos = data.d.results;
-                //             datos.forEach(function(obj){
-                //                 obj.Fechaformat = obj.FechaFact.substring(6,8)+"/"+ obj.FechaFact.substring(6,4)+"/"+obj.FechaFact.substring(4,0);
-                //             });
-                //             // oModelDevolucion.setProperty("/AddProducto",datos);
-                //             that.getOwnerComponent().getRouter().navTo("ConsultaProducto");
-                //             that.oModelDevolucion.setProperty("/keyProducto", "");
-                //             sap.ui.core.BusyIndicator.hide(0);
-                //         },
-                //         error: function () {
-                //             MessageBox.error("Ocurrio un error al obtener los datos");
-                //             sap.ui.core.BusyIndicator.hide(0);
-                //         }
-                //     });
-                that.getOwnerComponent().getRouter().navTo("ConsultaProducto");
-                that.oModelDevolucion.setProperty("/keyProducto", "");
+                    oModelDevolucion.setProperty("/AddProducto", []);
+                    oModelDevolucion.setProperty("/keyProducto", "");
+                    oModelDevolucion.setProperty("/keyMarca", "");
+                    oModelDevolucion.setProperty("/keyNombProduct", "");
+                    that.getOwnerComponent().getRouter().navTo("ConsultaProducto");
+                
                 sap.ui.core.BusyIndicator.hide(0);
                 } else {
 

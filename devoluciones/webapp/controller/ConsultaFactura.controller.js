@@ -210,12 +210,12 @@ sap.ui.define([
                         emphasizedAction: "",
                         onClose: function (sAction) {
                             if (sAction === that.getI18nText("acceptText")) {
+                                oModelDevolucion.setProperty("/FacturaBoletaDetal/DetalleBuscaReceiptSet/results", []);
+                                oModelDevolucion.setProperty("/KeyMotivo", "");
                                 that.getOwnerComponent().getRouter().navTo("Main");
+                                sap.ui.core.BusyIndicator.hide(0);
                             }
-                            oModelDevolucion.setProperty("/AddFacturaBoletaDetail", []);
-                            oModelDevolucion.setProperty("/KeyMotivo", "");
-                            sap.ui.core.BusyIndicator.hide(0);
-                            that.getOwnerComponent().getRouter().navTo("Main");
+                            
                            // that.AddFactBol.close();
 
                         }
