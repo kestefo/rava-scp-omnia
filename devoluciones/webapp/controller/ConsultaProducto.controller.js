@@ -96,7 +96,7 @@ sap.ui.define([
             console.log(SumaFechas +"-"+ FechaActual);
            
 
-                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ 
+                var url = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ 
                     SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ oClientSelect.Kunnr +"' and Material eq '"+
                     keyNombProduct+"')&$expand=DetalleBuscaReceiptSet";
                // var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ keyProducto +"')&$expand=DetalleBuscaReceiptSet";
@@ -168,7 +168,7 @@ sap.ui.define([
 			if (kSelected !== '') {
 				oEvent.getSource().setValue(sSelected);
 
-            var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ConsultaMarcaSet?$filter=Mvgr1 eq '"+ kSelected +"' and Vtweg eq '"+ CodigoCanal +"'";
+            var url=jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ConsultaMarcaSet?$filter=Mvgr1 eq '"+ kSelected +"' and Vtweg eq '"+ CodigoCanal +"'";
             
              jQuery.ajax({
                 type: "GET",
@@ -370,7 +370,7 @@ sap.ui.define([
             }
         
                     $.ajax({
-                        url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
+                        url: jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
                         
                         type: "GET",
                         headers: {
@@ -379,7 +379,7 @@ sap.ui.define([
                     }).always(function (data, status, response) {
                         var token = response.getResponseHeader("x-csrf-token");
                         $.ajax({
-                            url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
+                            url: jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
                             method: "POST",
                             headers: {
                                 "x-CSRF-Token": token

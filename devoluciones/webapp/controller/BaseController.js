@@ -20,7 +20,7 @@ sap.ui.define([
 	var sMessage = "";
 	return Controller.extend("devoluciones.controller.BaseController", {
 		formatter: Formatter,
-
+		
         local: sap.ushell.Container === undefined ? true : false,
         getUserLoged: function(){
 			var user = "";
@@ -31,6 +31,7 @@ sap.ui.define([
 			}
 			return user;
 		},
+	
         _onbtnHome:function(){
             that = this;
             MessageBox.warning(this.getI18nText("textbtnHome"), {

@@ -180,7 +180,7 @@ sap.ui.define([
             //return
 
             $.ajax({
-                url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
+                url: jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/",
                 type: "GET",
                 headers: {
                     "x-CSRF-Token": "Fetch"
@@ -188,7 +188,7 @@ sap.ui.define([
             }).always(function (data, status, response) {
                 var token = response.getResponseHeader("x-csrf-token");
                 $.ajax({
-                    url: "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
+                    url: jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/PedidosDevSet",
                     method: "POST",
                     headers: {
                          "x-CSRF-Token": token

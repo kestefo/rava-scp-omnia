@@ -161,7 +161,7 @@ sap.ui.define([
                     return;
                 }
 
-                var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=((Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"') and Kunnr eq '"+KeyCliente+"')&$expand=DetalleListadoPedDevSet";
+                var url = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=((Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"') and Kunnr eq '"+KeyCliente+"')&$expand=DetalleListadoPedDevSet";
                 // var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"' and Estado eq '' and Kunnr eq '"+KeyCliente+"' and Type eq 'D'&$expand=DetalleListadoPedDevSet"
 
                 jQuery.ajax({
@@ -245,7 +245,7 @@ sap.ui.define([
                 var that = this;
                 var oClienteGroup =[];
                 sap.ui.core.BusyIndicator.show();
-                var sPath = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
+                var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
                 jQuery.ajax({
                         type: "GET",
                         cache: false,
@@ -455,7 +455,7 @@ sap.ui.define([
                 
                 if (KeyAddUser !== undefined && KeyAddUser !== "") {
                     that.oModelDevolucion.setProperty("/oClientSelect", oClientSelect);
-                    var url = "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ KeyAddUser +"')&$expand=DetalleBuscaReceiptSet";
+                    var url = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ KeyAddUser +"')&$expand=DetalleBuscaReceiptSet";
                     jQuery.ajax({
                         type: "GET",
                         cache: false,
