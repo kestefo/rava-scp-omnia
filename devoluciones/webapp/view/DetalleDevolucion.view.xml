@@ -82,8 +82,8 @@
                 <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
                     <items>
                         <Text text="{i18n>titleTotal}" wrapping="false" width="3.5rem" textAlign="Right" />
-                     <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="350px" textAlign="Right" />
-                       <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="350px" textAlign="Right" visible="true" />
+                     <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="580px" textAlign="Right" />
+                       <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="500px" textAlign="Right" visible="true" />
                     </items>
                 </VBox>
             </VBox>

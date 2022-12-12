@@ -373,12 +373,15 @@ sap.ui.define([
                 //     this.oModelDevolucion.setProperty("/editableDescripMot", true);
                 // }
                 var datosDetalle = selected.DetalleListadoPedDevSet.results;
-
-                
                     datosDetalle.forEach(function(obj){
                         obj.Material =parseFloat(obj.Matnr).toString();
                         obj.formatCantidad = parseFloat(obj.Totca).toFixed(2);
-                        obj.preciounitario= ((parseFloat(obj.Netwr) / parseFloat(obj.formatCantidad)) * 1.18).toFixed(2);
+                        if(parseFloat(obj.formatCantidad) !== 0){
+                            obj.preciounitario= ((parseFloat(obj.Netwr) / parseFloat(obj.formatCantidad)) * 1.18).toFixed(2); 
+                        }else{
+                            obj.preciounitario= "0.00";  
+                        }
+                        
                         obj.ImporteTotal =  (parseFloat(obj.Totca) * parseFloat(obj.preciounitario)).toFixed(2);
 			 
                     });
