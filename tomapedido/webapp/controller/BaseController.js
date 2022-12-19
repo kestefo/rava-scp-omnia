@@ -540,6 +540,15 @@ sap.ui.define([
 				return "0.00";
 			}
 		},
+		currencyFormatIGVTreeDig: function (value) {
+			if(value){
+				var sNumberReplace = value.replaceAll(",","");
+				var iNumber = parseFloat(sNumberReplace) * this.igv;
+				return iNumber.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			}else{
+				return "0.00";
+			}
+		},
 		formatMay: function (value) {
 			if(value){
 				return value.toUpperCase();
@@ -644,6 +653,12 @@ sap.ui.define([
 			});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/Spots", {
 				items:[{}]
+			});
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oPromotions", {
+				oComponent:{},
+				sCantBoni: "",
+				oPromotion:[],
+				oTablaPrimerMoment: []
 			});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
@@ -939,6 +954,23 @@ sap.ui.define([
 				return sValue;
 			}
 		},
+		convertformatDateInAbap: function(sValue){
+			if(sValue != null &&  sValue != ""){
+				var t = (sValue.getDate()).toString();
+				var n = (sValue.getMonth() + 1).toString();
+				var r = (sValue.getFullYear()).toString();
+				if (t < 10) {
+					t = "0" + t
+				}
+				if (n < 10) {
+					n = "0" + n
+				}
+				var o = r + n + t;
+				return o;
+			}else{
+				return sValue;
+			}
+		},
 		reformatDateString: function(s) {
 			var b = s.split(/\D/);
 			return b.reverse().join('/');
@@ -1018,6 +1050,122 @@ sap.ui.define([
 			var day = parseInt(sValueDesdeSplit[0]);
 			oSource.setMinDate(new Date(year, mount-1, day));
 		},
+		
+		_onCalculoDescuento: function( oMaterial,oData1, oData2){
+			//descuentos D1
+			that = this;
+			var oPromobaseDsctoSet = oData1.PromobaseDsctoSet.results; //usa D1
+			var oPromocionesDsctoSet = oData1.PromocionesDsctoSet.results;
+			var oPromoescalasDsctoSet = oData1.PromoescalasDsctoSet.results; //usa D1
+			var totalImporte = 0;//usa D2
+			oMaterial.forEach(function(value, index){
+				if(value.tipo === "MAT"){
+					totalImporte += parseFloat(value.cantidad) * parseFloat(value.Kbetr);
+					var numProm = "";
+					var jPromoEscalaSelected = {};
+					var booleanVigente = false;
+					var oPromescalasfilter=[];
+					var oFindBase = oPromobaseDsctoSet.find(item => item.Probas  === value.Matnr);
+					if(!that.isEmpty(oFindBase)){
+						if(oFindBase.Flag === "X"){
+							numProm = oFindBase.Numpro;
+							booleanVigente = true;
+						}
+					}
+
+					if(booleanVigente){
+						oPromoescalasDsctoSet.forEach(function(value2, index){
+							if(value2.Flag === "X"){
+								if(value2.Numpro === numProm){
+									oPromescalasfilter.push(value2);
+								}
+							}
+						});
+
+						oPromescalasfilter.forEach(function(value2, index){
+							if(parseFloat(value.cantidad) >= parseFloat(value2.Base) ){
+								jPromoEscalaSelected = value2;
+							}
+						});
+
+						if(jPromoEscalaSelected){
+							if(!that.isEmpty(jPromoEscalaSelected.Boni)){
+								value.descuentosVolumen1 = (parseFloat(jPromoEscalaSelected.Boni)).toFixed(2) + "%";
+							}else{
+								value.descuentosVolumen1 = "0%";
+							}
+						}else{
+							value.descuentosVolumen1 = "0%";
+						}
+					}
+				}
+			})
+
+			//descuentos D2
+			var oPromobaseDsctoSet = oData2.PromobaseDsctoSet.results;
+			var oPromocionesDsctoSet = oData2.PromocionesDsctoSet.results;//usa D2
+			var oPromoescalasDsctoSet = oData2.PromoescalasDsctoSet.results;//usa D2
+			
+			oMaterial.forEach(function(value, index){
+				if(value.tipo === "MAT"){
+					var numProm = "";
+					var jPromoEscalaSelected = {};
+					var oPromescalasfilter = [];
+					var booleanVigente = false;
+
+					oPromocionesDsctoSet.forEach(function(value2, index){
+						numProm = value2.Numpro;
+						booleanVigente = true;
+					});
+
+					if(booleanVigente){
+						oPromoescalasDsctoSet.forEach(function(value2, index){
+							if(value2.Flag === "X"){
+								if(value2.Numpro === numProm){
+									oPromescalasfilter.push(value2);
+								}
+							}
+						});
+						oPromescalasfilter.forEach(function(value2, index){
+							if(parseFloat(totalImporte) >= parseFloat(value2.Base) ){
+								jPromoEscalaSelected = value2;
+							}
+						});
+
+						if(jPromoEscalaSelected){
+							if(!that.isEmpty(jPromoEscalaSelected.Boni)){
+								value.descuentosVolumen2 = (parseFloat(jPromoEscalaSelected.Boni)).toFixed(2) + "%";
+							}else{
+								value.descuentosVolumen2 = "0%";
+							}
+						}else{
+							value.descuentosVolumen2 = "0%";
+						}
+					}
+				}
+			})
+
+			//CalculoTotal
+			oMaterial.forEach(function(value, index){
+				if(value.tipo === "MAT"){
+					var splitDescuentoCondPago = value.descuentos.split("%");
+					var iDescuentoCondPago = parseFloat(splitDescuentoCondPago[0])/100;
+
+					var splitDescuento1 = value.descuentosVolumen1.split("%");
+					var iDescuento1 = parseFloat(splitDescuento1[0])/100;
+					
+					var splitDescuento2 = value.descuentosVolumen2.split("%");
+					var iDescuento2 = parseFloat(splitDescuento2[0])/100;
+
+					var iDescuentoTotal = iDescuentoCondPago + iDescuento1 + iDescuento2;
+					var iMult = 1-iDescuentoTotal;
+
+					value.total =( (parseFloat(value.cantidad) * parseFloat((parseFloat(value.Kbetr)*that.igv).toFixed(3)) )*iMult ).toString();
+				}
+			});
+
+			return oMaterial
+		}
 
 	});
 

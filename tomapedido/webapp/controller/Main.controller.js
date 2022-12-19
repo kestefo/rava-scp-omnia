@@ -123,6 +123,7 @@ sap.ui.define([
 
                     $.each(that._groupBy(oCliente,'Kunnr'), function (x, y) {
                         var jFamilia = {
+                            "Pltyp": y[0].Pltyp,
                             "Kunnr":y[0].Kunnr,
                             "Namec":y[0].Namec,
                             "Smtp_addr":y[0].Smtp_addr,
@@ -433,6 +434,7 @@ sap.ui.define([
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
 
                 var oMaterialFilter = oMaterialTotal.filter(function(value,index){
+                    // if(jSelected.canal == value.Vtweg && jSelected.Kdgrp === value.Kdgrp){
                     if(jSelected.canal == value.Vtweg){
                         return value;
                     }else{
@@ -486,6 +488,7 @@ sap.ui.define([
                     "nameCliente": jSelected.razonsocial,
                     "codeCanal": jSelected.canal,
                     "TextCanal": "",
+                    "codeGrupoVendedores": "",
                     "codeGrupoCliente": jSelected.Kdgrp,
                     "textGrupoCliente": jSelected.Txtfv,
                     "codeDirecccion": "1",
@@ -505,7 +508,8 @@ sap.ui.define([
                     "textOrdenCompra": "",
                     "textObservacion": sObs,
                     "textPardm": "",
-                    "textKundm": ""
+                    "textKundm": "",
+                    "descCondPago": jSelected.desc === undefined ? "0%":jSelected.desc
                 };
 
                 that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "M");
@@ -515,6 +519,7 @@ sap.ui.define([
                 var oMaterial=[];
                 jSelected.oMateriales.results.forEach(function(value, index){
                     var jMaterial={
+                        "Posnr": value.Posnr,
                         "Labst":"",
                         "Codfa":"",
                         "Kbetr":value.Precio,
@@ -573,6 +578,7 @@ sap.ui.define([
                     if(values[0].sEstado != "E"){
                         $.each(that._groupBy(oCliente,'Kunnr'), function (x, y) {
                             var jFamilia = {
+                                "Pltyp": y[0].Pltyp,
                                 "Kunnr":y[0].Kunnr,
                                 "Namec":y[0].Namec,
                                 "Smtp_addr":y[0].Smtp_addr,
@@ -641,6 +647,7 @@ sap.ui.define([
                 that._dialogSelectClient.close();
 
                 var oMaterialFilter = oMaterialTotal.filter(function(value,index){
+                    // if(oObjectSelected.Vtweg == value.Vtweg && oObjectSelected.Kdgrp === value.Kdgrp){
                     if(oObjectSelected.Vtweg == value.Vtweg){
                         return value;
                     }else{
@@ -680,7 +687,7 @@ sap.ui.define([
                 that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
                 that._onClearComponentDetailClient();
 
-                var date = that.reformatDateString(that.getYYYYMMDD(new Date()));
+                var date = that.reformatDateString(that.getYYYYMMDD( new Date( new Date().getTime() + 2 *24  * 60  * 60 * 1000) ));
                 var sFlete = "0";
                 if(oObjectSelected.Vtweg === "10"){
                     if(oObjectSelected.Kdgrp === "12"){
@@ -690,6 +697,7 @@ sap.ui.define([
                     }
                 }
                 var oChangeParameterSelected = {
+                    "Pltyp": oObjectSelected.Pltyp,
                     "sNumeroPedido": "",
                     "sTextDescContacto": oObjectSelected.Smtp_addr,
                     "sTextTelContacto": oObjectSelected.Telf1,
@@ -698,6 +706,7 @@ sap.ui.define([
                     "nameCliente": oObjectSelected.Namec,
                     "codeCanal": oObjectSelected.Vtweg,
                     "TextCanal": oObjectSelected.Txtca,
+                    "codeGrupoVendedores": "",
                     "codeGrupoCliente": oObjectSelected.Kdgrp,
                     "textGrupoCliente": oObjectSelected.Txtfv,
                     "codeDirecccion": "1",
@@ -827,6 +836,7 @@ sap.ui.define([
                     oSelectedCliente.textObservacion = sObservacion;
                     oSelectedCliente.textPardm = sPardm;
                     oSelectedCliente.textKundm = sKundm;
+                    oSelectedCliente.descCondPago = "";
                         
                     Promise.all([that._getLineaCredito(oSelectedCliente)]).then((values) => {
                         var sNumPedido = "";

@@ -13,7 +13,7 @@
                                 wrapping="true" class="sapUiSmallMarginTop" level="H2"/>
                         </f:heading>
                         <f:navigationActions>
-                            <Button text="Regresar" icon="sap-icon://nav-back" press="_onPressNavButtonDetail"/>
+                            <Button text="{i18n>textbtnBackTo}" icon="sap-icon://nav-back" press="_onPressNavButtonDetail"/>
                         </f:navigationActions>
                     </f:DynamicPageTitle>
                 </f:title>
@@ -56,7 +56,8 @@
                                     <!-- <Button id="btnCerrarDetail" text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/> -->
                                     <Button text="{i18n>textbtnEditar}" type="Transparent" icon="sap-icon://edit" press="_onPressAddEdit" 
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
+                                        visible="false"/>
+                                        <!-- visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/> -->
                                 </HBox>
                             </HBox>
                             <IconTabBar
@@ -88,7 +89,7 @@
                                                     <Label design="Bold" text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textDirecccion}"/>
                                                 </HBox>
                                             </HBox>
-                                            <vbm:GeoMap id="vbi" width="100%" height="15rem">
+                                            <!-- <vbm:GeoMap id="vbi" width="100%" height="15rem">
                                                 <vbm:vos>
                                                     <vbm:Spots click="onClickItem" posChangeable="true"
                                                         scaleChangeable="false" contextMenu="onContextMenuItem" 
@@ -101,7 +102,7 @@
                                                         </vbm:items>
                                                     </vbm:Spots>
                                                 </vbm:vos>
-                                            </vbm:GeoMap>
+                                            </vbm:GeoMap> -->
                                             <HBox width="100%" class="sapUiTinyMargin">
                                                 <HBox width="20%">
                                                     <Label design="Bold"  text="{i18n>textObservaciones}"/>
@@ -131,7 +132,7 @@
                 <f:footer>
                     <OverflowToolbar>
                         <ToolbarSpacer/>
-                        <Button type="Transparent" text="{i18n>txtbtnDescuento}" press="_onPressDiscount"/>
+                        <!-- <Button type="Transparent" text="{i18n>txtbtnDescuento}" press="_onPressDiscount"/> -->
                         <Button type="Default" text="{i18n>txtbtnPromociones}" press="_onPressPromotion"/>
                     </OverflowToolbar>
                 </f:footer>
@@ -139,49 +140,84 @@
             <Page
 				id="IdPromotionsCenter"
 				title="{i18n>titleDialogAddPromotions}" 
-                showNavButton="true"
-                navButtonPress="onNavBackPromotion" >
-				<VBox class="sapUiSmallMargin" width="auto">
-                    <HBox wrap="Wrap" justifyContent="Center">
-                        <ToggleButton id="idBonificacion" text="{i18n>textbtnBon}" pressed="false" press="onPressToggleButton" custom:custom="keyBonificacion"/>
-                        <ToggleButton id="idFuerzaVenta" text="{i18n>textbtnFue}" pressed="false" press="onPressToggleButton" custom:custom="keyFuerzaVenta"/>
-                        <ToggleButton id="idBonVendedor" text="{i18n>textbtnBVen}" pressed="false" press="onPressToggleButton" custom:custom="keyBonVendedor"/>
-                        <ToggleButton id="idBonSubMarca" text="{i18n>textbtnBSub}" pressed="false" press="onPressToggleButton" custom:custom="keyBonSubMarca"/>
-                        <ToggleButton id="idVolSubMarca" text="{i18n>textbtnVSub}" pressed="false" press="onPressToggleButton" custom:custom="keyVolSubMarca"/>
-                        <ToggleButton id="idVolVenta" text="{i18n>textbtnVVen}" pressed="false" press="onPressToggleButton" custom:custom="keyVolVenta"/>
-                        <ToggleButton id="idCombo" text="{i18n>textbtnCom}" pressed="false" press="onPressToggleButton" custom:custom="keyCombo"/>
-                        <ToggleButton id="idProdEspec" text="{i18n>textbtnPEsp}" pressed="false" press="onPressToggleButton" custom:custom="keyProdEspec"/>
-                        <ToggleButton id="idObsProducto" text="{i18n>textbtnOPro}" pressed="false" press="onPressToggleButton" custom:custom="keyObsProducto"/>
-                    </HBox>
-                    <Table items="{oModelPedidoVenta>/Promociones}" growingThreshold="20">
-                        <columns>
-                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                <header>
-                                    <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                </header>
-                            </Column>
-                            <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                <header>
-                                    <Text text="{i18n>titleAddColDescripcion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                </header>
-                            </Column>
-                            <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                <header>
-                                    <Text text="{i18n>titleAddColCant}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                </header>
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem type="Navigation" press="_onNavDetallePromocion">
-                                <cells>
-                                    <Text text="{oModelPedidoVenta>codigo}"/>
-                                    <Text text="{oModelPedidoVenta>descripcion}"/>
-                                    <Text text="{oModelPedidoVenta>cantidad}"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </VBox>
+                showNavButton="false" >
+                <headerContent>
+                    <Button text="{i18n>textbtnBackTo}" icon="sap-icon://nav-back" press="onNavBackPromotion"/>
+                </headerContent>
+                <content>
+                    <VBox class="sapUiSmallMargin" width="auto">
+                        <HBox wrap="Wrap" justifyContent="Center">
+                            <!-- <ToggleButton id="idBonificacion" text="{i18n>textbtnBon}" pressed="false" press="onPressToggleButton" 
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z1}" custom:custom="keyBonificacion"/> -->
+                            <!-- <ToggleButton id="idFuerzaVenta" text="{i18n>textbtnFue}" pressed="false" press="onPressToggleButton"
+                                enabled="true" custom:custom="keyFuerzaVenta"/> -->
+                            <ToggleButton id="idFuerzaVenta" text="{i18n>textbtnFue}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z1}" custom:custom="keyFuerzaVenta"/>
+                            <ToggleButton id="idBonVendedor" text="{i18n>textbtnBVen}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z2}" custom:custom="keyBonVendedor"/>
+                            <ToggleButton id="idVolMarca" text="{i18n>textbtnVMarca}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z3}" custom:custom="keyVolMarca"/>
+                            <ToggleButton id="idVolVenta" text="{i18n>textbtnVVen}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z4}" custom:custom="keyVolVenta"/>
+                            <ToggleButton id="idObsProducto" text="{i18n>textbtnOPro}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z5}" custom:custom="keyObsProducto"/>
+                            <ToggleButton id="idCliente" text="{i18n>textbtnCli}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z6}" custom:custom="keyCliente"/>
+                            <ToggleButton id="idPorVent" text="{i18n>textbtnPVent}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z7}" custom:custom="keyPorVen"/>
+                            <ToggleButton id="idCombo" text="{i18n>textbtnCom}" pressed="false" press="onPressToggleButton"
+                                enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z8}" custom:custom="keyCombo"/>
+                        </HBox>
+                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginTop">
+                            <Text text="{i18n>textCantBon}" />
+                            <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantBoni}" editable="false"></Input>
+                        </HBox>
+                        <Table id="tbPromociones" items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotion}" growingThreshold="20">
+                            <columns>
+                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColDescripcion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleDetColPrecio}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                                <!-- <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleDetColCantBon}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column> -->
+                                <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                    <header>
+                                        <Text text="{i18n>titleAddColCant}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                    </header>
+                                </Column>
+                            </columns>
+                            <items>
+                                <!-- <ColumnListItem type="Navigation" press="_onNavDetallePromocion"> -->
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{path:'oModelPedidoVenta>codeProm', formatter: '.formatInteger'}"/>
+                                        <Text text="{oModelPedidoVenta>descProm}"/>
+                                        <Text text="{path:'oModelPedidoVenta>precio', formatter:'.currencyFormat'}"/>
+                                         <!-- <Text text="{path:'oModelPedidoVenta>cantidadBonif', formatter:'.formatInteger'}"/> -->
+                                        <Input value="{oModelPedidoVenta>cantidadManual}" width="auto" liveChange="liveChangeFormatInteger"></Input>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        <HBox justifyContent="End">
+                            <Button id="btnAcceptPromotion" text="{i18n>textbtnConfirm}" press="_onAcceptPromotion" custom:custom="default" type="Accept"/>
+                        </HBox>
+                    </VBox>
+                </content>
 
 			</Page>
         </NavContainer>

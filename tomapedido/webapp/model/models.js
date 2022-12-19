@@ -39,6 +39,12 @@ sap.ui.define([
                     oMaterial:[],
                     Spots: {
                         items:[]
+                    },
+                    oPromotions:{
+                        oComponent:{},
+                        sCantBoni:"",
+                        oPromotion:[],
+                        oTablaPrimerMoment: []
                     }
                 };
                 return oModel;
@@ -184,169 +190,58 @@ sap.ui.define([
                 return oModel;
             },
             
-            
-            JsonPedidos: function () {
+            JsonDescuentoContado: function () {
+                var oModel = {
+                    "cliente": "1000000495",
+                    "desc": "10%"
+                };
+                
+                return oModel;
+            },
+            JsonDescuentoNoContado: function () {
+                var oModel = {
+                    "desc": "0%"
+                };
+                
+                return oModel;
+            },
+            JsonBonificacion: function () {
                 var oModel = [
                     {
-                        "pedido": "",
-                        "fecha": "20/09/2022",
-                        "vencimiento": "20/09/2022",
-                        "tipodoc": "70599323",
-                        "razonsocial": "SUPERMERCADOS PERUANOS SA",
-                        "importe": "250,000,000",
-                        "estado": "Pendiente Creación",
-                        "icon": "sap-icon://pending",
-                        "estate": "Warning"
-                    },
+                        "Codfa":"C08 S21",
+                        "Kbetr":"0.000",
+                        "Labst":"38890.000",
+                        "Maktg":"LIFE FOR MEN ACTIVADOR FRASCO 40ML",
+                        "Matnr":"000000001200000225",
+                        "Meins":"UND",
+                        "Txtfa":"Activadores/Reveladores LIFE FOR MEN",
+                        "Umrez":"61",
+                        "Vtweg":"10"
+                     }
+                ]
+                return oModel;
+            },
+            JsonDescuento: function () {
+                var oModel = [
                     {
-                        "pedido": "O123-588",
-                        "fecha": "20/09/2022",
-                        "vencimiento": "21/09/2022",
-                        "tipodoc": "70599325",
-                        "razonsocial": "HIPERMERCADO TOTTUS ORIENTE SA",
-                        "importe": "250,000,000",
-                        "estado": "Creado",
-                        "icon": "sap-icon://create",
-                        "estate": "Success"
-                    },
-                    {
-                        "pedido": "O123-589",
-                        "fecha": "20/09/2022",
-                        "vencimiento": "20/09/2022",
-                        "tipodoc": "70599324",
-                        "razonsocial": "CORPORACION BOTICAS PERU SA SA",
-                        "importe": "250,000,000",
-                        "estado": "Cerrado",
-                        "icon": "sap-icon://decline",
-                        "estate": "None"
+                        "Matnr": "000000001200000225",
+                        "desc1": "10%",
+                        "desc2": "15%"
                     }
                 ]
                 return oModel;
             },
-            JsonFuerzaVenta: function () {
-                var oModel = [
-                    {
-                        "key": "01",
-                        "desc": "Placenta life"
-                    }
-                ]
-                return oModel;
-            },
-            JsonPuntoVenta: function () {
-                var oModel = [
-                    {
-                        "key": "01",
-                        "desc": "Centro de Distribución de Villa"
-                    }
-                ]
-                return oModel;
-            },
-            JsonDirecciones: function () {
-                var oModel = [
-                    {
-                        "key": "01",
-                        "desc": "Av. DEFENSOR DEL MORRO No. 1277 URB. PANTANOS DE VILLA [CHORRILLOS LIMA-LIMA-PERU]"
-                    },
-                    {
-                        "key": "02",
-                        "desc": "Av. DEFENSOR DEL MORRO No. 1278 URB. PANTANOS DE VILLA [CHORRILLOS LIMA-LIMA-PERU]"
-                    }
-                ]
-                return oModel;
-            },
-            JsonCondPago: function () {
-                var oModel = [
-                    {
-                        "key": "01",
-                        "desc": "Pago a 90 días"
-                    },
-                    {
-                        "key": "02",
-                        "desc": "Pago a 60 días"
-                    }
-                ]
-                return oModel;
-            },
-            JsonProductos: function () {
-                var oModel = [
-                    {
-                        "producto": "Conditioner Placenta Life Hydra Macadamia Frasco 1lt",
-                        "cantidad": "6",
-                        "tipo": "L",
-                        "total": "151.16",
-                        "descuentos": "0.00% 0.00%",
-                        "descuentosVolumen": "0.00%"
-                    },
-                    {
-                        "producto": "Conditioner Life Radiant BB-Tox Treatment",
-                        "cantidad": "6",
-                        "tipo": "L",
-                        "total": "151.16",
-                        "descuentos": "0.00% 0.00%",
-                        "descuentosVolumen": ""
-                    },
-                    {
-                        "producto": "MALETA DE CUERINA COLOR NEGRO CON LOGO EN PLACA",
-                        "cantidad": "3",
-                        "tipo": "N",
-                        "total": "100.00",
-                        "descuentos": "0.00% ",
-                        "descuentosVolumen": "0.00%"
-                    }
-                ]
-                return oModel;
-            },
-            JsonFamilia: function () {
-                var oModel = [
-                    {
-                        "key": "01",
-                        "desc": "-Seleccione-"
-                    },
-                    {
-                        "key": "02",
-                        "desc": "Acondicionador Placenta Life Be Natural"
-                    },
-                    {
-                        "key": "03",
-                        "desc": "Acondicionador Placenta Life Saloon"
-                    },
-                    {
-                        "key": "04",
-                        "desc": "Acondicionador Tonno Plus Tonno Plus"
-                    }
-                ]
-                return oModel;
-            },
-            JsonProductoFamilia: function () {
-                var oModel = [
-                    {
-                        "producto": "Plife Radiant Conditioner Nutri - Soft Galonera 3.71l",
-                        "precio": "49.07",
-                        "stock": "329",
-                        "unicaja": "4",
-                        "cantidad": "0",
-                        "state": "Information",
-                        "icon": "sap-icon://outbox"
-                    },
-                    {
-                        "producto": "Plife Radiant Deco Extreme Pote 500mg",
-                        "precio": "44.07",
-                        "stock": "3,629",
-                        "unicaja": "6",
-                        "cantidad": "0",
-                        "state": "Information",
-                        "icon": "sap-icon://outbox"
-                    },
-                    {
-                        "producto": "Plife Radiant Shampo Nutri - Soft Galonera 3.71l",
-                        "precio": "49.07",
-                        "stock": "505",
-                        "unicaja": "4",
-                        "cantidad": "0",
-                        "state": "Information",
-                        "icon": "sap-icon://outbox"
-                    }
-                ]
+            JsonPromocionActivo: function () {
+                var oModel = {
+                    "Z1": "X",
+                    "Z2": "",
+                    "Z3": "X",
+                    "Z4": "",
+                    "Z5": "X",
+                    "Z6": "X",
+                    "Z7": "",
+                    "Z8": ""
+                }
                 return oModel;
             },
             
