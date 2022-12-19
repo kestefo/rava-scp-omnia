@@ -396,7 +396,7 @@ sap.ui.define([
                     });
 
                 this.oModelDevolucion.setProperty("/AddDetalleDev", datosDetalle);
-                this.oModelDevolucion.setProperty("/NroCredito", selected.CodFact);//Número de credito.
+                this.oModelDevolucion.setProperty("/NroCredito", selected.Vbeln);//Número de credito.
                 this.oModelDevolucion.setProperty("/NroLegal", selected.Xblnr);//Número legal.
                 this.oModelDevolucion.setProperty("/DescripMotivo", DescripcionMotiv);
 
@@ -405,12 +405,8 @@ sap.ui.define([
                     contadorMonto += parseFloat(element.ImporteTotal);
 
                 });
-
-
                 this.oModelDevolucion.setProperty("/totalCantidad", contadorCant.toFixed(2));
                 this.oModelDevolucion.setProperty("/totalMonto", contadorMonto.toFixed(2));
-
-
                 this.getOwnerComponent().getRouter().navTo("DetalleDevolucion");
             },
 
