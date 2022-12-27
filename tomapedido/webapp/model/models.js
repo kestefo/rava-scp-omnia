@@ -43,8 +43,12 @@ sap.ui.define([
                     oPromotions:{
                         oComponent:{},
                         sCantBoni:"",
+                        sCantProm:"",
                         oPromotion:[],
-                        oTablaPrimerMoment: []
+                        oTablaPrimerMoment: [],
+                        oPromotionDetail:[],
+                        oPromotionSelect: [],
+				        sPromotionSelect: ""
                     }
                 };
                 return oModel;

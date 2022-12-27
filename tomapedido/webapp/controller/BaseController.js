@@ -605,10 +605,13 @@ sap.ui.define([
 			var sCustom = oSource.data("custom");
 			switch (sCustom) {
 				case "SelectClient":
-					this._onClearComponentSelectClient();
+					this._onClearComponentClient();
+					this._onClearDataCliente();
 					oSource.getParent().close();
 					break;
 				case "DetailClient":
+					this._onClearComponentClient();
+					this._onClearDataCliente();
 					this._onClearComponentSelectClient();
 					this._onClearComponentDetailClient();
 					this._onClearDataDetailClient();
@@ -625,15 +628,31 @@ sap.ui.define([
 					break;
 				case "AddMasiveProduct":
 					this._onClearComponentDialogMasive();
-					this._onClearDataDialogDialog();
+					this._onClearDataDialogMasive();
+					oSource.getParent().close();
+					break;
+				case "AddPromotions":
+					this._onClearComponentDialogPromotions();
+					this._onClearDataDialogPromotions();
 					oSource.getParent().close();
 					break;
 				default:
 					oSource.getParent().close();
 			}
 		},
-		_onClearComponentSelectClient: function(){
+		_onClearComponentClient: function(){
 			this._byId("frgIdSelectClient--slUsuario").setSelectedKey("");
+		},
+		_onClearDataCliente: function(){
+		},
+		_onClearComponentDialogPromotions: function(){
+
+		},
+		_onClearDataDialogPromotions: function(){
+			this._byId("frgIdAddPromotions--idAddPromotions").setText("");
+		},
+		_onClearComponentSelectClient: function(){
+			this.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionDetail", []);
 		},
 		_onClearComponentDetailClient: function(){
 			this._byId("frgIdDetailCliente--slDirecciones").setSelectedKey("");
@@ -657,8 +676,12 @@ sap.ui.define([
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oPromotions", {
 				oComponent:{},
 				sCantBoni: "",
+				sCantProm: "",
 				oPromotion:[],
-				oTablaPrimerMoment: []
+				oTablaPrimerMoment: [],
+				oPromotionDetail: [],
+				oPromotionSelect: [],
+				sPromotionSelect: ""
 			});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedLineaCredito", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
@@ -687,7 +710,7 @@ sap.ui.define([
 		},
 		_onClearComponentDialogMasive: function(){
 		},
-		_onClearDataDialogDialog: function(){
+		_onClearDataDialogMasive: function(){
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
 				titulo:"",
 				oDataCargadaPrev:[],

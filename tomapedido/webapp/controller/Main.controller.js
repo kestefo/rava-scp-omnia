@@ -140,15 +140,20 @@ sap.ui.define([
                             "oDireccion": [],
                             "oCondPago": [
                                 {
-                                    "Zterm": "C001",
-                                    "Txtcp": "Al contado"
-                                },
-                                {
                                     "Zterm": y[0].Zterm,
                                     "Txtcp": y[0].Txtcp
                                 }
                             ]
                         };
+
+                        if(y[0].Zterm != "C001"){
+                            jFamilia.oCondPago.unshift(
+                                {
+                                    "Zterm": "C001",
+                                    "Txtcp": "Al contado"
+                                }
+                            );
+                        }
                         var count = 0;
                         y.forEach(function(value, index){
                             count ++;
@@ -434,8 +439,8 @@ sap.ui.define([
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
 
                 var oMaterialFilter = oMaterialTotal.filter(function(value,index){
-                    // if(jSelected.canal == value.Vtweg && jSelected.Kdgrp === value.Kdgrp){
-                    if(jSelected.canal == value.Vtweg){
+                    if(jSelected.canal == value.Vtweg && jSelected.Kunnr === value.Kunnr){
+                    // if(jSelected.canal == value.Vtweg){
                         return value;
                     }else{
                         return !value;
@@ -574,7 +579,6 @@ sap.ui.define([
                     var oCliente = values[0].oResults[0].NAVCUSTO.results;
                     var oMateriales = values[0].oResults[0].NAVMATER.results;
 
-
                     if(values[0].sEstado != "E"){
                         $.each(that._groupBy(oCliente,'Kunnr'), function (x, y) {
                             var jFamilia = {
@@ -595,15 +599,21 @@ sap.ui.define([
                                 "oDireccion": [],
                                 "oCondPago": [
                                     {
-                                        "Zterm": "C001",
-                                        "Txtcp": "Al contado"
-                                    },
-                                    {
                                         "Zterm": y[0].Zterm,
                                         "Txtcp": y[0].Txtcp
                                     }
                                 ]
                             };
+
+                            if(y[0].Zterm != "C001"){
+                                jFamilia.oCondPago.unshift(
+                                    {
+                                        "Zterm": "C001",
+                                        "Txtcp": "Al contado"
+                                    }
+                                );
+                            }
+
                             var count = 0;
                             y.forEach(function(value, index){
                                 count ++;
@@ -647,8 +657,8 @@ sap.ui.define([
                 that._dialogSelectClient.close();
 
                 var oMaterialFilter = oMaterialTotal.filter(function(value,index){
-                    // if(oObjectSelected.Vtweg == value.Vtweg && oObjectSelected.Kdgrp === value.Kdgrp){
-                    if(oObjectSelected.Vtweg == value.Vtweg){
+                    if(oObjectSelected.Vtweg == value.Vtweg && oObjectSelected.Kunnr === value.Kunnr){
+                    // if(oObjectSelected.Vtweg == value.Vtweg){
                         return value;
                     }else{
                         return !value;
@@ -862,6 +872,7 @@ sap.ui.define([
                         that.oModelSavePedidoVenta.refresh();
 
                         that._onClearComponentSelectClient();
+                        that._onClearComponentClient();
                         that["_dialogDetailCliente"].close();
 
                         that.oRouter.navTo("Detail", {

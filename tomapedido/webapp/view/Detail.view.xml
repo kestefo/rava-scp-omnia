@@ -49,8 +49,10 @@
                                 <HBox wrap="Wrap">
                                     <Button id="btnAgregarDetail" text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                    <!-- <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/> -->
                                     <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                        visible="false"/>
                                     <Button id="btnSaveDetail" text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
                                     <!-- <Button id="btnCerrarDetail" text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
@@ -168,54 +170,100 @@
                             <ToggleButton id="idCombo" text="{i18n>textbtnCom}" pressed="false" press="onPressToggleButton"
                                 enabled="{oModelPedidoVenta>/DataGeneral/oPromotions/oComponent/Z8}" custom:custom="keyCombo"/>
                         </HBox>
-                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginTop">
-                            <Text text="{i18n>textCantBon}" />
-                            <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantBoni}" editable="false"></Input>
-                        </HBox>
-                        <Table id="tbPromociones" items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotion}" growingThreshold="20">
-                            <columns>
-                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                    <header>
-                                        <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                    </header>
-                                </Column>
-                                <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                    <header>
-                                        <Text text="{i18n>titleAddColDescripcion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                    </header>
-                                </Column>
-                                <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                    <header>
-                                        <Text text="{i18n>titleDetColPrecio}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                    </header>
-                                </Column>
-                                <!-- <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                    <header>
-                                        <Text text="{i18n>titleDetColCantBon}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                    </header>
-                                </Column> -->
-                                <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                                    <header>
-                                        <Text text="{i18n>titleAddColCant}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                                    </header>
-                                </Column>
-                            </columns>
-                            <items>
-                                <!-- <ColumnListItem type="Navigation" press="_onNavDetallePromocion"> -->
-                                <ColumnListItem>
-                                    <cells>
-                                        <Text text="{path:'oModelPedidoVenta>codeProm', formatter: '.formatInteger'}"/>
-                                        <Text text="{oModelPedidoVenta>descProm}"/>
-                                        <Text text="{path:'oModelPedidoVenta>precio', formatter:'.currencyFormat'}"/>
-                                         <!-- <Text text="{path:'oModelPedidoVenta>cantidadBonif', formatter:'.formatInteger'}"/> -->
-                                        <Input value="{oModelPedidoVenta>cantidadManual}" width="auto" liveChange="liveChangeFormatInteger"></Input>
-                                    </cells>
-                                </ColumnListItem>
-                            </items>
-                        </Table>
-                        <HBox justifyContent="End">
-                            <Button id="btnAcceptPromotion" text="{i18n>textbtnConfirm}" press="_onAcceptPromotion" custom:custom="default" type="Accept"/>
-                        </HBox>
+                        <VBox id="VBoxPrimeraTabla" width="100%">
+                            <HBox justifyContent="SpaceBetween" width="100%" alignItems="Center" class="sapUiSmallMarginTop">
+                                <HBox justifyContent="Center" alignItems="Center">
+                                    <Text text="{i18n>textCantBon}" />
+                                    <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantBoni}" editable="false"></Input>
+                                </HBox>
+                                <HBox id="idPromoCant" justifyContent="Center" alignItems="Center" visible="false">
+                                    <Text text="{i18n>textCantProm}" />
+                                    <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantProm}" editable="true" liveChange="_onLiveChangeCantVol"></Input>
+                                </HBox>
+                                <HBox id="idPromoSelect" justifyContent="Center" alignItems="Center" visible="false">
+                                    <Text text="{i18n>textPromocion}" />
+                                    <ComboBox id="cbSelectPromo" selectedKey="{oModelPedidoVenta>/DataGeneral/oPromotions/sPromotionSelect}" required="true" 
+                                        items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotionSelect}" change="onValidateChange">
+                                        <core:ListItem key="{oModelPedidoVenta>Numpro}" text="{oModelPedidoVenta>Numpro}"/>
+                                    </ComboBox>
+                                </HBox>
+                            </HBox>
+                            <Table id="tbPromociones" items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotion}" growingThreshold="20">
+                                <columns>
+                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleAddColPromocion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleAddColDescripcion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                    <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleDetColPrecio}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                    <!-- <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleDetColCantBon}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column> -->
+                                    <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleAddColCant}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <!-- <ColumnListItem type="Navigation" press="_onNavDetallePromocion"> -->
+                                    <ColumnListItem>
+                                        <cells>
+                                        <Text text="{oModelPedidoVenta>Numpro}"/>
+                                            <Text text="{path:'oModelPedidoVenta>codeProm', formatter: '.formatInteger'}"/>
+                                            <Text text="{oModelPedidoVenta>descProm}"/>
+                                            <Text text="{path:'oModelPedidoVenta>precio', formatter:'.currencyFormat'}"/>
+                                            <!-- <Text text="{path:'oModelPedidoVenta>cantidadBonif', formatter:'.formatInteger'}"/> -->
+                                            <Input value="{oModelPedidoVenta>cantidadManual}" liveChange="liveChangeFormatInteger"
+                                             editable="{=${oModelPedidoVenta>editable}==='X'?true:false}"></Input>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                            <HBox justifyContent="End">
+                                <Button id="btnAcceptPromotion" text="{i18n>textbtnConfirm}" press="_onAcceptPromotion" custom:custom="default" type="Accept"/>
+                            </HBox>
+                        </VBox>
+                        <VBox id="VBoxOctavaTabla">
+                            <Table id="tbPromocionesCombo" items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotion}" growingThreshold="20">
+                                <columns>
+                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                                        <header>
+                                            <Text text="{i18n>titleAddColDescripcion}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                        </header>
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem vAlign="Middle" type="Navigation" press="_onPressDetailPromotion">
+                                        <cells>
+                                            <Text text="{oModelPedidoVenta>Numpro}"/>
+                                            <Text text="{oModelPedidoVenta>NomPro}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
                     </VBox>
                 </content>
 

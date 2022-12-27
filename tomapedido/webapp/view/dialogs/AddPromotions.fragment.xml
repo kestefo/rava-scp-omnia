@@ -9,58 +9,55 @@
                             <Title text="{i18n>textTitleSecundario}" level="H1" />
                         </HBox>
                         <HBox width="auto" justifyContent="Center">
-                            <Label design="Bold" text="{i18n>textDataPromocion}"/>
+                            <Label id="idAddPromotions" design="Bold" />
                         </HBox>
                         <HBox width="auto" justifyContent="Center">
-                            <Text text="{i18n>textTitleTerciario}:{i18n>textDataCantidad}"/>
+                            <Text text="{i18n>textTitleTerciario}:"/>
+                            <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantBoni}" maxLength="3" liveChange="liveChangeFormatInteger"></Input>
                         </HBox>
                     </VBox>
                 </uxap:content>
             </uxap:ObjectPageHeaderContent>
             <VBox class="sapUiSmallMargin" width="auto">
-                <Table items="{oModelPedidoVenta>/PromocionesDetail}" mode="SingleSelect" growingThreshold="20">
+                <Table id="tbPromocionesDetail" items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotionDetail}" growingThreshold="20">
                     <columns>
                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
-                                <Text text="{i18n>titleAddColNombre}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                <Text text="{i18n>titleAddColTextBreve}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                             </header>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <!-- <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
-                                <Text text="{i18n>titleAddColStock}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                <Text text="{i18n>titleAddColBoni}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                        </Column> -->
+                        <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text text="{i18n>titleAddColCantUit}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                             </header>
                         </Column>
-                        <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="auto" hAlign="Right" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
-                                <Text text="{i18n>titleAddColPrecio}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
-                            </header>
-                        </Column>
-                        <Column width="auto" hAlign="Right" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
-                            <header>
-                                <Text text="{i18n>titleAddColCantProm}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                <Text text="{i18n>titleAddColPrecioPromotions}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                             </header>
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Active">
+                        <ColumnListItem>
                             <cells>
-                                <Text text="{oModelPedidoVenta>nombre}"/>
-                                <Text text="{oModelPedidoVenta>stock}"/>
-                                <Text text="{oModelPedidoVenta>precio}"/>
-                                <Text text="{oModelPedidoVenta>cantprom}"/>
+                                <Text text="{oModelPedidoVenta>descProm}"/>
+                                <Text text="{path:'oModelPedidoVenta>cantidadManual', formatter:'.currencyFormat'}"/>
+                                <Text text="{path:'oModelPedidoVenta>precio', formatter:'.currencyFormat'}"/>
+                                <!-- <Text text="{path:'oModelPedidoVenta>cantidadBonif', formatter:'.currencyFormat'}"/> -->
                             </cells>
                         </ColumnListItem>
                     </items>
                 </Table>
-                <HBox width="auto" justifyContent="Center" alignContent="Center" alignItems="Center">
-                    <Text text="{i18n>textSeleccioneCantidad}"/>
-                    <StepInput id="siContadorPromocion" change="_onChangeCounterPromocion" value="1" width="5rem" min="0" max="50"/>
-                </HBox>
             </VBox>
         </content>
 		<buttons>
-			<Button text="{i18n>accpetText}" press="_onAcceptPromotions" custom:custom="default" type="Accept"/>
-			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="default" type="Default"/>
+			<Button text="{i18n>textbtnConfirm}" press="_onAcceptPromotionDetail" custom:custom="default" type="Accept"/>
+			<Button text="{i18n>cancelText}" press="_onPressClose" custom:custom="AddPromotions" type="Default"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

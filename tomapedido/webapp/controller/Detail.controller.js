@@ -123,6 +123,10 @@ sap.ui.define([
         _onPressNavButtonDetail: function(){
             this.oModelPedidoVenta.setProperty("/PedidosCreados", []);
             this._onClearDataDetailClient();
+            this._byId("VBoxPrimeraTabla").setVisible(true);
+            this._byId("VBoxOctavaTabla").setVisible(false);
+            this._byId("idPromoCant").setVisible(false);
+            this._byId("idPromoSelect").setVisible(false);
             this.oRouter.navTo("Main");
         },
         //Add Product
@@ -275,6 +279,117 @@ sap.ui.define([
 
 
         },
+        // _onAcceptProductManual: function(oEvent){
+        //     var oSource = oEvent.getSource();
+        //     var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
+        //     var oMaterialesSelected = [];
+
+        //     var oSelectItems = tbMaterialesManual.getItems();
+        //     if(oSelectItems.length == 0){
+        //         that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+        //         return;
+        //     }
+
+        //     oSelectItems.forEach(function(value, index){
+        //         var jObject = value.getBindingContext("oModelGetPedidoVenta").getObject();
+        //         if(parseFloat(jObject.cantidad) > 0){
+        //             oMaterialesSelected.push(jObject);
+        //         }
+        //     });
+
+        //     if(oMaterialesSelected.length === 0){
+        //         that.getMessageBox("error", that.getI18nText("errorNotCant"));
+        //         return;
+        //     }
+
+        //     var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+        //     var oMaterial = [];
+        //     var booleanProm = false;
+        //     oMaterialPrev.forEach(function(value, index){
+        //         oMaterial.push(value);
+        //         if(value.tipo==="PROFV"||value.tipo === "PROVEN"||value.tipo === "PROVM"||value.tipo === "PROVV"||value.tipo === "PROOP"
+        //             ||value.tipo === "PROCLI"||value.tipo === "PROPV"||value.tipo === "PROCOM"){
+                    
+        //             booleanProm = true;
+
+        //         }
+        //     });
+
+        //     var booleanRepeat = false;
+        //     var oMaterialRepeat = []
+        //     oMaterialesSelected.forEach(function(value,index){
+        //         var booleanRepeatLocal = false;
+        //         oMaterial.forEach(function(value2,index2){
+        //             if(value.Matnr  === value2.Matnr && value2.tipo === "MAT"){
+        //                 booleanRepeat = true;
+        //                 booleanRepeatLocal = true;
+        //                 value2.cantidad = value.cantidad;
+        //                 value2.cantidadRecalculo = value.cantidad;
+        //                 oMaterialRepeat.push(value2);
+        //             }
+        //         });
+        //         if(booleanRepeatLocal){
+        //             // oMaterialRepeat.push( (parseFloat(value.Matnr)).toString() );
+        //         }
+        //     });
+
+        //     oMaterialesSelected.forEach(function(value, index){
+        //         //6/12/2022
+        //         // value.total = (parseFloat(value.cantidad) * (parseFloat(value.Kbetr)*that.igv)).toString();
+        //         value.total = "0";
+        //         value.descuentos = "0%";
+        //         value.descuentosVolumen1 = "0%";
+        //         value.descuentosVolumen2 = "0%";
+        //         value.status = "None";
+        //         value.codeMotivo = "";
+        //         value.descMotivo = "";
+        //         value.tipo = "MAT";
+        //         //6/12/2022
+        //         // oMaterial.push(value);
+        //     });
+
+        //     if(booleanRepeat){
+        //         if(booleanProm){
+        //             utilUI.messageBox(this.getI18nText("errorProductRepeat"),"I", function(value){
+        //                 if(value){
+        //                     that._onPressDeletePromotions();
+        //                     that._onPressDeleteBonificacion(oMaterialRepeat);
+    
+        //                     var oMaterialPrevRepeat = [];
+        //                     that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial").forEach(function(value){
+        //                         oMaterialPrevRepeat.push(value)
+        //                     });
+    
+        //                     that._onFunctionValidateMaterial(oMaterialesSelected, oMaterialPrevRepeat);
+        //                     that._onClearDataAddManualProduct();
+        //                     that._onClearComponentAddManualProduct();
+        //                     oSource.getParent().close();
+        //                 }
+        //             });
+        //         }else{
+        //             that._onPressDeletePromotions();
+        //             that._onPressDeleteBonificacion(oMaterialRepeat);
+
+        //             var oMaterialPrevRepeat = [];
+        //             that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial").forEach(function(value){
+        //                 oMaterialPrevRepeat.push(value)
+        //             });
+
+        //             that._onFunctionValidateMaterial(oMaterialesSelected, oMaterialPrevRepeat);
+        //             that._onClearDataAddManualProduct();
+        //             that._onClearComponentAddManualProduct();
+        //             oSource.getParent().close();
+        //         }
+        //     }else{
+                
+        //         this._onFunctionValidateMaterial(oMaterialesSelected, oMaterial);
+    
+        //         this._onClearDataAddManualProduct();
+        //         this._onClearComponentAddManualProduct();
+        //         oSource.getParent().close();
+    
+        //     }
+        // },
         _onAcceptProductManual: function(oEvent){
             var oSource = oEvent.getSource();
             var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
@@ -397,6 +512,109 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.hide(0);
             });
         },
+        // _onAcceptProductEan: function(oEvent){
+        //     var oSource = oEvent.getSource();
+        //     var tbMaterialesManual = this._byId("frgIdAddEan--tbMaterialesEan");
+        //     var oMaterialesSelected = [];
+
+        //     var oSelectItems = tbMaterialesManual.getItems();
+        //     if(oSelectItems.length == 0){
+        //         that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
+        //         return;
+        //     }
+
+        //     oSelectItems.forEach(function(value, index){
+        //         var jObject = value.getBindingContext("oModelGetPedidoVenta").getObject();
+        //         if(parseFloat(jObject.cantidad) > 0){
+        //             oMaterialesSelected.push(jObject);
+        //         }
+        //     });
+
+        //     if(oMaterialesSelected.length === 0){
+        //         that.getMessageBox("error", that.getI18nText("errorNotCant"));
+        //         return;
+        //     }
+            
+        //     var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+        //     var oMaterial = [];
+        //     var booleanProm = false;
+        //     oMaterialPrev.forEach(function(value, index){
+        //         oMaterial.push(value);
+        //         if(value.tipo==="PROFV"||value.tipo === "PROVEN"||value.tipo === "PROVM"||value.tipo === "PROVV"||value.tipo === "PROOP"
+        //             ||value.tipo === "PROCLI"||value.tipo === "PROPV"||value.tipo === "PROCOM"){
+                    
+        //             booleanProm = true;
+
+        //         }
+        //     });
+
+        //     var booleanRepeat = false;
+        //     var oMaterialRepeat = []
+        //     oMaterialesSelected.forEach(function(value,index){
+        //         var booleanRepeatLocal = false;
+        //         oMaterial.forEach(function(value2,index2){
+        //             if(value.Matnr  === value2.Matnr && value2.tipo === "MAT"){
+        //                 booleanRepeat = true;
+        //                 booleanRepeatLocal = true;
+        //                 value2.cantidad = value.cantidad;
+		// 		        value2.cantidadRecalculo = value.cantidad;
+        //                 oMaterialRepeat.push(value2);
+        //             }
+        //         });
+        //         if(booleanRepeatLocal){
+        //             // oMaterialRepeat.push( (parseFloat(value.Matnr)).toString() );
+        //         }
+        //     });
+
+        //     oMaterialesSelected.forEach(function(value, index){
+        //         delete value["__metadata"];
+        //         // value.total = (parseFloat(value.cantidad) * (parseFloat(value.Kbetr)*that.igv)).toString();
+        //         value.total = "0";
+        //         value.descuentos = "0%";
+        //         value.descuentosVolumen1 = "0%";
+        //         value.descuentosVolumen2 = "0%";
+        //         value.status = "None";
+        //         value.codeMotivo = "";
+        //         value.descMotivo = "";
+        //         value.tipo = "MAT";
+        //         //6/12/2022
+        //         // oMaterial.push(value);
+        //     });
+
+        //     if(booleanRepeat){
+        //         if(booleanProm){
+        //             utilUI.messageBox(this.getI18nText("errorProductRepeat"),"I", function(value){
+        //                 if(value){
+        //                     that._onPressDeletePromotions();
+        //                     that._onPressDeleteBonificacion(oMaterialRepeat);
+
+        //                     var oMaterialPrevRepeat = [];
+        //                     that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial").forEach(function(value){
+        //                         oMaterialPrevRepeat.push(value)
+        //                     });
+
+        //                     that._onFunctionValidateMaterial(oMaterialesSelected, oMaterialPrevRepeat);
+        //                     oSource.getParent().close();
+        //                 }
+        //             });
+        //         }else{
+        //             that._onPressDeletePromotions();
+		// 	        that._onPressDeleteBonificacion(oMaterialRepeat);
+
+        //             var oMaterialPrevRepeat = [];
+        //             that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial").forEach(function(value){
+        //                 oMaterialPrevRepeat.push(value)
+        //             });
+
+        //             that._onFunctionValidateMaterial(oMaterialesSelected, oMaterialPrevRepeat);
+        //             oSource.getParent().close();
+        //         }
+        //     }else{
+        //         this._onFunctionValidateMaterial(oMaterialesSelected,oMaterial);
+        //         oSource.getParent().close();
+        //     }
+
+        // },
         _onAcceptProductEan: function(oEvent){
             var oSource = oEvent.getSource();
             var tbMaterialesManual = this._byId("frgIdAddEan--tbMaterialesEan");
@@ -738,7 +956,7 @@ sap.ui.define([
             oMaterialesSelected.forEach(function(value,index){
                 var booleanRepeatLocal = false;
                 oMaterial.forEach(function(value2,index2){
-                    if(value.Matnr  === value2.Matnr){
+                    if(value.Matnr  === value2.Matnr && value2.tipo === "MAT"){
                         booleanRepeat = true;
                         booleanRepeatLocal = true;
                     }
@@ -857,9 +1075,6 @@ sap.ui.define([
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oSelectedLineaCredito);    
             }
         },
-        onUpdateMaterial: function(oMaterialesSelected){
-            
-        },
         _onPressDeletePro: function(oEvent){
             var oSource = oEvent.getSource();
             var tbProductos = this._byId("tbProductos");
@@ -885,6 +1100,7 @@ sap.ui.define([
 
             var sMsg = "";
             var oSmsMat = [];
+            var oMaterialRepeat = []
             oSelectItems.forEach(function(value, index){
                 var booleanWarningMat = false;
                 oMaterial.forEach(function(value2, index2){
@@ -892,6 +1108,10 @@ sap.ui.define([
                         if(value2.MatnrPrinc === value.Matnr && value2.PosnrPrinc === value.Posnr){
                             booleanWarningMat = true;
                             oSelectItems.push(value2);
+                        }
+                    }else{
+                        if(value.Matnr  === value2.Matnr && value2.tipo === "MAT"){
+                            oMaterialRepeat.push(value2);
                         }
                     }
                 });
@@ -903,89 +1123,98 @@ sap.ui.define([
             if(oSmsMat.length > 0){
                 utilUI.messageBox(this.getI18nText("warningPromoBoni")+"\n"+oSmsMat.join(),"I", function(value){
                     if(value){
-                        oSelectItems.forEach(function(value, index){
-                            var indice = oMaterial.indexOf(value);
-                            if(indice != -1)
-                            oMaterial.splice( indice, 1 );
-                        });
+                        that._onPressDeletePromotions();
+					    that._onPressDeleteBonificacion(oMaterialRepeat);
 
-                        if(oMaterial.length > 0){
-                            oMaterial.forEach(function(value, index){
-                                if(value.tipo === "MAT"){
-                                    var jOtrosDescuentos = {
-                                        "Tippro":"D1",
-                                        "Posnr": value.Posnr,
-                                        "Matnr": value.Matnr,
-                                        "Kwmeng": value.cantidad,
-                                        "Vrkme": value.Meins,
-                                        "Netpr": value.Kbetr,
-                                        "Netwr": (parseFloat(value.Kbetr)*parseFloat(value.cantidad)).toString(),
-                                        "Waerk":"PEN"
-                                    }
-                                    oOtrosDescuentos.push(jOtrosDescuentos);
-                                }
-                            });
-                            sap.ui.core.BusyIndicator.show(0);
-                            Promise.all([that._getOtrosDescuentos(oOtrosDescuentos,"D1"),that._getOtrosDescuentos(oOtrosDescuentos,"D2")]).then((values) => {
-                                var oDataReturn = that._onCalculoDescuento( oMaterial,values[0],values[1]);
-                                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oDataReturn);
-                                that.reformatPosicion();
-                                that.onConteoMaterial();
-                                that._byId("tbProductos").removeSelections(true);
-                                sap.ui.core.BusyIndicator.hide(0);
-                            });
-                        }else{
-                            that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",[]);
-                            that.reformatPosicion();
-                            that.onConteoMaterial();
-                            that._byId("tbProductos").removeSelections(true);
-                            sap.ui.core.BusyIndicator.hide(0);
-                        }
+                        that.onConteoMaterial();
+                        that._byId("tbProductos").removeSelections(true);
+                        sap.ui.core.BusyIndicator.hide(0);
                     }
                 });
             }else{
-                
-                oSelectItems.forEach(function(value, index){
-                    var indice = oMaterial.indexOf(value);
-                    if(indice != -1)
-                    oMaterial.splice( indice, 1 );
-                });
+                that._onPressDeletePromotions();
+                that._onPressDeleteBonificacion(oMaterialRepeat);
 
-                if(oMaterial.length > 0){
-                    oMaterial.forEach(function(value, index){
-                        if(value.tipo === "MAT"){
-                            var jOtrosDescuentos = {
-                                "Tippro":"D1",
-                                "Posnr": value.Posnr,
-                                "Matnr": value.Matnr,
-                                "Kwmeng": value.cantidad,
-                                "Vrkme": value.Meins,
-                                "Netpr": value.Kbetr,
-                                "Netwr": (parseFloat(value.Kbetr)*parseFloat(value.cantidad)).toString(),
-                                "Waerk":"PEN"
-                            }
-                            oOtrosDescuentos.push(jOtrosDescuentos);
-                        }
-                    });
-                    sap.ui.core.BusyIndicator.show(0);
-                    Promise.all([this._getOtrosDescuentos(oOtrosDescuentos,"D1"),this._getOtrosDescuentos(oOtrosDescuentos,"D2")]).then((values) => {
-                        var oDataReturn = that._onCalculoDescuento( oMaterial,values[0],values[1]);
-                        that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oDataReturn);
-                        this.reformatPosicion();
-                        that.onConteoMaterial();
-                        this._byId("tbProductos").removeSelections(true);
-                        sap.ui.core.BusyIndicator.hide(0);
-                    });
-                }else{
-                    that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",[]);
-                    that.reformatPosicion();
-                    that.onConteoMaterial();
-                    that._byId("tbProductos").removeSelections(true);
-                    sap.ui.core.BusyIndicator.hide(0);
+                that.onConteoMaterial();
+                that._byId("tbProductos").removeSelections(true);
+                sap.ui.core.BusyIndicator.hide(0);
+            }
+        },
+        _onPressDeletePromotions: function(oEvent){
+            var oSelectItems = [];
+            var oOtrosDescuentos = [];
+            var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMaterial = [];
+            oMaterialPrev.forEach(function(value){
+                oMaterial.push(value);
+            });
+            
+            that._byId("tbProductos").getItems().forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                if(jObject.tipo==="PROFV"||jObject.tipo === "PROVEN"||jObject.tipo === "PROVM"||jObject.tipo === "PROVV"||jObject.tipo === "PROOP"
+                    ||jObject.tipo === "PROCLI"||jObject.tipo === "PROPV"||jObject.tipo === "PROCOM"){
+
+                    oSelectItems.push(jObject);
+
                 }
+            });
 
-    
-                
+            oSelectItems.forEach(function(value, index){
+                var booleanWarningMat = false;
+                oMaterial.forEach(function(value2, index2){
+                    if(value2.tipo != "MAT"){
+                        if(value2.MatnrPrinc === value.Matnr && value2.PosnrPrinc === value.Posnr){
+                            booleanWarningMat = true;
+                            oSelectItems.push(value2);
+                        }
+                    }
+                });
+            });
+
+            oSelectItems.forEach(function(value, index){
+                var indice = oMaterial.indexOf(value);
+                if(indice != -1)
+                oMaterial.splice( indice, 1 );
+            });
+
+            if(oMaterial.length > 0){
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+            }else{
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",[]);
+            }
+        },
+        _onPressDeleteBonificacion: function(oMatSel){
+            var oSelectItems = [];
+            var oOtrosDescuentos = [];
+            var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMaterial = [];
+            oMaterialPrev.forEach(function(value){
+                oMaterial.push(value);
+            });
+            
+            oSelectItems = oMatSel;
+            oSelectItems.forEach(function(value, index){
+                var booleanWarningMat = false;
+                oMaterial.forEach(function(value2, index2){
+                    if(value2.tipo != "MAT"){
+                        if(value2.MatnrPrinc === value.Matnr && value2.PosnrPrinc === value.Posnr){
+                            booleanWarningMat = true;
+                            oSelectItems.push(value2);
+                        }
+                    }
+                });
+            });
+
+            oSelectItems.forEach(function(value, index){
+                var indice = oMaterial.indexOf(value);
+                if(indice != -1)
+                oMaterial.splice( indice, 1 );
+            });
+
+            if(oMaterial.length > 0){
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+            }else{
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",[]);
             }
         },
         reformatPosicion: function(){
@@ -1734,8 +1963,24 @@ sap.ui.define([
                     that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oComponent",jActivo);
                 }
                 sap.ui.core.BusyIndicator.hide(0);
+
                 navCon.to(this.byId("IdPromotionsCenter"));
-            });
+                
+                this._byId("idFuerzaVenta").setPressed(false);
+                this._byId("idBonVendedor").setPressed(false);
+                this._byId("idVolMarca").setPressed(false);
+                this._byId("idVolVenta").setPressed(false);
+                this._byId("idObsProducto").setPressed(false);
+                this._byId("idCliente").setPressed(false);
+                this._byId("idPorVent").setPressed(false);
+                this._byId("idCombo").setPressed(false);
+
+                this._byId("VBoxPrimeraTabla").setVisible(true);
+                this._byId("VBoxOctavaTabla").setVisible(false);
+            }).catch(function (oError) {
+                that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+				sap.ui.core.BusyIndicator.hide(0);
+			});
             // this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
         },
         _getPromotionsActivate: function(oData){
@@ -1809,12 +2054,25 @@ sap.ui.define([
             var oMaterialProm = [];
             oMaterialPrev.forEach(function(value, index){
                 if(value.tipo === "MAT"){
+                    var splitDescuentoCondPago = value.descuentos.split("%");
+                    var iDescuentoCondPago = parseFloat(splitDescuentoCondPago[0])/100;
+
+                    var splitDescuento1 = value.descuentosVolumen1.split("%");
+                    var iDescuento1 = parseFloat(splitDescuento1[0])/100;
+                    
+                    var splitDescuento2 = value.descuentosVolumen2.split("%");
+                    var iDescuento2 = parseFloat(splitDescuento2[0])/100;
+
+                    var iDescuentoTotal = iDescuentoCondPago + iDescuento1 + iDescuento2;
+                    var iMult = 1-iDescuentoTotal;
+                    var iKbetrMult = parseFloat(value.Kbetr)*iMult;
+
                     var jMat = {
                         "Matnr": value.Matnr,
                         "Cantidad": value.cantidad,
                         "Meins": value.Meins,
-                        "Netpr": value.Kbetr,
-                        "Netwr": (parseFloat(value.Kbetr)*parseFloat(value.cantidad)).toString(),
+                        "Netpr": (iKbetrMult).toString(),
+                        "Netwr": ( iKbetrMult*parseFloat(value.cantidad) ).toString(),
                         "Waerk": "PEN"
                     }
                     oMaterial.push(jMat);
@@ -1841,6 +2099,10 @@ sap.ui.define([
             switch (sCustom) {
                 case "keyFuerzaVenta":
                     this._byId("idFuerzaVenta").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(false);
+                    this._byId("idPromoSelect").setVisible(false);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "Vbeln": "",
@@ -1867,6 +2129,10 @@ sap.ui.define([
                     break;
                 case "keyBonVendedor":
                     this._byId("idBonVendedor").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(false);
+                    this._byId("idPromoSelect").setVisible(false);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "02",
@@ -1891,6 +2157,10 @@ sap.ui.define([
                     break;
                 case "keyVolMarca":
                     this._byId("idVolMarca").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(true);
+                    this._byId("idPromoSelect").setVisible(true);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "03",
@@ -1915,6 +2185,10 @@ sap.ui.define([
                     break;
                 case "keyVolVenta":
                     this._byId("idVolVenta").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(true);
+                    this._byId("idPromoSelect").setVisible(true);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "04",
@@ -1939,6 +2213,10 @@ sap.ui.define([
                     break;
                 case "keyObsProducto":
                     this._byId("idObsProducto").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(false);
+                    this._byId("idPromoSelect").setVisible(false);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "05",
@@ -1963,6 +2241,10 @@ sap.ui.define([
                     break;
 				case "keyCliente":
                     this._byId("idCliente").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(false);
+                    this._byId("idPromoSelect").setVisible(false);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "07",
@@ -1987,6 +2269,10 @@ sap.ui.define([
 					break;
                 case "keyPorVen":
                     this._byId("idPorVent").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(true);
+                    this._byId("VBoxOctavaTabla").setVisible(false);
+                    this._byId("idPromoCant").setVisible(false);
+                    this._byId("idPromoSelect").setVisible(false);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "08",
@@ -2011,6 +2297,10 @@ sap.ui.define([
                     break;
                 case "keyCombo":
                     this._byId("idCombo").setPressed(true);
+                    this._byId("VBoxPrimeraTabla").setVisible(false);
+                    this._byId("VBoxOctavaTabla").setVisible(true);
+                    this._byId("idPromoCant").setVisible(false);
+                    this._byId("idPromoSelect").setVisible(false);
                     sPath += "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/MostrarFVentaSet";
                     oDataSap = {
                         "TipPro": "06",
@@ -2046,10 +2336,13 @@ sap.ui.define([
                 var oBoniPorVen = [];
                 var oBoniComb = [];
                 var oPromo = [];
+                var oPromoFilter = [];
                 var sCantBoni = "";
 
+                var booleanTable = false;
                 switch (sCustom) {
                     case "keyFuerzaVenta":
+                        booleanTable = false;
                         oBoniPrev = values[0].BonifFVentaSet.results;
                         oBoniPrev.forEach(function(value,index){
                             if(value.Probon){
@@ -2062,13 +2355,17 @@ sap.ui.define([
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": "X"
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
                         break;
                     case "keyBonVendedor":
+                        booleanTable = false;
                         oBoniVen = values[0].BonifFVentaSet.results;
                         oBoniVen.forEach(function(value,index){
                             if(value.Probon){
@@ -2081,51 +2378,117 @@ sap.ui.define([
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": "X"
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
                         break;
                     case "keyVolMarca":
+                        booleanTable = false;
                         oBoniVolMar = values[0].BonifFVentaSet.results;
                         oBoniVolMar.forEach(function(value,index){
                             if(value.Probon){
                                 sCantBoni = value.CantBonif;
                                 var jPromo = {
                                     "tipo": "PROVM",
-                                    "cantidadManual": "0",
+                                    "cantidadManual": (parseFloat(value.Cantidad)).toString(),
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": ""
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+                        
+                        $.each(that._groupBy(oBoniVolMar,'Numpro'), function (x, y) {
+                            var jPromo = {
+                                "Numpro": y[0].Numpro,
+                                "NomPro": y[0].NomPro,
+                                "oMaterialProm": []
+                            };
+
+                            y.forEach(function(value,index){
+                                if(value.Probon){
+                                    sCantBoni = value.CantBonif;
+                                    var jPromoMat = {
+                                        "tipo": "PROVM",
+                                        "cantidadManual": value.Cantidad,
+                                        "cantidadBonif": value.CantBonif,
+                                        "codeProm": value.Probon,
+                                        "Numpro": value.Numpro,
+                                        "descProm": value.Maktx,
+                                        "precio": value.Precio,
+                                        "Meins": value.Meins,
+                                        "editable": ""
+                                    };
+                                    jPromo.oMaterialProm.push(jPromoMat);
+                                }
+                            });
+                            oPromoFilter.push(jPromo);
+                        });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", oPromoFilter);
                         break;
                     case "keyVolVenta":
+                        booleanTable = false;
                         oBoniVolVen = values[0].BonifFVentaSet.results;
                         oBoniVolVen.forEach(function(value,index){
                             if(value.Probon){
                                 sCantBoni = value.CantBonif;
                                 var jPromo = {
                                     "tipo": "PROVV",
-                                    "cantidadManual": "0",
+                                    "cantidadManual": (parseFloat(value.Cantidad)).toString(),
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": ""
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+
+                        $.each(that._groupBy(oBoniVolVen,'Numpro'), function (x, y) {
+                            var jPromo = {
+                                "Numpro": y[0].Numpro,
+                                "NomPro": y[0].NomPro,
+                                "oMaterialProm": []
+                            };
+
+                            y.forEach(function(value,index){
+                                if(value.Probon){
+                                    sCantBoni = value.CantBonif;
+                                    var jPromoMat = {
+                                        "tipo": "PROVM",
+                                        "cantidadManual": value.Cantidad,
+                                        "cantidadBonif": value.CantBonif,
+                                        "codeProm": value.Probon,
+                                        "Numpro": value.Numpro,
+                                        "descProm": value.Maktx,
+                                        "precio": value.Precio,
+                                        "Meins": value.Meins,
+                                        "editable": ""
+                                    };
+                                    jPromo.oMaterialProm.push(jPromoMat);
+                                }
+                            });
+                            oPromoFilter.push(jPromo);
+                        });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", oPromoFilter);
                         break;
                     case "keyObsProducto":
+                        booleanTable = false;
                         oBoniObsPro = values[0].BonifFVentaSet.results;
                         oBoniObsPro.forEach(function(value,index){
                             if(value.Probon){
@@ -2138,13 +2501,17 @@ sap.ui.define([
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": "X"
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
                         break;
                     case "keyCliente":
+                        booleanTable = false;
                         oBoniClie = values[0].BonifFVentaSet.results;
                         oBoniClie.forEach(function(value,index){
                             if(value.Probon){
@@ -2157,13 +2524,17 @@ sap.ui.define([
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": "X"
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
                         break;
                     case "keyPorVen":
+                        booleanTable = false;
                         oBoniPorVen = values[0].BonifFVentaSet.results;
                         oBoniPorVen.forEach(function(value,index){
                             if(value.Probon){
@@ -2176,41 +2547,69 @@ sap.ui.define([
                                     "Numpro": value.Numpro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
-                                    "Meins": value.Meins
+                                    "Meins": value.Meins,
+                                    "editable": "X"
                                 };
                                 oPromo.push(jPromo);
                             }
                         });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
                         break;
                     case "keyCombo":
+                        booleanTable = true;
                         oBoniComb = values[0].BonifFVentaSet.results;
-                        oBoniComb.forEach(function(value,index){
-                            if(value.Probon){
-                                sCantBoni = value.CantBonif;
-                                var jPromo = {
-                                    "tipo": "PROCOM",
-                                    "cantidadManual": "0",
-                                    "cantidadBonif": value.CantBonif,
-                                    "codeProm": value.Probon,
-                                    "Numpro": value.Numpro,
-                                    "descProm": value.Maktx,
-                                    "precio": value.Precio,
-                                    "Meins": value.Meins
-                                };
-                                oPromo.push(jPromo);
-                            }
+                        $.each(that._groupBy(oBoniComb,'Numpro'), function (x, y) {
+                            var jPromo = {
+                                "Numpro": y[0].Numpro,
+                                "NomPro": y[0].NomPro,
+                                "oMaterialProm": []
+                            };
+
+                            y.forEach(function(value,index){
+                                if(value.Probon){
+                                    sCantBoni = value.CantBonif;
+                                    var jPromoMat = {
+                                        "tipo": "PROCOM",
+                                        "cantidadManual": value.Cantidad,
+                                        "cantidadBonif": value.CantBonif,
+                                        "codeProm": value.Probon,
+                                        "Numpro": value.Numpro,
+                                        "descProm": value.Maktx,
+                                        "precio": value.Precio,
+                                        "Meins": value.Meins,
+                                        "editable": ""
+                                    };
+                                    jPromo.oMaterialProm.push(jPromoMat);
+                                }
+                            });
+                            oPromo.push(jPromo);
                         });
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
                         break;
                 }
-                if(oPromo.length > 0){
-                    that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", sCantBoni);
-                    that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", oPromo);
-                    // that.oModelGetPedidoVenta.setProperty("/oPromociones", oPromo);
+
+                if(!booleanTable){
+                    if(oPromo.length > 0){
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", sCantBoni);
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantProm", "0");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", oPromo);
+                    }else{
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", "0");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantProm", "0");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", []);
+                    }
                 }else{
-                    that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", "");
-                    that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", []);
-                    // that.oModelGetPedidoVenta.setProperty("/oPromociones", []);
+                    if(oPromo.length > 0){
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", "0");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", oPromo);
+                    }else{
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", "0");
+                        that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", []);
+                    }
                 }
+                
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
                 that.getMessageBox("error", that.getI18nText("warningMantentInternet"));
@@ -2240,69 +2639,161 @@ sap.ui.define([
 				that.getMessageBox("error", that.getI18nText("sErrorTry"));
 			}
 		},
+        _onLiveChangeCantVol:function(oEvent){
+            var oSource = oEvent.getSource();
+            var oParent = oSource.getParent();
+
+            var values = oSource.getValue();
+            var regex = /[^\d]/g;
+			var x = values.replace(/[^\d]/g, '');
+			if(values.match(regex)){
+				var x = values;
+			}else{
+				var x = values.substring(0, values.length - 1);
+			}
+			var x = parseInt(values);
+			var sValueUsed = isNaN(x) ? '0' : x;
+
+            var sCantBoni = this.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantBoni");
+            if(parseInt(sCantBoni) >= parseInt(sValueUsed)){
+                oSource.setValue(sValueUsed);
+            }else{
+                that.getMessageBox("error", that.getI18nText("errorLimitCant"));
+                oSource.setValue("0");
+            }
+        },
         //Segunda fase consulta promociones
 
         
         //Tercera fase guardar promocion local
         _onAcceptPromotion: function(){
-            var tbPromociones = this._byId("tbPromociones");
-            var oSelectItems = tbPromociones.getItems();
-
             var oData=[];
             var sPath = jQuery.sap.getModulePath("tomapedido");
             var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
             var oUser = that.getModel("oModelUser").getProperty("/oUser");
             var sCodeUser = oUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
             var oDataSap = {};
+
+            var tbPromociones = this._byId("tbPromociones");
+            var oSelectItems = tbPromociones.getItems();
             
             if(oSelectItems.length == 0){
                 that.getMessageBox("error", that.getI18nText("errorNotPromotionSave"));
                 return;
             }
 
-            var oPromotionsPrev = [];
-            var oPromotions = [];
-            var totalImporte = 0;
-            oSelectItems.forEach(function(value, index){
-                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
-                if(parseFloat(jObject.cantidadManual) > 0){
-                    totalImporte += parseFloat(jObject.cantidadManual);
-                    var jMatPro = {
-                        "Codfa":"",
-                        "Kbetr": jObject.precio,
-                        "Labst": "0",
-                        "Maktg": jObject.descProm,
-                        "Matnr": jObject.codeProm,
-                        "Meins": jObject.Meins,
-                        "Posnr":"",
-                        "Txtfa":"",
-                        "Umrez":"0",
-                        "Vtweg":"0",
-                        "cantidad": jObject.cantidadManual,
-                        "codeMotivo":"",
-                        "descMotivo":"",
-                        "descuentos":"0%",
-                        "descuentosVolumen1":"0%",
-                        "descuentosVolumen2":"0%",
-                        "icon":"sap-icon://inbox",
-                        "state":"Success",
-                        "status":"None",
-                        "tipo": jObject.tipo,
-                        "total": ( (parseFloat(jObject.precio)*that.igv)*parseFloat(jObject.cantidadManual) ).toString(),
-                        "MatnrPrinc": "",
-                        "PosnrPrinc":"",
-                        "Probon": jObject.Probon,
-                        "Numpro": jObject.Numpro
-                    }
-                    oPromotionsPrev.push(jMatPro);
-                }
-            });
-
-            var sCantBoni = that.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantBoni");
-            if(totalImporte > parseFloat(sCantBoni)){
-                that.getMessageBox("error", that.getI18nText("errorLimitCant"));
-                return;
+            var bPressedFV = this._byId("idFuerzaVenta").getPressed();
+            var bPressedBV = this._byId("idBonVendedor").getPressed();
+            var bPressedVM = this._byId("idVolMarca").getPressed();
+            var bPressedVV = this._byId("idVolVenta").getPressed();
+            var bPressedOP = this._byId("idObsProducto").getPressed();
+            var bPressedC = this._byId("idCliente").getPressed();
+            var bPressedPV = this._byId("idPorVent").getPressed();
+            var bPressedC = this._byId("idCombo").getPressed();
+            
+            var booleanVol = false;
+            if(bPressedVV || bPressedVM){
+                booleanVol = true;
             }
+            if(booleanVol){
+                var sCantProm = that.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantProm");
+                var fCantProm = parseFloat(sCantProm);
+                if (fCantProm === 0) {
+                    that.getMessageBox("error", that.getI18nText("errorNotCant"));
+                    return;
+                }
+                var cbSelectPromo = this._byId("cbSelectPromo").getSelectedKey();
+                if (this.isEmpty(cbSelectPromo)) {
+                    that.getMessageBox("error", that.getI18nText("errorSelectPromocion"));
+                    return;
+                }
+                
+                var oPromotionsPrev = [];
+                var oPromotions = [];
+
+                oSelectItems.forEach(function(value, index){
+                    var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                    if(jObject.Numpro === cbSelectPromo){
+                        var jMatPro = {
+                            "Codfa":"",
+                            "Kbetr": jObject.precio,
+                            "Labst": "0",
+                            "Maktg": jObject.descProm,
+                            "Matnr": jObject.codeProm,
+                            "Meins": jObject.Meins,
+                            "Posnr":"",
+                            "Txtfa":"",
+                            "Umrez":"0",
+                            "Vtweg":"0",
+                            "cantidad": ( parseFloat(jObject.cantidadManual)*fCantProm ).toString(),
+                            "codeMotivo":"",
+                            "descMotivo":"",
+                            "descuentos":"0%",
+                            "descuentosVolumen1":"0%",
+                            "descuentosVolumen2":"0%",
+                            "icon":"sap-icon://inbox",
+                            "state":"Success",
+                            "status":"None",
+                            "tipo": jObject.tipo,
+                            "total": ( (parseFloat(jObject.precio)*that.igv)*( parseFloat(jObject.cantidadManual)*fCantProm) ).toString(),
+                            "MatnrPrinc": "",
+                            "PosnrPrinc":"",
+                            "Probon": jObject.Probon,
+                            "Numpro": jObject.Numpro
+                        }
+    
+                        oPromotionsPrev.push(jMatPro);
+                    }
+                });
+            }else{
+                var oPromotionsPrev = [];
+                var oPromotions = [];
+                var totalImporte = 0;
+                oSelectItems.forEach(function(value, index){
+                    var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                    if(parseFloat(jObject.cantidadManual) > 0){
+                        
+                        totalImporte += parseFloat(jObject.cantidadManual);
+                        var jMatPro = {
+                            "Codfa":"",
+                            "Kbetr": jObject.precio,
+                            "Labst": "0",
+                            "Maktg": jObject.descProm,
+                            "Matnr": jObject.codeProm,
+                            "Meins": jObject.Meins,
+                            "Posnr":"",
+                            "Txtfa":"",
+                            "Umrez":"0",
+                            "Vtweg":"0",
+                            "cantidad": jObject.cantidadManual,
+                            "codeMotivo":"",
+                            "descMotivo":"",
+                            "descuentos":"0%",
+                            "descuentosVolumen1":"0%",
+                            "descuentosVolumen2":"0%",
+                            "icon":"sap-icon://inbox",
+                            "state":"Success",
+                            "status":"None",
+                            "tipo": jObject.tipo,
+                            "total": ( (parseFloat(jObject.precio)*that.igv)*parseFloat(jObject.cantidadManual) ).toString(),
+                            "MatnrPrinc": "",
+                            "PosnrPrinc":"",
+                            "Probon": jObject.Probon,
+                            "Numpro": jObject.Numpro
+                        }
+
+                        var oFind= that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial").find(item => item.Matnr  === jObject.Matnr && item.tipo === "MAT");
+                        oPromotionsPrev.push(jMatPro);
+                    }
+                });
+
+                var sCantBoni = that.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantBoni");
+                if(totalImporte > parseFloat(sCantBoni)){
+                    that.getMessageBox("error", that.getI18nText("errorLimitCant"));
+                    return;
+                }
+            }
+
             
             var date = this.convertformatDateInAbap(new Date());
             var oMaterialBon = [];
@@ -2344,7 +2835,7 @@ sap.ui.define([
                             "icon":"sap-icon://inbox",
                             "state":"Success",
                             "status":"None",
-                            "tipo":"BON",
+                            "tipo":"BONPRO",
                             "total":"0",
                             "MatnrPrinc": value.Matnr,
                             "PosnrPrinc": ""
@@ -2355,10 +2846,6 @@ sap.ui.define([
                         oPromotions.push(value);
                         oResultBonificacion.forEach(function(valueBon,index){
                             if(value.Matnr === valueBon.MatnrPrinc){
-                                var sPosnr = parseFloat(value.Posnr);
-                                sPosnr = sPosnr+ 1;
-                                valueBon.PosnrPrinc = that.zfill(parseFloat(value.Posnr),6);
-                                valueBon.Posnr = that.zfill(sPosnr,6);
                                 oPromotions.push(valueBon);
                             }
                         });
@@ -2377,11 +2864,20 @@ sap.ui.define([
                     oMaterial.push(value);
                     if(value.tipo === "MAT"){
                         oPromotions.forEach(function(value2,index2){
-                            if(value.Matnr === value2.Matnr){
-                                value2.MatnrPrinc = value.Matnr;
-                                value2.PosnrPrinc = value.Posnr;
-                                value2.Posnr = that.zfill(parseFloat(value.Posnr)+1,6);
-                                // oMaterial.push(value2);
+                            if(value2.tipo != "BONPRO"){
+                                if(value.Matnr === value2.Matnr){
+                                    value2.MatnrPrinc = value.Matnr;
+                                    value2.PosnrPrinc = value.Posnr;
+                                    value2.Posnr = that.zfill(parseFloat(value.Posnr)+1,6);
+                                    // oMaterial.push(value2);
+                                }
+                            }else{
+                                if(value.Matnr === value2.MatnrPrinc){
+                                    value2.MatnrPrinc = value.Matnr;
+                                    value2.PosnrPrinc = that.zfill(parseFloat(value.Posnr)+1,6);
+                                    value2.Posnr = that.zfill(parseFloat(value.Posnr)+2,6);
+                                    // oMaterial.push(value2);
+                                }
                             }
                         });
                     }
@@ -2648,6 +3144,7 @@ sap.ui.define([
             var navCon = this.byId("navcIdGroupPromotions");
             navCon.back();
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", []);
+            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionDetail", []);
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", "");
         },
         _onNavDetallePromocion: function(){
@@ -2655,5 +3152,187 @@ sap.ui.define([
             var dataFilter=models.JsonPromocionDetail();
             this.oModelPedidoVenta.setProperty("/PromocionesDetail", dataFilter);
         },
+
+        //Promocion Volumen Marca
+        //Promocion Volumen Marca
+
+        //Promocion Combo
+        _onPressDetailPromotion: function(oEvent){
+            var oSource = oEvent.getSource();
+            var jObject = oSource.getBindingContext("oModelPedidoVenta").getObject();
+            var oMaterial = jObject.oMaterialProm;
+            this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
+            this._byId("frgIdAddPromotions--idAddPromotions").setText(jObject.Numpro);
+            this.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionDetail", oMaterial);
+        },
+        _onAcceptPromotionDetail: function(oEvent){
+            var oSource = oEvent.getSource();
+            var tbPromocionesDetail = this._byId("frgIdAddPromotions--tbPromocionesDetail");
+            var oSelectItems = tbPromocionesDetail.getItems();
+
+            var oData=[];
+            var sPath = jQuery.sap.getModulePath("tomapedido");
+            var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+            var oUser = that.getModel("oModelUser").getProperty("/oUser");
+            var sCodeUser = oUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+            var oDataSap = {};
+            
+            if(oSelectItems.length == 0){
+                that.getMessageBox("error", that.getI18nText("errorNotPromotionSave"));
+                return;
+            }
+
+            var sCantBoni = that.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantBoni");
+            if(parseFloat(sCantBoni) === 0){
+                that.getMessageBox("error", that.getI18nText("errorNotCant"));
+                return;
+            }
+
+            var oPromotionsPrev = [];
+            var oPromotions = [];
+            var totalImporte = 0;
+            oSelectItems.forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                var sCantidad = that.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantBoni");
+                var jMatPro = {
+                    "Codfa":"",
+                    "Kbetr": jObject.precio,
+                    "Labst": "0",
+                    "Maktg": jObject.descProm,
+                    "Matnr": jObject.codeProm,
+                    "Meins": jObject.Meins,
+                    "Posnr":"",
+                    "Txtfa":"",
+                    "Umrez":"0",
+                    "Vtweg":"0",
+                    "cantidad": ( parseFloat(jObject.cantidadManual)*parseFloat(sCantidad) ).toString(),
+                    "codeMotivo":"",
+                    "descMotivo":"",
+                    "descuentos":"0%",
+                    "descuentosVolumen1":"0%",
+                    "descuentosVolumen2":"0%",
+                    "icon":"sap-icon://inbox",
+                    "state":"Success",
+                    "status":"None",
+                    "tipo": jObject.tipo,
+                    "total": ( (parseFloat(jObject.precio)*that.igv)*( parseFloat(jObject.cantidadManual)*parseFloat(sCantidad) ) ).toString(),
+                    "MatnrPrinc": "",
+                    "PosnrPrinc":"",
+                    "Probon": jObject.Probon,
+                    "Numpro": jObject.Numpro
+                }
+                oPromotionsPrev.push(jMatPro);
+            });
+
+            var date = this.convertformatDateInAbap(new Date());
+            var oMaterialBon = [];
+            oPromotionsPrev.forEach(function(value, index){
+                var jMaterialBon = {
+                    "Kunnr": oSelectedCliente.codeCliente,
+                    "Vtweg": oSelectedCliente.codeCanal,
+                    "Datum": date,
+                    "Matnr": value.Matnr,
+                    "Meins": value.Meins,
+                    "Emeng": value.cantidad
+                }
+                oMaterialBon.push(jMaterialBon);
+            });
+
+            sap.ui.core.BusyIndicator.show(0);
+            Promise.all([this._getBonificaciones(oMaterialBon)]).then((values) => {
+                //Bonificacion
+                var oResultBonificacion = [];
+                if(values[0].DetalleListadoBonifSet.results){
+                    values[0].DetalleListadoBonifSet.results.forEach(function(value, index){
+                        var jMaterialBonificacion = {
+                            "Codfa":"",
+                            "Kbetr":"0.000",
+                            "Labst":"0",
+                            "Maktg":value.Maktg,
+                            "Matnr":value.Knrmat,
+                            "Meins":value.Meins,
+                            "Posnr": "",
+                            "Txtfa":"",
+                            "Umrez":"0",
+                            "Vtweg":"0",
+                            "cantidad":value.CantBonif,
+                            "codeMotivo":"",
+                            "descMotivo":"",
+                            "descuentos":"0%",
+                            "descuentosVolumen1":"0%",
+                            "descuentosVolumen2":"0%",
+                            "icon":"sap-icon://inbox",
+                            "state":"Success",
+                            "status":"None",
+                            "tipo":"BONPRO",
+                            "total":"0",
+                            "MatnrPrinc": value.Matnr,
+                            "PosnrPrinc": ""
+                        }
+                        oResultBonificacion.push(jMaterialBonificacion);
+                    });
+                    oPromotionsPrev.forEach(function(value, index){
+                        oPromotions.push(value);
+                        oResultBonificacion.forEach(function(valueBon,index){
+                            if(value.Matnr === valueBon.MatnrPrinc){
+                                oPromotions.push(valueBon);
+                            }
+                        });
+                    });
+                }
+
+                var oMaterialPrev = that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+                var oMaterial = [];
+                var oMaterialGroup = [];
+
+                oMaterialPrev.forEach(function(value){
+                    oMaterialGroup.push(value)
+                });
+
+                oMaterialPrev.forEach(function(value,index){
+                    oMaterial.push(value);
+                    if(value.tipo === "MAT"){
+                        oPromotions.forEach(function(value2,index2){
+                            if(value2.tipo != "BONPRO"){
+                                if(value.Matnr === value2.Matnr){
+                                    value2.MatnrPrinc = value.Matnr;
+                                    value2.PosnrPrinc = value.Posnr;
+                                    value2.Posnr = that.zfill(parseFloat(value.Posnr)+1,6);
+                                    // oMaterial.push(value2);
+                                }
+                            }else{
+                                if(value.Matnr === value2.MatnrPrinc){
+                                    value2.MatnrPrinc = value.Matnr;
+                                    value2.PosnrPrinc = that.zfill(parseFloat(value.Posnr)+1,6);
+                                    value2.Posnr = that.zfill(parseFloat(value.Posnr)+2,6);
+                                    // oMaterial.push(value2);
+                                }
+                            }
+                        });
+                    }
+                });
+
+                var oMaterialConcat = oMaterial.concat(oPromotions);
+
+                var sPath = jQuery.sap.getModulePath("tomapedido");
+                var oDataSap = {};
+                Promise.all([that._savePromotions(sPath,oDataSap)]).then((values) => {
+                    oSource.getParent().close();
+                    that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterialConcat);
+                    that.onConteoMaterial();
+                    that.onNavBackPromotion()
+                    sap.ui.core.BusyIndicator.hide(0);
+                }).catch(function (oError) {
+                    that.getMessageBox("error", that.getI18nText("warningMantentInternet"));
+                    sap.ui.core.BusyIndicator.hide(0);
+                });
+
+            }).catch(function (oError) {
+                that.getMessageBox("error", that.getI18nText("warningMantentInternet"));
+                sap.ui.core.BusyIndicator.hide(0);
+            });
+            
+        },
+        //Promocion Combo
     });
 });
