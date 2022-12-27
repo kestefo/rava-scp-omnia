@@ -676,7 +676,7 @@ sap.ui.define([
             this._onFunctionValidateMaterial(oMaterial);
             oSource.getParent().close();
 
-        },
+        }, 
         //Add Product EAN
 
         //Add Product Masive
