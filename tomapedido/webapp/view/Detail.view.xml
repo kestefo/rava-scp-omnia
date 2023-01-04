@@ -49,10 +49,10 @@
                                 <HBox wrap="Wrap">
                                     <Button id="btnAgregarDetail" text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                                    <!-- <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/> -->
                                     <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
-                                        visible="false"/>
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                    <!-- <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
+                                        visible="false"/> -->
                                     <Button id="btnSaveDetail" text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
                                     <!-- <Button id="btnCerrarDetail" text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
@@ -176,6 +176,13 @@
                                     <Text text="{i18n>textCantBon}" />
                                     <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantBoni}" editable="false"></Input>
                                 </HBox>
+                                <HBox id="idPromoSelectCant" justifyContent="Center" alignItems="Center" visible="false">
+                                    <Text text="{i18n>textListProm}" />
+                                    <ComboBox id="cbSelectPromoCant" selectedKey="{oModelPedidoVenta>/DataGeneral/oPromotions/sPromotionSelect}" required="true" 
+                                        items="{oModelPedidoVenta>/DataGeneral/oPromotions/oPromotionSelect}" change="onValidateChange">
+                                        <core:ListItem key="{oModelPedidoVenta>Numpro}" text="{oModelPedidoVenta>Numpro} ( {oModelPedidoVenta>Max} )"/>
+                                    </ComboBox>
+                                </HBox>
                                 <HBox id="idPromoCant" justifyContent="Center" alignItems="Center" visible="false">
                                     <Text text="{i18n>textCantProm}" />
                                     <Input value="{oModelPedidoVenta>/DataGeneral/oPromotions/sCantProm}" editable="true" liveChange="_onLiveChangeCantVol"></Input>
@@ -230,7 +237,7 @@
                                             <Text text="{oModelPedidoVenta>descProm}"/>
                                             <Text text="{path:'oModelPedidoVenta>precio', formatter:'.currencyFormat'}"/>
                                             <!-- <Text text="{path:'oModelPedidoVenta>cantidadBonif', formatter:'.formatInteger'}"/> -->
-                                            <Input value="{oModelPedidoVenta>cantidadManual}" liveChange="liveChangeFormatInteger"
+                                            <Input value="{oModelPedidoVenta>cantidadManual}" liveChange="_onLiveChangeCantPrimer"
                                              editable="{=${oModelPedidoVenta>editable}==='X'?true:false}"></Input>
                                         </cells>
                                     </ColumnListItem>

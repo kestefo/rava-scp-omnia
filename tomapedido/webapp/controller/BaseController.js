@@ -653,6 +653,7 @@ sap.ui.define([
 		},
 		_onClearComponentSelectClient: function(){
 			this.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionDetail", []);
+			this.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionPadre", []);
 		},
 		_onClearComponentDetailClient: function(){
 			this._byId("frgIdDetailCliente--slDirecciones").setSelectedKey("");
@@ -680,6 +681,7 @@ sap.ui.define([
 				oPromotion:[],
 				oTablaPrimerMoment: [],
 				oPromotionDetail: [],
+				oPromotionPadre: [],
 				oPromotionSelect: [],
 				sPromotionSelect: ""
 			});

@@ -48,7 +48,12 @@
             </Column>
             <Column width="auto" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleDetColDescVol}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleDetColDesc1}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                </header>
+            </Column>
+            <Column width="auto" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                <header>
+                    <Text text="{i18n>titleDetColDesc2}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -73,10 +78,12 @@
                     <Text text="{path:'oModelPedidoVenta>cantidad', formatter: '.currencyFormat'}"/>
                     <Text text="{path:'oModelPedidoVenta>Kbetr', formatter: '.currencyFormatIGVTreeDig'}"/>
                     <Text text="{oModelPedidoVenta>descuentos}" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
-                    <HBox visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" justifyContent="SpaceAround">
+                    <Text text="{oModelPedidoVenta>descuentosVolumen1}" />
+                    <Text text="{oModelPedidoVenta>descuentosVolumen2}" />
+                    <!-- <HBox visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" justifyContent="SpaceAround">
                         <Text text="{oModelPedidoVenta>descuentosVolumen1}" />
                         <Text text="{oModelPedidoVenta>descuentosVolumen2}" />
-                    </HBox>
+                    </HBox> -->
                     <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormat'}" visible="true"/>
                     <Input value="{oModelPedidoVenta>descMotivo}" editable="false" visible="{=${oModelPedidoVenta>status}==='None'?false:true}"/>
                 </cells>

@@ -319,11 +319,11 @@ sap.ui.define([
                 that.getMessageBox("error", that.getI18nText("errorFechaHasta"));
                 return;
             }
-            if (this.isEmpty(cbCliente)) {
-                // aFilter.push(new Filter("Cliente", "EQ", cbCliente));
-                that.getMessageBox("error", that.getI18nText("errorSelectClient"));
-                return;
-            }
+            // if (this.isEmpty(cbCliente)) {
+            //     // aFilter.push(new Filter("Cliente", "EQ", cbCliente));
+            //     that.getMessageBox("error", that.getI18nText("errorSelectClient"));
+            //     return;
+            // }
             // if (!this.isEmpty(cbEstado)) {
             //     // aFilter.push(new Filter("Estado", "EQ", cbEstado));
             // }
@@ -390,14 +390,16 @@ sap.ui.define([
                         });
 
                         var cbCliente = that._byId("cbFilterCliente");
-                        var oClienteSelected = cbCliente.getSelectedItem().getBindingContext("oModelGetPedidoVenta").getObject();
-                        oPedido = oPedido.filter(function(value, index){
-                            if(oClienteSelected.Vtweg === value.canal){
-                                return value;
-                            }else{
-                                return !value;
-                            }
-                        });
+                        if(!that.isEmpty(cbCliente.getSelectedItem())){
+                            var oClienteSelected = cbCliente.getSelectedItem().getBindingContext("oModelGetPedidoVenta").getObject();
+                            oPedido = oPedido.filter(function(value, index){
+                                if(oClienteSelected.Vtweg === value.canal){
+                                    return value;
+                                }else{
+                                    return !value;
+                                }
+                            });
+                        }
                         that.oModelPedidoVenta.setProperty("/PedidosCreados", oPedido);
                         sap.ui.core.BusyIndicator.hide();
                     },
@@ -439,7 +441,7 @@ sap.ui.define([
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oLineaCredito);
 
                 var oMaterialFilter = oMaterialTotal.filter(function(value,index){
-                    if(jSelected.canal == value.Vtweg && jSelected.Kunnr === value.Kunnr){
+                    if(jSelected.canal == value.Vtweg && jSelected.codeCliente === value.Kunnr){
                     // if(jSelected.canal == value.Vtweg){
                         return value;
                     }else{
@@ -824,10 +826,10 @@ sap.ui.define([
                 return;
             }
 
-            if(this.isEmpty(sOrdenCompra)){
-                this.getMessageBox("error", this.getI18nText("errorInputOrdenCompra"));
-                return;
-            }
+            // if(this.isEmpty(sOrdenCompra)){
+            //     this.getMessageBox("error", this.getI18nText("errorInputOrdenCompra"));
+            //     return;
+            // }
 
             var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
             var sPardm = slDirecciones.getSelectedItem().getBindingContext("oModelPedidoVenta").getObject().Pardm;
@@ -871,6 +873,53 @@ sap.ui.define([
                         that.oModelSavePedidoVenta.getData().push(objCreado);
                         that.oModelSavePedidoVenta.refresh();
 
+                        if(oSelectedCliente.textFlete === "0"){
+                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
+                        }else{
+                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", [
+                                {
+                                    "Codfa":"",
+                                    "Kbetr":"0",
+                                    "Labst":"0",
+                                    "Maktg": "",
+                                    "Matnr":"0",
+                                    "Meins":"",
+                                    "Txtfa":"",
+                                    "Umrez":"0",
+                                    "Vtweg":"0",
+                                    "icon":"sap-icon://inbox",
+                                    "state":"Success",
+                                    "cantidad": "0",
+                                    "total": oSelectedCliente.textFlete,
+                                    "descuentos":"0%",
+                                    "descuentosVolumen1":"0%",
+                                    "descuentosVolumen2":"0%",
+                                    "status":"None",
+                                    "codeMotivo":"",
+                                    "descMotivo":"",
+                                    "tipo":"FLE",
+                                    "Posnr":"",
+                                    "cantidadRecalculo":"0"
+                                 }
+                            ]);
+                        }
+                        that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oPromotions", {
+                            oComponent:{},
+                            sCantBoni: "",
+                            sCantProm: "",
+                            oPromotion:[],
+                            oTablaPrimerMoment: [],
+                            oPromotionDetail: [],
+                            oPromotionSelect: [],
+                            sPromotionSelect: ""
+                        });
+                        that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectEan", {});
+                        that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
+                            titulo:"",
+                            oDataCargadaPrev:[],
+                            oDataCargadaMost:[]
+                        });
+                        
                         that._onClearComponentSelectClient();
                         that._onClearComponentClient();
                         that["_dialogDetailCliente"].close();
