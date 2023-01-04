@@ -26,7 +26,7 @@
                             <Input value="{oModelDevolucion>/NroCredito}" editable="false" />
                         </fb:control>
                     </fb:FilterGroupItem>
-                     <!-- <fb:FilterGroupItem name="idNrolegal3" groupName="Filters" label="{i18n>titleColnumerolegal}" visibleInFilterBar="true">
+                    <!-- <fb:FilterGroupItem name="idNrolegal3" groupName="Filters" label="{i18n>titleColnumerolegal}" visibleInFilterBar="true">
                         <fb:control>
                             <Input value="{oModelDevolucion>/NroLegal}" editable="false" />
                         </fb:control>
@@ -41,10 +41,13 @@
             <VBox width="auto" class="sapUiSmallMargin">
                 <Table id="id12" items="{oModelDevolucion>/AddDetalleDev}" growingThreshold="20">
                     <columns>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
                                 <Text text="{i18n>txtCodSap}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                             </header>
+                              <footer>
+                                <Text text="{i18n>titleTotal}" wrapping="false"/>
+                            </footer>
                         </Column>
                         <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
@@ -53,8 +56,16 @@
                         </Column>
                         <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
+                                <Text text="{i18n>titleAddColLote}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+                            </header>
+                        </Column>
+                        <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
                                 <Text text="{i18n>titleAddCantidadDev}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                             </header>
+                            <footer>
+                                <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false"/>
+                            </footer>
                         </Column>
                         <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
@@ -65,6 +76,9 @@
                             <header>
                                 <Text text="{i18n>titleAddImporteTotal}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true" />
                             </header>
+                             <footer>
+                                <Text text="{oModelDevolucion>/totalMonto}" wrapping="false"/>
+                            </footer>
                         </Column>
                     </columns>
                     <items>
@@ -72,6 +86,7 @@
                             <cells>
                                 <Text text="{oModelDevolucion>Material}" />
                                 <Text text="{oModelDevolucion>Maktx}" />
+                                <Text text="{oModelDevolucion>Charg}" />
                                 <Text text="{oModelDevolucion>formatCantidad}" />
                                 <Text text="{oModelDevolucion>preciounitario}" />
                                 <Text text="{oModelDevolucion>ImporteTotal}" />
@@ -79,13 +94,13 @@
                         </ColumnListItem>
                     </items>
                 </Table>
-                <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
+                <!-- <VBox wrap="Wrap" class="sapUiLargeMarginEnd sapUiSmallMarginTop" alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="1.5rem" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
                     <items>
                         <Text text="{i18n>titleTotal}" wrapping="false" width="3.5rem" textAlign="Right" />
-                     <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="580px" textAlign="Right" />
-                       <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="500px" textAlign="Right" visible="true" />
+                        <Text text="{oModelDevolucion>/totalCantidad}" wrapping="false" width="580px" textAlign="Right" />
+                        <Text text="{oModelDevolucion>/totalMonto}" wrapping="false" width="500px" textAlign="Right" visible="true" />
                     </items>
-                </VBox>
+                </VBox> -->
             </VBox>
         </content>
     </Page>

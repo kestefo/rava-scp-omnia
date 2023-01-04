@@ -130,6 +130,8 @@ sap.ui.define([
                 var that = this;
                 var mensaje = "";
                 var canal ="";
+                var datos1 ="";
+                
                 var RegExPattern = /^(?:(?:(?:0?[1-9]|1\d|2[0-8])[/](?:0?[1-9]|1[0-2])|(?:29|30)[/](?:0?[13-9]|1[0-2])|31[/](?:0?[13578]|1[02]))[/](?:0{2,3}[1-9]|0{1,2}[1-9]\d|0?[1-9]\d{2}|[1-9]\d{3})|29[/]0?2[/](?:\d{1,2}(?:0[48]|[2468][048]|[13579][26])|(?:0?[48]|[13579][26]|[2468][048])00))$/;
                 sap.ui.core.BusyIndicator.show();
                 if ((FechaComprobante1.match(RegExPattern) === null)) {
@@ -149,11 +151,11 @@ sap.ui.define([
                     contador++;
                     mensaje = this.getI18nText("txtValidacionBuscar");
                 }
-                if (KeyCliente === "" || KeyCliente === undefined) {
-                    contador++;
-                    mensaje = this.getI18nText("txtValidacionBuscar");
+                // if (KeyCliente === "" || KeyCliente === undefined) {
+                //     contador++;
+                //     mensaje = this.getI18nText("txtValidacionBuscar");
 
-                }
+                // }
 
                 if (contador > 0) {
                     MessageBox.warning(mensaje);
@@ -161,7 +163,29 @@ sap.ui.define([
                     return;
                 }
 
-                var url = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=((Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"') and Kunnr eq '"+KeyCliente+"')&$expand=DetalleListadoPedDevSet";
+                if(KeyCliente === "" || KeyCliente === undefined){
+
+                    FiltroCliente.forEach(function(items2 , i){
+                        if (i > 0) {
+    
+                            datos1 += "or Kunnr eq '" + items2.Kunnr + "'";
+                            if (FiltroCliente.length === i + 1) {
+        
+                                datos1 = "(" + datos1 + ")";
+                            }
+        
+                        } else {
+                            datos1 = "Kunnr eq '" + items2.Kunnr + "'";
+
+                        }
+
+                    });
+                }else{
+                    datos1 = "Kunnr eq '"+KeyCliente+"'";
+                }
+
+                var url = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=((Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"') and " +
+                datos1 + ")&$expand=DetalleListadoPedDevSet";
                 // var url="/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/ListadoPedDevSet?$filter=Erdat ge '"+formatoDesde+"' and Erdat le '"+formatoHasta+"' and Estado eq '' and Kunnr eq '"+KeyCliente+"' and Type eq 'D'&$expand=DetalleListadoPedDevSet"
 
                 jQuery.ajax({
@@ -375,14 +399,14 @@ sap.ui.define([
                 var datosDetalle = selected.DetalleListadoPedDevSet.results;
                     datosDetalle.forEach(function(obj){
                         obj.Material =parseFloat(obj.Matnr).toString();
-                        obj.formatCantidad = parseFloat(obj.Totca).toFixed(2);
+                        obj.formatCantidad = parseFloat(obj.Kwmeng).toFixed(2);
                         if(parseFloat(obj.formatCantidad) !== 0){
-                            obj.preciounitario= ((parseFloat(obj.Netwr) / parseFloat(obj.formatCantidad)) * 1.18).toFixed(2); 
+                            obj.preciounitario= ((parseFloat(obj.Netwr) / parseFloat(obj.formatCantidad)) * 1.18).toFixed(3); 
                         }else{
                             obj.preciounitario= "0.00";  
                         }
                         
-                        obj.ImporteTotal =  (parseFloat(obj.Totca) * parseFloat(obj.preciounitario)).toFixed(2);
+                        obj.ImporteTotal =  (parseFloat(obj.Kwmeng) * parseFloat(obj.preciounitario)).toFixed(2);
 			 
                     });
 
@@ -401,7 +425,7 @@ sap.ui.define([
                 this.oModelDevolucion.setProperty("/DescripMotivo", DescripcionMotiv);
 
                 datosDetalle.forEach(function (element) {
-                    contadorCant += parseFloat(element.Totca);
+                    contadorCant += parseFloat(element.Kwmeng);
                     contadorMonto += parseFloat(element.ImporteTotal);
 
                 });
