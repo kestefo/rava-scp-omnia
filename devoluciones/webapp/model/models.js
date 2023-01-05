@@ -175,30 +175,6 @@ sap.ui.define([
                 var oModel = [
                 
                     {
-                     "key": "C02",
-                     "descripcion": "N\/C por error de personal"
-                    },
-                    {
-                     "key": "C03",
-                     "descripcion": "N\/C por error de cliente"
-                    },
-                    {
-                     "key": "C04",
-                     "descripcion": "N\/C por error de cobro"
-                    },
-                    {
-                     "key": "C05",
-                     "descripcion": "N\/C Descuento al contado terceros"
-                    },
-                    {
-                     "key": "C06",
-                     "descripcion": "N\/C Descuento especial Rebate"
-                    },
-                    {
-                     "key": "C07",
-                     "descripcion": "N\/C Descuento Gerencial"
-                    },
-                    {
                      "key": "C08",
                      "descripcion": "N\/C Cliente ausente"
                     },
@@ -213,20 +189,7 @@ sap.ui.define([
                     {
                      "key": "C11",
                      "descripcion": "N\/C Reclamo por despacho error de almac."
-                    },
-                    {
-                     "key": "C12",
-                     "descripcion": "N\/C Devolución total concepto terceros"
-                    },
-                    {
-                     "key": "C13",
-                     "descripcion": "N\/C Por devolución de dinero"
-                    },
-                    {
-                     "key": "C14",
-                     "descripcion": "N\/C Por devolución de mercadería"
-                    },
-                    {
+                    },{
                      "key": "C15",
                      "descripcion": "N\/C Cliente moroso (problemas de pago)"
                     },
@@ -255,26 +218,6 @@ sap.ui.define([
                      "descripcion": "N\/C Rotación de productos"
                     },
                     {
-                     "key": "C22",
-                     "descripcion": "N\/C por defecto del producto"
-                    },
-                    {
-                     "key": "C23",
-                     "descripcion": "N\/C por cambio de producto"
-                    },
-                    {
-                     "key": "C24",
-                     "descripcion": "N\/C Por bonificación especial"
-                    },
-                    {
-                     "key": "C25",
-                     "descripcion": "N\/C Diferencia de precios - terceros"
-                    },
-                    {
-                     "key": "C26",
-                     "descripcion": "N\/C por devolución de dinero"
-                    },
-                    {
                      "key": "C27",
                      "descripcion": "N\/C Datos logísticos no actualizados"
                     },
@@ -301,28 +244,7 @@ sap.ui.define([
                     {
                      "key": "C33",
                      "descripcion": "N\/C Recall"
-                    },
-                    {
-                     "key": "C34",
-                     "descripcion": "N\/C Por siniestralidad"
-                    },
-                    {
-                     "key": "C35",
-                     "descripcion": "N\/C Faltante de mercadería"
-                    },
-                    {
-                     "key": "C36",
-                     "descripcion": "N\/C Exportac. Empaque en mal estado o in"
-                    },
-                    {
-                     "key": "C37",
-                     "descripcion": "N\/C Gastos administrativos"
-                    },
-                    {
-                     "key": "C38",
-                     "descripcion": "N\/C Diferencia de precios"
-                    }
-                    
+                    }  
                 ]
                 return oModel;
             },

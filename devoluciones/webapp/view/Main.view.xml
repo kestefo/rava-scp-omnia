@@ -54,7 +54,7 @@
                         <items>
                             <VBox height="100%">
                                 <items>
-                                    <Label text="{i18n>txtSelectCliente}" required="true" />
+                                    <Label text="{i18n>txtSelectCliente}" required="false" />
                                     <ComboBox id="selectCajadER01" width="" selectedKey="{oModelDevolucion>/KeyCliente}" items="{oModelDevolucion>/FiltroCliente}" placeholder="---Seleccionar---" change="onPressSelect">
                                         <core:Item key="{oModelDevolucion>Kunnr}" text="{oModelDevolucion>Stcd1} {oModelDevolucion>Namec}" />
                                     </ComboBox>

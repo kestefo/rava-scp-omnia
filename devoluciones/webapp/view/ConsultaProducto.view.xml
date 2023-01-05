@@ -40,8 +40,8 @@
                         </ComboBox>
                     </VBox>
                     <VBox width="auto">
-                        <!-- <Title text="{i18n>textLote}" level="H4" />
-                        <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad" /> -->
+                        <Title text="{i18n>textLote}" level="H4" />
+                        <Input value="{oModelDevolucion>/datosLote}" width="auto" liveChange="_onLiveChangeCantidad" />
                         <Button text="{i18n>txtbtnBuscarProduct}" visible="true" press="_SearchPedido" type="Emphasized" icon="sap-icon://search" />
                     </VBox>
                     <Table items="{oModelDevolucion>/AddProducto}" growingThreshold="20">
