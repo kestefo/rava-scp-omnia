@@ -38,7 +38,7 @@ sap.ui.define([
             // this.getOwnerComponent().getRouter().navTo("Main");
         },
         _SearchPedido:function(){
-            sap.ui.core.BusyIndicator.show();
+           
             var oView = this.getView();
             var oModelDevolucion = oView.getModel("oModelDevolucion");
             var keyMarca  =oModelDevolucion.getProperty("/keyMarca");
@@ -54,6 +54,8 @@ sap.ui.define([
             var SumaMes             ="";
             var Dia                 ="";
             var AddNombreProduct    =oModelDevolucion.getProperty("/AddNombreProduct");
+            var datosLote           =oModelDevolucion.getProperty("/datosLote");
+            var arrayLote           =[];
             var Añoactual           = e.getFullYear().toString();
             var SumaFecha           = e.getMonth()+1;
            
@@ -95,7 +97,7 @@ sap.ui.define([
 
             console.log(SumaFechas +"-"+ FechaActual);
            
-
+             sap.ui.core.BusyIndicator.show();
                 var url = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaReceiptSet?$filter=((FechaFact ge '"+ 
                     SumaFechas +"' and FechaFact le '"+ FechaActual +"') and CodCli eq '"+ oClientSelect.Kunnr +"' and Material eq '"+
                     keyNombProduct+"')&$expand=DetalleBuscaReceiptSet";
@@ -110,22 +112,29 @@ sap.ui.define([
                     url: url,
                     async: true,
                     success: function (data, textStatus, jqXHR) {
-                        var datos = data.d.results;
+                        var datos        = data.d.results;
                         var oClientSelect = that.getModel("oModelDevolucion").getProperty("/AddSelectUser");
                         if(datos.length > 0){
                             // AddNombreProduct.forEach(function(items){
-                                datos.forEach(function(obj){
-                                    // if(keyNombProduct === items.Kunnr){
-                                        // obj.NombreCliente=obj1.Namec; 
-                                        // obj.Fechaformat = obj.FechaFact.substring(6,8)+"/"+ obj.FechaFact.substring(6,4)+"/"+obj.FechaFact.substring(4,0);
+                                
+                                datos.forEach(function(obj , i){
+                                    if(datosLote !== "" && datosLote !== undefined){
+                                        datos[i].DetalleBuscaReceiptSet.results.forEach(function(items1){
+                                        if(datosLote === items1.Charg){
+                                            arrayLote.push(obj); 
+                                        }
+                                        });
+                                    }
+                                    
                                         var jFindMaterial = oClientSelect.find(item => item.Kunnr  === obj.CodCli);
                                         if(jFindMaterial){
                                             obj.NombreCliente = jFindMaterial.Namec;
                                         }
-                                    // }
+                                    
           
                                   });
-                            // });
+                                 
+                            
 
                             datos.forEach(function(value, index){
                                 //Claudia factura a mostrar en sus detalles
@@ -135,10 +144,21 @@ sap.ui.define([
                                 }
                                 value.mostMont = (parseFloat(value.MonGlobal) + parseFloat(value.ImpGlobal)).toString();
                             });
+                            
+                            if(datosLote !== "" && datosLote !== undefined){
+                                if(arrayLote.length > 0){
+                                    oModelDevolucion.setProperty("/AddProducto", arrayLote);      
+                                    }else{
+                                    oModelDevolucion.setProperty("/AddProducto", []);  
+                                    }
+                            }else{
+                                oModelDevolucion.setProperty("/AddProducto",datos);   
+                            }
+                            
 
-                            oModelDevolucion.setProperty("/AddProducto", datos);
+                           
                             oModelDevolucion.setProperty("/keyProducto", "");
-                            oModelDevolucion.setProperty("/keyNombProduct", "");
+                            
                              sap.ui.core.BusyIndicator.hide(0);
 
                         }else{
@@ -205,6 +225,9 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.hide(0); 
 				}
 				oEvent.getSource().setValue("");
+                oModelDevolucion.setProperty("/keyNombProduct", "");
+                oModelDevolucion.setProperty("/AddSelectProducto", []);
+                oModelDevolucion.setProperty("/AddProductoDetail", []);
                 sap.ui.core.BusyIndicator.hide(0); 
 			}
         },
@@ -251,14 +274,13 @@ sap.ui.define([
             var oSelected = oEvent.getSource().getBindingContext("oModelDevolucion").getObject();
             var productPath      = oEvent.getSource().getBindingContext("oModelDevolucion").getPath();
             var selected        = oView.getModel("oModelDevolucion").getProperty(productPath);
-
+            
             // oModelDevolucion.setProperty("/textDataDocumento", selected.Referencia);
             oModelDevolucion.setProperty("/textDataDocumento", selected.CodFact);//Cambio Claudia Romero
-            oModelDevolucion.setProperty("/AddProductoDetail", selected.DetalleBuscaReceiptSet.results);
+             oModelDevolucion.setProperty("/AddProductoDetail", selected.DetalleBuscaReceiptSet.results);
             oModelDevolucion.setProperty("/FacturaSap", selected.mostFactura);
             
-            
-
+          
             selected.DetalleBuscaReceiptSet.results.forEach(function(items){
                 items.sumTotalPos = (parseFloat(items.Impuesto) + parseFloat(items.ImpNeto)).toString();
                 items.cantsoldev = "0";
@@ -271,8 +293,10 @@ sap.ui.define([
                 items.montonc = (parseFloat(items.cantsoldev) * parseFloat(items.sumTotalPos)).toString();
             });
 
+           
             selected.DetalleBuscaReceiptSet.results.forEach(function (element) {
                 contadorMonto += parseFloat(element.montonc); 
+ 
             });
 
             if (isNaN(contCantidad) || contCantidad === "0") {
@@ -284,12 +308,14 @@ sap.ui.define([
             if (isNaN(contMonto) || contMonto === "0") {
                 contMonto = "0.00";
             }
-
+           
             oModelDevolucion.setProperty("/totalCantidadDetProd", contCantidad.toFixed(2));
             oModelDevolucion.setProperty("/totalProduct",contTotal.toFixed(2));
             oModelDevolucion.setProperty("/totalMontoDetProduct", contadorMonto.toFixed(2));//Cambio Claudia
 
             oModelDevolucion.setProperty("/ProductDetal", oSelected);
+
+            
 
             if (!that.AbrirProducto) {
                 that.AbrirProducto = sap.ui.xmlfragment("devoluciones.view.dialogs.DetalleProduct", that);
@@ -401,6 +427,7 @@ sap.ui.define([
                                 if (sAction === that.getI18nText("acceptText")) {
                                     oModelDevolucion.setProperty("/AddProductoDetail", []);
                                     oModelDevolucion.setProperty("/KeyMotivo", "");
+                                    oModelDevolucion.setProperty("/datosLote", "");
                                     that.getOwnerComponent().getRouter().navTo("Main");
                                     sap.ui.core.BusyIndicator.hide(0);
                                 }
@@ -424,6 +451,8 @@ sap.ui.define([
             oModelDevolucion.setProperty("/keyNombProduct", "");
             oModelDevolucion.setProperty("/datosLote", "");
             oModelDevolucion.setProperty("/AddProducto", []);
+            oModelDevolucion.setProperty("/AddSelectProducto", []);
+            oModelDevolucion.refresh(true);
         // vista.byId("idTablaPrincipal").removeSelections(true);
 
             this.getOwnerComponent().getRouter().navTo("Main");

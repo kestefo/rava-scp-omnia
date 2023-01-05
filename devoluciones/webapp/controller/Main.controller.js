@@ -35,8 +35,8 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.show();
                     this.oModelDevolucion = this.getModel("oModelDevolucion");
                     this.oModelDevolucion.setProperty("/AddMotivo", models.JsonMotivo());
-                    var sCodeUser = values[0].value;
-                    // var sCodeUser ="9600000065";// cambio 25/11/2022
+                    //var sCodeUser = values[0].value;
+                     var sCodeUser ="9600000000";// cambio 05/01/2023
                     if(!that.isEmpty(sCodeUser)){
                         that.filtroCliente(sCodeUser);
                        
@@ -243,8 +243,8 @@ sap.ui.define([
 
             onRefreshCliente:function(){
                 var oModelUser = that.getModel("oModelUser").getProperty("/oUser");
-                var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
-                //var sCodeUser = "9600000065";//cambio 25/11/2022
+                //var sCodeUser = oModelUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+                var sCodeUser = "9600000000";//cambio 05/01/2023
                 sap.ui.core.BusyIndicator.show();
                this.filtroCliente(sCodeUser);
                MessageBox.success(that.getI18nText("sucessActualizacion"));
