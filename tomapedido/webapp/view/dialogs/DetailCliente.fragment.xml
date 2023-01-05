@@ -46,8 +46,8 @@
                         </layoutData>
                     </Input>
                     <Label text="{i18n>textFlete}"/>
-                    <Input id="inFlete" maxLength="40" enabled="false"
-                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFlete}">
+                    <Input id="inFlete" maxLength="40" enabled="{=${oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeCanal}==='30'?true:false}"
+                        value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFlete}" liveChange="liveChangeFormatInteger">
                         <layoutData>
                             <l:GridData span="L3 M5"/>
                         </layoutData>

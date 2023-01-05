@@ -1512,10 +1512,16 @@ sap.ui.define([
                             }
                         });
 
+                        var sSaldo = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito/sSaldo");
+                        var sMsgBloq = "";
+                        if(parseFloat(sSaldo) < 0){
+                            sMsgBloq = "\nPedido bloqueado por superar la linea de credito."
+                        }
+
                         if(booleanError){
                             that.getMessageBox("error", sSms);
                         }else{
-                            utilUI.messageBox(oResp[oResp.length-1].Msage,"S", function(value){
+                            utilUI.messageBox(oResp[oResp.length-1].Msage+sMsgBloq,"S", function(value){
                                 that._onClearComponentTableProduct();
                                 that._onPressNavButtonDetail();
                             });
