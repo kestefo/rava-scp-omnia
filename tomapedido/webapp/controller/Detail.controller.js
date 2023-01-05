@@ -924,7 +924,7 @@ sap.ui.define([
                     }else{
                         var arrMsg = [];
 
-                        if(parseFloat(value.precioUnidXsl) > parseFloat(value.precioUnidSap)){
+                        if(parseFloat(value.precioUnidXsl) != parseFloat(value.precioUnidSap)){
                             value.status = "Error";
                             value.statusNoProduct = "S";
                             value.statusPrecio = "Error";
@@ -968,6 +968,8 @@ sap.ui.define([
             var oSource = oEvent.getSource();
             var tbMaterialesMasive = this._byId("frgIdLoadMasiveDetail--tbMaterialesMasive");
             var oMaterialesSelected = [];
+            var oMaterialesSelectedEnv = [];
+
 
             var oSelectItems = tbMaterialesMasive.getItems();
             if(oSelectItems.length == 0){
@@ -987,7 +989,11 @@ sap.ui.define([
                 return;
             }
             
-            var oMaterial = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMaterial = [];
+            oMaterialPrev.forEach(function(value){
+                oMaterial.push(value);
+            });
             var booleanRepeat = false;
             var oMaterialRepeat = []
             oMaterialesSelected.forEach(function(value,index){
@@ -1004,7 +1010,7 @@ sap.ui.define([
             });
 
             if(booleanRepeat){
-                that.getMessageBox("error", that.getI18nText("errorProductRepeat") + oMaterialRepeat.join());
+                that.getMessageBox("error", that.getI18nText("errorProductRepeatNotCont")+"\n"+oMaterialRepeat.join());
                 return;
             }
 
@@ -1051,14 +1057,15 @@ sap.ui.define([
                     "cantidad":value.solXsl,
                     "total": ((parseFloat(value.precioUnidXsl)*that.igv) * parseFloat(value.solXsl)).toString(),
                     "descuentos":"0%",
-                    "descuentosVolumen":"0%",
+                    "descuentosVolumen1":"0%",
+                    "descuentosVolumen2":"0%",
                     "status":value.status,
                     "tipo": "MAT"
                  }
-                oMaterial.push(jMaterial);
+                 oMaterialesSelectedEnv.push(jMaterial);
             });
             
-            this._onFunctionValidateMaterial(oMaterial);
+            this._onFunctionValidateMaterial(oMaterialesSelectedEnv,oMaterial);
 
             this._onClearDataDialogMasive();
             
