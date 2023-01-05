@@ -125,6 +125,7 @@ sap.ui.define([
             var KeyClientAdd          =oModelDevolucion.getProperty("/KeyClientAdd");
             if (KeyMotivo === undefined || KeyMotivo === "") {
                 MessageBox.warning(that.getI18nText("txtMensajeDevolucion"));
+                sap.ui.core.BusyIndicator.hide(0);
                 return;
             }
 
