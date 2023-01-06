@@ -875,33 +875,34 @@ sap.ui.define([
 
                         if(oSelectedCliente.textFlete === "0"){
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
+                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
                         }else{
-                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", [
-                                {
-                                    "Codfa":"",
-                                    "Kbetr":"0",
-                                    "Labst":"0",
-                                    "Maktg": "",
-                                    "Matnr":"0",
-                                    "Meins":"",
-                                    "Txtfa":"",
-                                    "Umrez":"0",
-                                    "Vtweg":"0",
-                                    "icon":"sap-icon://inbox",
-                                    "state":"Success",
-                                    "cantidad": "0",
-                                    "total": oSelectedCliente.textFlete,
-                                    "descuentos":"0%",
-                                    "descuentosVolumen1":"0%",
-                                    "descuentosVolumen2":"0%",
-                                    "status":"None",
-                                    "codeMotivo":"",
-                                    "descMotivo":"",
-                                    "tipo":"FLE",
-                                    "Posnr":"",
-                                    "cantidadRecalculo":"0"
-                                 }
-                            ]);
+                            var jFlete = {
+                                "Codfa":"",
+                                "Kbetr":"0",
+                                "Labst":"0",
+                                "Maktg": "",
+                                "Matnr":"0",
+                                "Meins":"",
+                                "Txtfa":"",
+                                "Umrez":"0",
+                                "Vtweg":"0",
+                                "icon":"sap-icon://inbox",
+                                "state":"Success",
+                                "cantidad": "0",
+                                "total": oSelectedCliente.textFlete,
+                                "descuentos":"0%",
+                                "descuentosVolumen1":"0%",
+                                "descuentosVolumen2":"0%",
+                                "status":"None",
+                                "codeMotivo":"",
+                                "descMotivo":"",
+                                "tipo":"FLE",
+                                "Posnr":"",
+                                "cantidadRecalculo":"0"
+                             };
+                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", [jFlete]);
+                            that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", [jFlete]);
                         }
                         that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oPromotions", {
                             oComponent:{},

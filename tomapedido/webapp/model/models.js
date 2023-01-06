@@ -28,6 +28,7 @@ sap.ui.define([
                         sCliente: "",
                         sEstado: "",
                     },
+                    oFlete:[],
                     sNumPedido: "",
                     sStatus: "",
                     oSelectedCliente:{},

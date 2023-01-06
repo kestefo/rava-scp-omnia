@@ -664,6 +664,7 @@ sap.ui.define([
 		_onClearDataDetailClient: function(){
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sNumPedido", "");
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/sStatus", "");
+			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oSelectedCliente", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectEan", {});
 			this.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterialSelectMasive", {
