@@ -130,6 +130,7 @@ sap.ui.define([
             this._byId("idPromoSelect").setVisible(false);
             this.oRouter.navTo("Main");
         },
+        
         //Add Product
         _onPressAddProduct: function(){
             that._byId("tbProductos").removeSelections(true);
