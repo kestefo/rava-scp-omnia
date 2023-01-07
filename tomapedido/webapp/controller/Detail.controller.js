@@ -1353,6 +1353,8 @@ sap.ui.define([
                         var sCondPago = oSelectedCliente.codeCondPago === 'C001' ? oSelectedCliente.codeCondPago: '';
     
                         oDataSap={
+                            "Cond_Type": "ZG07",
+                            "Cond_value": that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente/textFlete"),
                             "Type": "C",
                             "Kunnr": oSelectedCliente.codeCliente,
                             "Vkorg": "1000",

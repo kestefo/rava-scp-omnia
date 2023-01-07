@@ -542,9 +542,9 @@ sap.ui.define([
                         "total":  ((value.Precio * that.igv)*parseFloat(value.Totca)).toString(),
                         "descuentos":"0%",
                         "descuentosVolumen":"0%",
-                        "status":"None",
-                        "codeMotivo":"",
-                        "descMotivo":""
+                        "status": that.isEmpty(value.Abgru) ? "None":"Error",
+                        "codeMotivo":value.Abgru,
+                        "descMotivo":value.Bezei
                     };
                     var jFindMaterial = oMaterialFilter.find(item => item.Matnr  === value.Matnr);
                     if(jFindMaterial){
