@@ -531,6 +531,15 @@ sap.ui.define([
 				return "0.00";
 			}
 		},
+		currencyFormatTreeDig: function (value) {
+			if(value){
+				var sNumberReplace = value.replaceAll(",","");
+				var iNumber = parseFloat(sNumberReplace);
+				return iNumber.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			}else{
+				return "0.000";
+			}
+		},
 		currencyFormatIGV: function (value) {
 			if(value){
 				var sNumberReplace = value.replaceAll(",","");
@@ -546,7 +555,7 @@ sap.ui.define([
 				var iNumber = parseFloat(sNumberReplace) * this.igv;
 				return iNumber.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 			}else{
-				return "0.00";
+				return "0.000";
 			}
 		},
 		formatMay: function (value) {

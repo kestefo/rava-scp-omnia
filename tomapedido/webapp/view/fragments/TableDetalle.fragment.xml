@@ -27,13 +27,22 @@
                 <header>
                     <Text text="{i18n>titleDetColProducto}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
+                <footer>
+                    <VBox>
+                        <Text text="{i18n>titleFooterColDisponible}"/>
+                        <Text text="{i18n>titleFooterColNoDisponible}"/>
+                    </VBox>
+                </footer>
             </Column>
             <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleDetColCantidad}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
                 <footer>
-                    <Label id="lCantidadProductos" visible="{=${device>/system/phone}?false:true}"/>
+                    <VBox>
+                        <Label id="lCantidadProductos" visible="{=${device>/system/phone}?false:true}"/>
+                        <Label id="lCantidadProductosNot" visible="{=${device>/system/phone}?false:true}"/>
+                    </VBox>
                 </footer>
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -41,19 +50,19 @@
                     <Text text="{i18n>titleDetColPrecio}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleDetColDesc}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleDetColDesc}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleDetColDesc1}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleDetColDesc1}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
-                    <Text text="{i18n>titleDetColDesc2}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                    <Text text="{i18n>titleDetColDesc2}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -61,7 +70,10 @@
                     <Text text="{i18n>titleDetColTotal}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
                 <footer>
-                    <Label id="lTotalProductos" visible="{=${device>/system/phone}?false:true}"/>
+                    <VBox>
+                        <Label id="lTotalProductos" visible="{=${device>/system/phone}?false:true}"/>
+                        <Label id="lTotalProductosNot" visible="{=${device>/system/phone}?false:true}"/>
+                    </VBox>
                 </footer>
             </Column>
             <Column id="clMotivo" width="11rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -84,7 +96,7 @@
                         <Text text="{oModelPedidoVenta>descuentosVolumen1}" />
                         <Text text="{oModelPedidoVenta>descuentosVolumen2}" />
                     </HBox> -->
-                    <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormat'}" visible="true"/>
+                    <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormatTreeDig'}" visible="true"/>
                     <Input value="{oModelPedidoVenta>descMotivo}" editable="false" visible="{=${oModelPedidoVenta>status}==='None'?false:true}"/>
                 </cells>
             </ColumnListItem>

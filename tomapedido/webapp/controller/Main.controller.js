@@ -377,6 +377,15 @@ sap.ui.define([
                                 "estate": "Warning",
                                 "oMateriales": value.DetalleBuscaPedidoSet
                             };
+
+                            var iNoContable = 0;
+                            jPedido.oMateriales.results.forEach(function(value){
+                                if(value.Abgru){
+                                    iNoContable += parseFloat(value.Totim);
+                                }
+                            })
+
+                            jPedido.importe = (parseFloat(value.Netwr) - iNoContable).toFixed(3);
                             var oFindCliente = oClientePorVendedor.find(item => item.Kunnr  === value.Kunnr);
                             if(oFindCliente){
                                 jPedido.tipodoc = oFindCliente.Stcd1;

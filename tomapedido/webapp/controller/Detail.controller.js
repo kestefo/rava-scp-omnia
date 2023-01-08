@@ -34,8 +34,10 @@ sap.ui.define([
                 if(oProductosSave.length > 0){
                     this.onConteoMaterial("S");
                 }else{
-                    that._byId("lTotalProductos").setText(this.currencyFormat("0"));
-                    that._byId("lCantidadProductos").setText(this.currencyFormat("0"));
+                    that._byId("lTotalProductos").setText(this.currencyFormatTreeDig("0"));
+                    that._byId("lCantidadProductos").setText(this.currencyFormatTreeDig("0"));
+                    that._byId("lTotalProductosNot").setText(this.currencyFormatTreeDig("0"));
+                    that._byId("lCantidadProductosNot").setText(this.currencyFormatTreeDig("0"));
                 }
 
                 that._byId("idIconTabBarDetail").setSelectedKey("keyDetail");
@@ -203,14 +205,20 @@ sap.ui.define([
 
                 Promise.all([that._getStockMateriales(oDetailStockSet)]).then((values) => {
                     var oStock = values[0].DetailStockSet.results;
+                    var oMaterialPrev = that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
                     oMaterial.forEach(async function(value, index){
+                        var oFindExist = oMaterialPrev.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins && item.tipo === "MAT");
                         var oFindStock = oStock.find(item => item.Matnr  === value.Matnr && item.Meins  === value.Meins);
                         value.Labst = "0";
                         value.icon = "sap-icon://outbox";
                         value.state = "Information",
                         value.cantidad = "0";
                         if(!that.isEmpty(oFindStock)){
-                            value.Labst = oFindStock.Labst;
+                            // if(!that.isEmpty(oFindExist)){
+                            //     value.Labst = ( parseFloat(oFindStock.Labst) - parseFloat(oFindExist.cantidad) ).toFixed(3);
+                            // }else{
+                                value.Labst = oFindStock.Labst;
+                            // }
                         }
                     });
 
@@ -946,6 +954,7 @@ sap.ui.define([
             var tbProductos = this._byId("tbProductos");
             var oItems = tbProductos.getItems();
             var oProductosValidos = [];
+            var oProductosNoValidos = [];
             var booleanError = false;
             oItems.forEach(function(value, index){
                 var jObject = value.getBindingContext('oModelPedidoVenta').getObject();
@@ -955,6 +964,7 @@ sap.ui.define([
 
                 if(jObject.status === "Error"){
                     booleanError = true;
+                    oProductosNoValidos.push(jObject);
                 }
             });
 
@@ -968,6 +978,18 @@ sap.ui.define([
             var total = 0;
             var cantidad = 0;
             var totalmMateriales = 0;
+            var totalNot = 0;
+            var cantidadNot = 0;
+            var totalmMaterialesNot = 0;
+            oProductosNoValidos.forEach(function(value, index){
+                cantidadNot += parseFloat(value.cantidad);
+                if(value.total === "10 por monto menor a 450"){
+                    totalNot += 10;
+                }else{
+                    totalmMateriales += parseFloat(value.total);
+                    totalNot += parseFloat(value.total);
+                }
+            });
             
             oProductosValidos.forEach(function(value, index){
                 cantidad += parseFloat(value.cantidad);
@@ -1006,19 +1028,19 @@ sap.ui.define([
                     this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 }
             }
-            
-            // that._byId("lTotalProductos").setText( this.getI18nText("sTotal")+this.currencyFormat(total.toString()));
-            // that._byId("lCantidadProductos").setText( this.getI18nText("sCantidad")+this.currencyFormat(cantidad.toString()));
 
-            that._byId("lTotalProductos").setText( this.currencyFormat(total.toString()));
+            that._byId("lTotalProductos").setText( this.currencyFormatTreeDig(total.toString()));
             that._byId("lCantidadProductos").setText( this.currencyFormat(cantidad.toString()));
 
+            that._byId("lTotalProductosNot").setText( this.currencyFormatTreeDig(totalNot.toString()));
+            that._byId("lCantidadProductosNot").setText( this.currencyFormat(cantidadNot.toString()));
+
             if(this.isEmpty(sParameter)){
-                var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
-                oSelectedLineaCredito.sConsumo = (parseFloat(oSelectedLineaCredito.Amount) + parseFloat(total)).toString();
-                oSelectedLineaCredito.sSaldo = (parseFloat(oSelectedLineaCredito.CreditLimit) - parseFloat(oSelectedLineaCredito.sConsumo)).toString();
+                // var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
+                // oSelectedLineaCredito.sConsumo = (parseFloat(oSelectedLineaCredito.Amount) + parseFloat(total)).toString();
+                // oSelectedLineaCredito.sSaldo = (parseFloat(oSelectedLineaCredito.CreditLimit) - parseFloat(oSelectedLineaCredito.sConsumo)).toString();
     
-                that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oSelectedLineaCredito);    
+                // that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedLineaCredito", oSelectedLineaCredito);    
             }
         },
         _onPressDeletePro: function(oEvent){
@@ -1413,7 +1435,7 @@ sap.ui.define([
                     Promise.all([that._postProductos(oDataSap), that._postPromotions()]).then((values) => {
                         var oResp = values[0].ResultSOSet.results;
                         var booleanError = false;
-                        var sSms = ""
+                        var sSms = "";
                         oResp.forEach(function(value,index){
                             if(value.Type == "E"){
                                 booleanError = true;
@@ -1421,21 +1443,48 @@ sap.ui.define([
                             }
                         });
 
-                        var sSaldo = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito/sSaldo");
-                        var sMsgBloq = "";
-                        if(parseFloat(sSaldo) < 0){
-                            sMsgBloq = "\nPedido bloqueado por superar la linea de credito."
-                        }
+                        var oNumPedido = oResp[oResp.length-1].Msage.match(/(\d+)/g);
+                        var sNumeroPedido = "";
+                        oNumPedido.forEach(function(value){
+                            sNumeroPedido = value;
+                        });
 
-                        if(booleanError){
-                            that.getMessageBox("error", sSms);
-                        }else{
-                            utilUI.messageBox(oResp[oResp.length-1].Msage+sMsgBloq,"S", function(value){
-                                that._onClearComponentTableProduct();
-                                that._onPressNavButtonDetail();
+                        var date = that.formatDaySlDateRay(that.getYYYYMMDD(new Date()));
+                        var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+
+                        var sPath = jQuery.sap.getModulePath("tomapedido")+
+                            "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaPedidoSet?$filter=Erdat ge '"+date+"' and Erdat le '"+date+"' "+
+                            "and Estado eq '' and Kunnr eq '"+oSelectedCliente.codeCliente+"' and Type eq 'L'&$expand=DetalleBuscaPedidoSet";
+                        Services.getoDataERPSync(that, sPath, function (result) {
+                            util.response.validateAjaxGetERPNotMessage(result, {
+                                success: function (oData, message) {
+                                    var oResp2 = oData.data;
+                                    var sMsgBloq = "";
+                                    if(!that.isEmpty(sNumeroPedido)){
+                                        var oFind = oResp2.find(item => parseInt(item.Vbeln)  === parseInt(sNumeroPedido));
+                                        if(oFind){
+                                            if(oFind.Cmgst === "B" || oFind.Cmgst === "C")
+                                            sMsgBloq += "\n"+that.getI18nText("errorBloqueado");
+                                        }
+                                    }
+
+                                    if(booleanError){
+                                        that.getMessageBox("error", sSms);
+                                    }else{
+                                        utilUI.messageBox(oResp[oResp.length-1].Msage+sMsgBloq,"S", function(value){
+                                            that._onClearComponentTableProduct();
+                                            that._onPressNavButtonDetail();
+                                        });
+                                    }
+                                    sap.ui.core.BusyIndicator.hide(0);
+                                },
+                                error: function (message) {
+                                    that.getMessageBox("error", that.getI18nText("warningInternet"));
+                                    sap.ui.core.BusyIndicator.hide();
+                                }
                             });
-                        }
-                        sap.ui.core.BusyIndicator.hide(0);
+                        });
+
                     }).catch(function (oError) {
                         that.getMessageBox("error", that.getI18nText("errorSave"));
                         sap.ui.core.BusyIndicator.hide(0);
