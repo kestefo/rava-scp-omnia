@@ -30,7 +30,7 @@
                 <footer>
                     <VBox>
                         <Text text="{i18n>titleFooterColDisponible}"/>
-                        <Text text="{i18n>titleFooterColNoDisponible}"/>
+                        <Text id="textFooterColNoDisponible" text="{i18n>titleFooterColNoDisponible}"/>
                     </VBox>
                 </footer>
             </Column>

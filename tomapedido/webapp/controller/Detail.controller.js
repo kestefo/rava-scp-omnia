@@ -38,8 +38,8 @@ sap.ui.define([
                     that._byId("lCantidadProductos").setText(this.currencyFormatTreeDig("0"));
                     that._byId("lTotalProductosNot").setText(this.currencyFormatTreeDig("0"));
                     that._byId("lCantidadProductosNot").setText(this.currencyFormatTreeDig("0"));
+                    this.onConteoMaterial("S");
                 }
-
                 that._byId("idIconTabBarDetail").setSelectedKey("keyDetail");
                 // that.onFunctionDireccion();
 			}).catch(function (oError) {
@@ -971,8 +971,14 @@ sap.ui.define([
             var columns = this._byId("tbProductos").getColumns();
             if(booleanError){
                 columns[columns.length-1].setVisible(true);
+                that._byId("lTotalProductosNot").setVisible(true);
+                that._byId("lCantidadProductosNot").setVisible(true);
+                that._byId("textFooterColNoDisponible").setVisible(true);
             }else{
                 columns[columns.length-1].setVisible(false);
+                that._byId("lTotalProductosNot").setVisible(false);
+                that._byId("lCantidadProductosNot").setVisible(false);
+                that._byId("textFooterColNoDisponible").setVisible(false);
             }
 
             var total = 0;

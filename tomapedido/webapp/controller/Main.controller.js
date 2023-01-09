@@ -39,6 +39,7 @@ sap.ui.define([
 
                 that.oModelSavePedidoVenta.setProperty("/", []);
                 var sCodeUser = values[0].value;
+                // var sCodeUser = "9600000064";
                 if(!that.isEmpty(sCodeUser)){
                     that.getCargaData(sCodeUser);
                 }else{
@@ -882,6 +883,13 @@ sap.ui.define([
                         that.oModelSavePedidoVenta.getData().push(objCreado);
                         that.oModelSavePedidoVenta.refresh();
 
+                        var sFlete = "";
+                        if(oSelectedCliente.textFlete === "10 por monto menor a 450"){
+                            sFlete = "10";
+                        }else{
+                            sFlete = oSelectedCliente.textFlete;
+                        }
+
                         if(oSelectedCliente.textFlete === "0"){
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
@@ -899,7 +907,7 @@ sap.ui.define([
                                 "icon":"sap-icon://inbox",
                                 "state":"Success",
                                 "cantidad": "0",
-                                "total": oSelectedCliente.textFlete,
+                                "total": (parseFloat(oSelectedCliente.textFlete)*1.18).toFixed(3),
                                 "descuentos":"0%",
                                 "descuentosVolumen1":"0%",
                                 "descuentosVolumen2":"0%",
