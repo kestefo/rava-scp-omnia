@@ -203,24 +203,42 @@ sap.ui.define([
                 }).always(async function (data, status, response) {
 
                     var datos = data.d.ResultPedidosDevSet.results[0];
-                    oModelDevolucion.setProperty("/KeyAddUser", "");
-                    tablaCliente02.removeSelections(true);
 
-                    MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") +" "+ datos.Pedido +" .", {
-                        actions: [that.getI18nText("acceptText")],
-                        emphasizedAction: "",
-                        onClose: function (sAction) {
-                            if (sAction === that.getI18nText("acceptText")) {
-                                oModelDevolucion.setProperty("/FacturaBoletaDetal/DetalleBuscaReceiptSet/results", []);
-                                oModelDevolucion.setProperty("/KeyMotivo", "");
-                                that.getOwnerComponent().getRouter().navTo("Main");
-                                sap.ui.core.BusyIndicator.hide(0);
+                    if(datos.Type === "S"){//Claudia 09/01/2023
+
+                        oModelDevolucion.setProperty("/KeyAddUser", "");
+                        tablaCliente02.removeSelections(true);
+    
+                        MessageBox.success(that.getI18nText("txtbtnBuscarCancelar") +" "+ datos.Pedido +" .", {
+                            actions: [that.getI18nText("acceptText")],
+                            emphasizedAction: "",
+                            onClose: function (sAction) {
+                                if (sAction === that.getI18nText("acceptText")) {
+                                    oModelDevolucion.setProperty("/FacturaBoletaDetal/DetalleBuscaReceiptSet/results", []);
+                                    oModelDevolucion.setProperty("/KeyMotivo", "");
+                                    that.getOwnerComponent().getRouter().navTo("Main");
+                                    sap.ui.core.BusyIndicator.hide(0);
+                                }
+                                
+                               // that.AddFactBol.close();
+    
                             }
-                            
-                           // that.AddFactBol.close();
-
-                        }
-                    });
+                        });
+                    }else{
+                        MessageBox.error(that.getI18nText("txtbtnErrorDevolucion"), {
+                            actions: [that.getI18nText("acceptText")],
+                            emphasizedAction: "",
+                            onClose: function (sAction) {
+                                if (sAction === that.getI18nText("acceptText")) {
+                                    
+                                    sap.ui.core.BusyIndicator.hide(0);
+                                }
+                              
+    
+                            }
+                        });
+                    }
+                   
 
                 });
             });
