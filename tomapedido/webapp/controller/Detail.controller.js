@@ -1029,10 +1029,10 @@ sap.ui.define([
                 }
             }
 
-            that._byId("lTotalProductos").setText( this.currencyFormatTreeDig(total.toString()));
+            that._byId("lTotalProductos").setText( this.currencyFormat(total.toString()));
             that._byId("lCantidadProductos").setText( this.currencyFormat(cantidad.toString()));
 
-            that._byId("lTotalProductosNot").setText( this.currencyFormatTreeDig(totalNot.toString()));
+            that._byId("lTotalProductosNot").setText( this.currencyFormat(totalNot.toString()));
             that._byId("lCantidadProductosNot").setText( this.currencyFormat(cantidadNot.toString()));
 
             if(this.isEmpty(sParameter)){

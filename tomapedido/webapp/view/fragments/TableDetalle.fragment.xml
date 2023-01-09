@@ -96,7 +96,7 @@
                         <Text text="{oModelPedidoVenta>descuentosVolumen1}" />
                         <Text text="{oModelPedidoVenta>descuentosVolumen2}" />
                     </HBox> -->
-                    <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormatTreeDig'}" visible="true"/>
+                    <Text text="{path: 'oModelPedidoVenta>total', formatter: '.currencyFormat'}" visible="true"/>
                     <Input value="{oModelPedidoVenta>descMotivo}" editable="false" visible="{=${oModelPedidoVenta>status}==='None'?false:true}"/>
                 </cells>
             </ColumnListItem>
