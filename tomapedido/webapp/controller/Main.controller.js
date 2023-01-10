@@ -39,7 +39,7 @@ sap.ui.define([
 
                 that.oModelSavePedidoVenta.setProperty("/", []);
                 var sCodeUser = values[0].value;
-                // var sCodeUser = "9600000064";
+                // var sCodeUser = "9600000030";
                 if(!that.isEmpty(sCodeUser)){
                     that.getCargaData(sCodeUser);
                 }else{

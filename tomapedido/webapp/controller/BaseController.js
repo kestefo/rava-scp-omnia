@@ -605,7 +605,7 @@ sap.ui.define([
                 var x = '';
             }
             var x = parseFloat(values);
-            var sValueUsed = isNaN(x) ? '0' : x;
+            var sValueUsed = isNaN(x) ? '0' : values;
 
             oSource.setValue(sValueUsed);
         },

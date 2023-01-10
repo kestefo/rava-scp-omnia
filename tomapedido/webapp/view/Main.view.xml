@@ -1,55 +1,70 @@
-<mvc:View controllerName="tomapedido.controller.Main" xmlns:core="sap.ui.core"
-    xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns:fb="sap.ui.comp.filterbar"
-    xmlns="sap.m">
-    <Shell >
-        <Page id="page" title="{i18n>title}">
-            <headerContent>
-                <Button text="{i18n>textRefresh}" press="_onbtnRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="{i18n>tooltipbtnRefresh}"/>
-                <Button text="{i18n>textHome}" press="_onbtnHome" type="Transparent" icon="sap-icon://home" tooltip="{i18n>tooltipbtnHome}"/>
-            </headerContent>
-            <content>
-                <fb:FilterBar id="idFilterBar" filterContainerWidth="15rem" reset="onReset" search="_onSearchFB" showFilterConfiguration="true"
-                    showRestoreButton="false" showClearOnFB="true" clear="_onClear">
-                    <fb:filterItems>
-                        <fb:FilterItem name="A" label="{i18n>lblDesde}">
-                            <fb:control>
-                                <DatePicker id="dpDateFilterDesde" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy" required="true" 
-                                    value="{oModelPedidoVenta>/DataGeneral/filter/sDesde}" change="_onChangeDateDesde"/>
-                            </fb:control>
-                        </fb:FilterItem>
-                        
-                        <fb:FilterItem name="B" label="{i18n>lblHasta}">
-                            <fb:control>
-                                <DatePicker id="dpDateFilterHasta" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy" required="true" 
-                                    value="{oModelPedidoVenta>/DataGeneral/filter/sHasta}" change="_onChangeDateHasta" navigate="_onNavigateDateHasta"/>
-                            </fb:control>
-                        </fb:FilterItem>
-                        
-                        <fb:FilterItem name="D" label="{i18n>lblCliente}">
-                            <fb:control>
-                                <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" required="false" 
-                                    items="{oModelGetPedidoVenta>/oClientePorVendedor}" change="onValidateChange">
-                                    <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Stcd1} {oModelGetPedidoVenta>Namec}"/>
-                                </ComboBox>
-                            </fb:control>
-                        </fb:FilterItem>
+<mvc:View
+		controllerName="tomapedido.controller.Main"
+		height="100%"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:core="sap.ui.core"
+		xmlns="sap.m"
+		xmlns:f="sap.f"
+		xmlns:fb="sap.ui.comp.filterbar"
+		xmlns:svm="sap.ui.comp.smartvariants">
+        <Shell >
+            <f:DynamicPage headerExpanded="true">
+                <f:title>
+                    <f:DynamicPageTitle>
+                        <f:heading>
+                            <Title level="H1" text="{i18n>title}" />
+                        </f:heading>
+                    </f:DynamicPageTitle>
+                </f:title>
+                <f:header>
+                    <f:DynamicPageHeader>
+                        <f:content>
+                            <fb:FilterBar id="idFilterBar" filterContainerWidth="15rem" reset="onReset" search="_onSearchFB" showFilterConfiguration="true"
+                                showRestoreButton="false" showClearOnFB="true" clear="_onClear" useToolbar="false">
+                                <fb:filterItems>
+                                    <fb:FilterItem name="A" label="{i18n>lblDesde}">
+                                        <fb:control>
+                                            <DatePicker id="dpDateFilterDesde" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy" required="true" 
+                                                value="{oModelPedidoVenta>/DataGeneral/filter/sDesde}" change="_onChangeDateDesde"/>
+                                        </fb:control>
+                                    </fb:FilterItem>
+                                    
+                                    <fb:FilterItem name="B" label="{i18n>lblHasta}">
+                                        <fb:control>
+                                            <DatePicker id="dpDateFilterHasta" width="auto" displayFormat="dd/MM/yyyy" visible="true" valueFormat="dd/MM/yyyy" required="true" 
+                                                value="{oModelPedidoVenta>/DataGeneral/filter/sHasta}" change="_onChangeDateHasta" navigate="_onNavigateDateHasta"/>
+                                        </fb:control>
+                                    </fb:FilterItem>
+                                    
+                                    <fb:FilterItem name="D" label="{i18n>lblCliente}">
+                                        <fb:control>
+                                            <ComboBox id="cbFilterCliente" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sCliente}" required="false" 
+                                                items="{oModelGetPedidoVenta>/oClientePorVendedor}" change="onValidateChange">
+                                                <core:ListItem key="{oModelGetPedidoVenta>Kunnr}" text="{oModelGetPedidoVenta>Stcd1} {oModelGetPedidoVenta>Namec}"/>
+                                            </ComboBox>
+                                        </fb:control>
+                                    </fb:FilterItem>
 
-                        <fb:FilterItem name="E" label="{i18n>lblEstado}">
-                            <fb:control>
-                                <ComboBox id="cbFilterEstado" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sEstado}" 
-                                    items="{oModelGetPedidoVenta>/oEstado}" change="onValidateChange">
-                                    <core:ListItem key="{oModelGetPedidoVenta>desc}" text="{oModelGetPedidoVenta>desc}"/>
-                                </ComboBox>
-                            </fb:control>
-                        </fb:FilterItem>
-                    </fb:filterItems>
-                </fb:FilterBar>
-                <VBox >
-                    <VBox id="vbTableDetalle">
-                        <core:Fragment fragmentName="tomapedido.view.fragments.TableMain" type="XML"/>
+                                    <fb:FilterItem name="E" label="{i18n>lblEstado}">
+                                        <fb:control>
+                                            <ComboBox id="cbFilterEstado" selectedKey="{oModelPedidoVenta>/DataGeneral/filter/sEstado}" 
+                                                items="{oModelGetPedidoVenta>/oEstado}" change="onValidateChange">
+                                                <core:ListItem key="{oModelGetPedidoVenta>desc}" text="{oModelGetPedidoVenta>desc}"/>
+                                            </ComboBox>
+                                        </fb:control>
+                                    </fb:FilterItem>
+                                </fb:filterItems>
+                            </fb:FilterBar>
+                        </f:content>
+                    </f:DynamicPageHeader>
+                </f:header>
+                <f:content>
+                    <VBox >
+                        <VBox id="vbTableDetalle">
+                            <core:Fragment fragmentName="tomapedido.view.fragments.TableMain" type="XML"/>
+                        </VBox>
                     </VBox>
-                </VBox>
-            </content>
-        </Page>
-    </Shell >
+                </f:content>
+            </f:DynamicPage>
+        </Shell >
 </mvc:View>
