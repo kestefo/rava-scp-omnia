@@ -66,5 +66,6 @@
                     </VBox>
                 </f:content>
             </f:DynamicPage>
+            
         </Shell >
 </mvc:View>
