@@ -37,9 +37,15 @@ sap.ui.define([
                 that.oModelGetPedidoVenta = this.getModel("oModelGetPedidoVenta");
                 that.oModelSavePedidoVenta = this.getModel("oModelSavePedidoVenta");
 
+                that.oModelVendedor.setSizeLimit(99999999);
+                // that.oModelMaestro.setSizeLimit(99999999);
+                that.oModelPedidoVenta.setSizeLimit(99999999);
+                that.oModelGetPedidoVenta.setSizeLimit(99999999);
+                that.oModelSavePedidoVenta.setSizeLimit(99999999);
+
                 that.oModelSavePedidoVenta.setProperty("/", []);
                 var sCodeUser = values[0].value;
-                // var sCodeUser = "9600000030";
+                // var sCodeUser = "9600000024";
                 if(!that.isEmpty(sCodeUser)){
                     that.getCargaData(sCodeUser);
                 }else{
@@ -491,9 +497,9 @@ sap.ui.define([
                 var sFlete = "0";
                 if(jSelected.canal === "10"){
                     if(jSelected.Kdgrp === "12"){
-                        sFlete = "10";
+                        sFlete = "8.4745762711864406779661016949153";
                     }else if(jSelected.Kdgrp === "13"){ // falta poner menor a 450
-                        sFlete = "10 por monto menor a 450";
+                        sFlete = "8.4745762711864406779661016949153 por monto menor a 450";
                     }
                 }
                 var oChangeParameterSelected = {
@@ -538,14 +544,14 @@ sap.ui.define([
                     var jMaterial={
                         "Posnr": value.Posnr,
                         "Labst":"",
-                        "Codfa":"",
+                        "Codfa":value.Codfa,
                         "Kbetr":value.Precio,
                         "Matnr":value.Matnr,
-                        "Maktg":"",
-                        "Meins":"",
-                        "Txtfa":"",
-                        "Umrez":"",
-                        "Vtweg":"",
+                        "Maktg":value.Maktg,
+                        "Meins":value.Meins,
+                        "Txtfa":value.Txtfa,
+                        "Umrez":value.Umrez,
+                        "Vtweg":value.Vtweg,
                         "icon":"sap-icon://inbox",
                         "state":"Success",
                         "cantidad":value.Totca,
@@ -556,16 +562,16 @@ sap.ui.define([
                         "codeMotivo":value.Abgru,
                         "descMotivo":value.Bezei
                     };
-                    var jFindMaterial = oMaterialFilter.find(item => item.Matnr  === value.Matnr);
-                    if(jFindMaterial){
-                        jMaterial.Codfa = jFindMaterial.Codfa;
-                        jMaterial.Maktg = jFindMaterial.Maktg;
-                        jMaterial.Meins = jFindMaterial.Meins;
-                        jMaterial.Txtfa = jFindMaterial.Txtfa;
-                        jMaterial.Umrez = jFindMaterial.Umrez;
-                        jMaterial.Vtweg = jFindMaterial.Vtweg;
+                    // var jFindMaterial = oMaterialFilter.find(item => item.Matnr  === value.Matnr);
+                    // if(jFindMaterial){
+                        // jMaterial.Codfa = jFindMaterial.Codfa;
+                        // jMaterial.Maktg = jFindMaterial.Maktg;
+                        // jMaterial.Meins = jFindMaterial.Meins;
+                        // jMaterial.Txtfa = jFindMaterial.Txtfa;
+                        // jMaterial.Umrez = jFindMaterial.Umrez;
+                        // jMaterial.Vtweg = jFindMaterial.Vtweg;
                         oMaterial.push(jMaterial);
-                    }
+                    // }
                 });
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 sap.ui.core.BusyIndicator.hide(0);
@@ -713,9 +719,9 @@ sap.ui.define([
                 var sFlete = "0";
                 if(oObjectSelected.Vtweg === "10"){
                     if(oObjectSelected.Kdgrp === "12"){
-                        sFlete = "10";
+                        sFlete = "8.4745762711864406779661016949153";
                     }else if(oObjectSelected.Kdgrp === "13"){ // falta poner menor a 450
-                        sFlete = "10 por monto menor a 450";
+                        sFlete = "8.4745762711864406779661016949153 por monto menor a 450";
                     }
                 }
                 var oChangeParameterSelected = {
@@ -885,7 +891,7 @@ sap.ui.define([
 
                         var sFlete = "";
                         if(oSelectedCliente.textFlete === "10 por monto menor a 450"){
-                            sFlete = "10";
+                            sFlete = "8.4745762711864406779661016949153";
                         }else{
                             sFlete = oSelectedCliente.textFlete;
                         }
@@ -907,7 +913,7 @@ sap.ui.define([
                                 "icon":"sap-icon://inbox",
                                 "state":"Success",
                                 "cantidad": "0",
-                                "total": (parseFloat(oSelectedCliente.textFlete)*1.18).toFixed(3),
+                                "total": (parseFloat(oSelectedCliente.textFlete)*that.igv).toFixed(3),
                                 "descuentos":"0%",
                                 "descuentosVolumen1":"0%",
                                 "descuentosVolumen2":"0%",

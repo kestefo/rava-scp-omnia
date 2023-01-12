@@ -71,6 +71,16 @@
                                     <IconTabFilter icon="sap-icon://create-form"  key="keyDetail" text="{i18n>textIconTabDetalle}">
                                         <VBox id="vbTableDetalle" height="100%">
                                             <core:Fragment fragmentName="tomapedido.view.fragments.TableDetalle" type="XML"/>
+                                            <VBox id="vbTableDetallePhone" height="100%" visible="{=${device>/system/phone}?true:false}">
+                                                <HBox>
+                                                    <Text text="{i18n>titleFooterColDisponible}:"/>
+                                                    <Text id="lTotalDisponible"/>
+                                                </HBox>
+                                                <HBox id="hbTableDetallePhoneNoDisponible">
+                                                    <Text text="{i18n>titleFooterColNoDisponible}:"/>
+                                                    <Text id="lTotalNoDisponible"/>
+                                                </HBox>
+                                            </VBox>
                                         </VBox>
                                     </IconTabFilter>
                                     <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">

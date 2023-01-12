@@ -969,16 +969,35 @@ sap.ui.define([
             });
 
             var columns = this._byId("tbProductos").getColumns();
-            if(booleanError){
-                columns[columns.length-1].setVisible(true);
-                that._byId("lTotalProductosNot").setVisible(true);
-                that._byId("lCantidadProductosNot").setVisible(true);
-                that._byId("textFooterColNoDisponible").setVisible(true);
+            if(!this.getModel("device").getProperty("/system/phone")){
+                if(booleanError){
+                    columns[columns.length-1].setVisible(true);
+                    that._byId("lTotalProductosNot").setVisible(true);
+                    that._byId("lCantidadProductosNot").setVisible(true);
+                    that._byId("textFooterColNoDisponible").setVisible(true);
+                }else{
+                    columns[columns.length-1].setVisible(false);
+                    that._byId("lTotalProductosNot").setVisible(false);
+                    that._byId("lCantidadProductosNot").setVisible(false);
+                    that._byId("textFooterColNoDisponible").setVisible(false);
+                }
+                that._byId("textFooterColDisponible").setVisible(true);
+                that._byId("lCantidadProductos").setVisible(true);
+                that._byId("lTotalProductos").setVisible(true);
             }else{
-                columns[columns.length-1].setVisible(false);
-                that._byId("lTotalProductosNot").setVisible(false);
-                that._byId("lCantidadProductosNot").setVisible(false);
+                if(booleanError){
+                    columns[columns.length-1].setVisible(true);
+                    that._byId("hbTableDetallePhoneNoDisponible").setVisible(true);
+                }else{
+                    columns[columns.length-1].setVisible(false);
+                    that._byId("hbTableDetallePhoneNoDisponible").setVisible(false);
+                }
+                that._byId("textFooterColDisponible").setVisible(false);
                 that._byId("textFooterColNoDisponible").setVisible(false);
+                that._byId("lTotalProductosNot").setVisible(false);
+                that._byId("lCantidadProductos").setVisible(false);
+                that._byId("lTotalProductos").setVisible(false);
+                that._byId("lCantidadProductosNot").setVisible(false);
             }
 
             var total = 0;
@@ -989,7 +1008,7 @@ sap.ui.define([
             var totalmMaterialesNot = 0;
             oProductosNoValidos.forEach(function(value, index){
                 cantidadNot += parseFloat(value.cantidad);
-                if(value.total === "10 por monto menor a 450"){
+                if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
                     totalNot += 10;
                 }else{
                     totalmMateriales += parseFloat(value.total);
@@ -999,7 +1018,7 @@ sap.ui.define([
             
             oProductosValidos.forEach(function(value, index){
                 cantidad += parseFloat(value.cantidad);
-                if(value.total === "10 por monto menor a 450"){
+                if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
                     total += 10;
                 }else{
                     totalmMateriales += parseFloat(value.total);
@@ -1040,6 +1059,11 @@ sap.ui.define([
 
             that._byId("lTotalProductosNot").setText( this.currencyFormat(totalNot.toString()));
             that._byId("lCantidadProductosNot").setText( this.currencyFormat(cantidadNot.toString()));
+
+            if(this.getModel("device").getProperty("/system/phone")){
+                that._byId("lTotalDisponible").setText( this.currencyFormat(cantidad.toString()) + " ; " + this.currencyFormat(total.toString()) );
+                that._byId("lTotalNoDisponible").setText( this.currencyFormat(cantidadNot.toString()) + " ; " + this.currencyFormat(totalNot.toString()) );
+            }
 
             if(this.isEmpty(sParameter)){
                 // var oSelectedLineaCredito = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedLineaCredito");
@@ -1379,10 +1403,11 @@ sap.ui.define([
                         var sKundm = oSelectedCliente.textKundm;
                         var sKundm = oSelectedCliente.textKundm;
                         var sCondPago = oSelectedCliente.codeCondPago === 'C001' ? oSelectedCliente.codeCondPago: '';
+                        var sFlete = parseFloat(that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente/textFlete")).toFixed(3);
     
                         oDataSap={
                             "Cond_Type": "ZG07",
-                            "Cond_Value": that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente/textFlete"),
+                            "Cond_Value": sFlete,
                             "Type": "C",
                             "Kunnr": oSelectedCliente.codeCliente,
                             "Vkorg": "1000",

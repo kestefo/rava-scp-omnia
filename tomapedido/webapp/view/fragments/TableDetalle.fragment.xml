@@ -20,7 +20,10 @@
                     <Text text="{i18n>titleAddColCodigo}" width="auto" maxLines="2" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
                 <footer>
-                    <Text text="{i18n>titleFooterColProducto}"/>
+                    <VBox height="100%">                        
+                        <Text id="textFooterColTotal" text="{i18n>titleFooterColProducto}" visible="{=${device>/system/phone}?false:true}"/>
+                        <Text id="textFooterColTotal2" text="{i18n>titleFooterColProducto2}" visible="{=${device>/system/phone}?true:false}"/>
+                    </VBox>
                 </footer>
             </Column>
             <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -29,7 +32,7 @@
                 </header>
                 <footer>
                     <VBox>
-                        <Text text="{i18n>titleFooterColDisponible}"/>
+                        <Text id="textFooterColDisponible" text="{i18n>titleFooterColDisponible}"/>
                         <Text id="textFooterColNoDisponible" text="{i18n>titleFooterColNoDisponible}"/>
                     </VBox>
                 </footer>
@@ -40,8 +43,8 @@
                 </header>
                 <footer>
                     <VBox>
-                        <Label id="lCantidadProductos" visible="{=${device>/system/phone}?false:true}"/>
-                        <Label id="lCantidadProductosNot" visible="{=${device>/system/phone}?false:true}"/>
+                        <Label id="lCantidadProductos" visible="true"/>
+                        <Label id="lCantidadProductosNot" visible="true"/>
                     </VBox>
                 </footer>
             </Column>
