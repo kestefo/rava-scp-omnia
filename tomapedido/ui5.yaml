@@ -18,8 +18,8 @@ server:
         backend:
           - path: /sap
             url: http://life:44300
-            client: '210'
-            destination: LIFE-ERP-DEV-210
+            client: '300'
+            destination: LIFE-PRD
           - path: /service/scim
             url: https://aijy7d89l.accounts.ondemand.com
             destination: API-USER-IAS

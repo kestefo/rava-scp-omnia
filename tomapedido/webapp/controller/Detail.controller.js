@@ -658,9 +658,20 @@ sap.ui.define([
                 var oDataCampos = {};
                 oDataCampos.aItems = [];
 
+                var indiceTotus = titulo.indexOf("TOTTUS");
+                var indiceAruma = titulo.indexOf("ARUMA");
+                var indiceInka = titulo.indexOf("INKA");
+                var indiceSuper = titulo.indexOf("SUPER");
+
+                if(indiceTotus==-1 && indiceAruma==-1 && indiceInka==-1 && indiceSuper ==-1){
+                    that.getMessageBox("error", that.getI18nText("errorNoExcelSave"));
+                    return
+                }
+
                 var titulo = that.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive/titulo");
                 value.forEach(function (item) {
                     var indiceTotus = titulo.indexOf("TOTTUS");
+                    var indiceAruma = titulo.indexOf("ARUMA");
                     var indiceInka = titulo.indexOf("INKA");
                     var indiceSuper = titulo.indexOf("SUPER");
                     item.eanXsl = "";
@@ -673,7 +684,7 @@ sap.ui.define([
                     item.descripcionStatus = "";
                     item.codeMotivo = "";
                     item.descMotivo = "";
-                    if(indiceTotus != -1){
+                    if(indiceTotus != -1 || indiceAruma != -1){
                         item.eanXsl = item.EAN;
                         item.codigo = item[that.getI18nText("sCodeTottus")];
                         item.descripcion = item[that.getI18nText("sDescTottus")];
@@ -1473,7 +1484,12 @@ sap.ui.define([
                                 sSms += value.Msage + "\n";
                             }
                         });
-
+                        gi
+                        if(booleanError){
+                            that.getMessageBox("error", sSms);
+                            sap.ui.core.BusyIndicator.hide(0);
+                            return;
+                        }
                         var oNumPedido = oResp[oResp.length-1].Msage.match(/(\d+)/g);
                         var sNumeroPedido = "";
                         oNumPedido.forEach(function(value){
