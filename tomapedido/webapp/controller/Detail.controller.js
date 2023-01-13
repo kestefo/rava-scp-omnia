@@ -657,7 +657,8 @@ sap.ui.define([
             pUpload.then(function (value) {
                 var oDataCampos = {};
                 oDataCampos.aItems = [];
-
+                
+                var titulo = that.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive/titulo");
                 var indiceTotus = titulo.indexOf("TOTTUS");
                 var indiceAruma = titulo.indexOf("ARUMA");
                 var indiceInka = titulo.indexOf("INKA");
@@ -668,7 +669,6 @@ sap.ui.define([
                     return
                 }
 
-                var titulo = that.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oMaterialSelectMasive/titulo");
                 value.forEach(function (item) {
                     var indiceTotus = titulo.indexOf("TOTTUS");
                     var indiceAruma = titulo.indexOf("ARUMA");
@@ -1484,7 +1484,7 @@ sap.ui.define([
                                 sSms += value.Msage + "\n";
                             }
                         });
-                        gi
+                        
                         if(booleanError){
                             that.getMessageBox("error", sSms);
                             sap.ui.core.BusyIndicator.hide(0);
@@ -2573,6 +2573,7 @@ sap.ui.define([
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
+                                    "Nompro": value.NomPro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
                                     "Meins": value.Meins,
@@ -2598,6 +2599,7 @@ sap.ui.define([
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
+                                    "Nompro": value.NomPro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
                                     "Meins": value.Meins,
@@ -2623,6 +2625,7 @@ sap.ui.define([
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
+                                    "Nompro": value.NomPro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
                                     "Meins": value.Meins,
@@ -2633,31 +2636,40 @@ sap.ui.define([
                         });
                         
                         $.each(that._groupBy(oBoniVolMar,'Numpro'), function (x, y) {
-                            var jPromo = {
-                                "Numpro": y[0].Numpro,
-                                "NomPro": y[0].NomPro,
-                                "oMaterialProm": []
-                            };
+                            if(x != ""){
+                                var oFind = values[0].MaxBoniSet.results.find(item => item.Numpro  === y[0].Numpro);
+                                var jPromo = {
+                                    "Numpro": y[0].Numpro,
+                                    "NomPro": y[0].NomPro,
+                                    "Max": "",
+                                    "oMaterialProm": []
+                                };
 
-                            y.forEach(function(value,index){
-                                if(value.Probon){
-                                    sCantBoni = value.CantBonif;
-                                    var jPromoMat = {
-                                        "tipo": "PROVM",
-                                        "cantidadManual": value.Cantidad,
-                                        "cantidadBonif": value.CantBonif,
-                                        "codeProm": value.Probon,
-                                        "Numpro": value.Numpro,
-                                        "descProm": value.Maktx,
-                                        "precio": value.Precio,
-                                        "Meins": value.Meins,
-                                        "editable": ""
-                                    };
-                                    jPromo.oMaterialProm.push(jPromoMat);
+                                if(!that.isEmpty(oFind)){
+                                    jPromo.Max = oFind.Max
                                 }
-                            });
-                            oPromoFilter.push(jPromo);
+
+                                y.forEach(function(value,index){
+                                    if(value.Probon){
+                                        sCantBoni = value.CantBonif;
+                                        var jPromoMat = {
+                                            "tipo": "PROVM",
+                                            "cantidadManual": value.Cantidad,
+                                            "cantidadBonif": value.CantBonif,
+                                            "codeProm": value.Probon,
+                                            "Numpro": value.Numpro,
+                                            "descProm": value.Maktx,
+                                            "precio": value.Precio,
+                                            "Meins": value.Meins,
+                                            "editable": ""
+                                        };
+                                        jPromo.oMaterialProm.push(jPromoMat);
+                                    }
+                                });
+                                oPromoFilter.push(jPromo);
+                            }
                         });
+
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", oPromoFilter);
                         break;
@@ -2673,6 +2685,7 @@ sap.ui.define([
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
+                                    "Nompro": value.NomPro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
                                     "Meins": value.Meins,
@@ -2683,30 +2696,37 @@ sap.ui.define([
                         });
 
                         $.each(that._groupBy(oBoniVolVen,'Numpro'), function (x, y) {
-                            var jPromo = {
-                                "Numpro": y[0].Numpro,
-                                "NomPro": y[0].NomPro,
-                                "oMaterialProm": []
-                            };
-
-                            y.forEach(function(value,index){
-                                if(value.Probon){
-                                    sCantBoni = value.CantBonif;
-                                    var jPromoMat = {
-                                        "tipo": "PROVM",
-                                        "cantidadManual": value.Cantidad,
-                                        "cantidadBonif": value.CantBonif,
-                                        "codeProm": value.Probon,
-                                        "Numpro": value.Numpro,
-                                        "descProm": value.Maktx,
-                                        "precio": value.Precio,
-                                        "Meins": value.Meins,
-                                        "editable": ""
-                                    };
-                                    jPromo.oMaterialProm.push(jPromoMat);
+                            if(x != ""){
+                                var oFind = values[0].MaxBoniSet.results.find(item => item.Numpro  === y[0].Numpro);
+                                var jPromo = {
+                                    "Numpro": y[0].Numpro,
+                                    "NomPro": y[0].NomPro,
+                                    "Max": "",
+                                    "oMaterialProm": []
+                                };
+                                if(!that.isEmpty(oFind)){
+                                    jPromo.Max = oFind.Max
                                 }
-                            });
-                            oPromoFilter.push(jPromo);
+
+                                y.forEach(function(value,index){
+                                    if(value.Probon){
+                                        sCantBoni = value.CantBonif;
+                                        var jPromoMat = {
+                                            "tipo": "PROVM",
+                                            "cantidadManual": value.Cantidad,
+                                            "cantidadBonif": value.CantBonif,
+                                            "codeProm": value.Probon,
+                                            "Numpro": value.Numpro,
+                                            "descProm": value.Maktx,
+                                            "precio": value.Precio,
+                                            "Meins": value.Meins,
+                                            "editable": ""
+                                        };
+                                        jPromo.oMaterialProm.push(jPromoMat);
+                                    }
+                                });
+                                oPromoFilter.push(jPromo);
+                            }
                         });
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", oPromoFilter);
@@ -2723,6 +2743,7 @@ sap.ui.define([
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
+                                    "Nompro": value.NomPro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
                                     "Meins": value.Meins,
@@ -2773,6 +2794,7 @@ sap.ui.define([
                                     "cantidadBonif": value.CantBonif,
                                     "codeProm": value.Probon,
                                     "Numpro": value.Numpro,
+                                    "Nompro": value.NomPro,
                                     "descProm": value.Maktx,
                                     "precio": value.Precio,
                                     "Meins": value.Meins,
@@ -2801,6 +2823,7 @@ sap.ui.define([
                                         "cantidadBonif": "0",
                                         "codeProm": value.Probas,
                                         "Numpro": value.Numpro,
+                                        "Nompro": value.NomPro,
                                         "descProm": value.Maktx,
                                         "precio": "0",
                                         "Meins": "PI",
@@ -2874,7 +2897,7 @@ sap.ui.define([
                         that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotion", []);
                     }
                 }
-                
+                that._byId("tbPromociones").getBinding("items").filter([]);
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
                 that.getMessageBox("error", that.getI18nText("warningMantentInternet"));
@@ -2908,6 +2931,14 @@ sap.ui.define([
             var oSource = oEvent.getSource();
             var oParent = oSource.getParent();
 
+            var cbSelectPromo = this._byId("cbSelectPromo").getSelectedKey();
+            if(that.isEmpty(cbSelectPromo)){
+                that.getMessageBox("error", that.getI18nText("sErrorSelectPromotion"));
+                oSource.setValue("0");
+                return;
+            }
+            var jObject = this._byId("cbSelectPromo").getSelectedItem().getBindingContext("oModelPedidoVenta").getObject();
+
             var values = oSource.getValue();
             var regex = /[^\d]/g;
 			var x = values.replace(/[^\d]/g, '');
@@ -2920,7 +2951,7 @@ sap.ui.define([
 			var sValueUsed = isNaN(x) ? '0' : x;
 
             var sCantBoni = this.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantBoni");
-            if(parseInt(sCantBoni) >= parseInt(sValueUsed)){
+            if(parseInt(jObject.Max) >= parseInt(sValueUsed)){
                 oSource.setValue(sValueUsed);
             }else{
                 that.getMessageBox("error", that.getI18nText("errorLimitCant"));

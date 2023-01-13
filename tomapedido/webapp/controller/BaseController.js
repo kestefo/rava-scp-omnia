@@ -590,6 +590,44 @@ sap.ui.define([
 				oEvent.getSource().setValue("");
 			}
 		},
+		onValidateChangeFilterPromotion: function(oEvent){
+			var kSelected=oEvent.getSource().getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+
+			var oTable = this.byId("tbPromociones");
+            var aFilter = [];
+
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+				aFilter.push(new Filter("Numpro", 'Contains', kSelected));
+			}else{
+				if(oEvent.getSource().getValue()){
+					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}
+
+			oTable.getBinding("items").filter(aFilter);
+		},
+		onValidateChangeFilterPromotion1: function(oEvent){
+			var kSelected=oEvent.getSource().getSelectedKey();
+			var sSelected=oEvent.getSource().getValue();
+
+			var oTable = this.byId("tbPromociones");
+            var aFilter = [];
+
+			if (kSelected !== '') {
+				oEvent.getSource().setValue(sSelected);
+				aFilter.push(new Filter("Numpro", 'Contains', kSelected));
+			}else{
+				if(oEvent.getSource().getValue()){
+					this.getMessageBox("error", this.getI18nText("sErrorSelect"));
+				}
+				oEvent.getSource().setValue("");
+			}
+
+			oTable.getBinding("items").filter(aFilter);
+		},
 		liveChangeFormatInteger: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var values = oSource.getValue();

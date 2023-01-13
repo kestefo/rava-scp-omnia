@@ -143,39 +143,75 @@ sap.ui.define([
                 var oModel = [
                     {
                         "key": "Z1",
-                        "desc": "Por falta de Disponibilidad"
+                        "desc": "Falta de Disponibilidad"
                     },
                     {
                         "key": "Z2",
-                        "desc": "Cliente no conforme con precio"
+                        "desc": "Falta de Insumos para Fabricación"
                     },
                     {
                         "key": "Z3",
-                        "desc": "Mal calculo en la cubicación"
+                        "desc": "Lote No Vigente"
                     },
                     {
                         "key": "Z4",
-                        "desc": "Cambios solicitados por cliente"
+                        "desc": "Falta de Empaques o Envase"
                     },
                     {
                         "key": "Z5",
-                        "desc": "Por fecha vencimiento Corta"
+                        "desc": "Retraso en la Fabricación"
                     },
                     {
                         "key": "Z6",
-                        "desc": "Cliente moroso"
+                        "desc": "Diferencia de Precios"
                     },
                     {
                         "key": "Z7",
-                        "desc": "Error al hacer pedido cliente"
+                        "desc": "Producto Descontinuado"
                     },
                     {
                         "key": "Z8",
-                        "desc": "Datos Logísticos No Actualizados"
+                        "desc": "Producto Dañados y/o Vencidos"
                     },
                     {
                         "key": "Z9",
-                        "desc": "Otros"
+                        "desc": "Sobre Venta"
+                    },
+                    {
+                        "key": "ZA",
+                        "desc": "Retraso en la Importación"
+                    },
+                    {
+                        "key": "ZB",
+                        "desc": "Error en la Unidad de Medida"
+                    },
+                    {
+                        "key": "ZC",
+                        "desc": "Nuevo Código con Disponibilidad"
+                    },
+                    {
+                        "key": "ZD",
+                        "desc": "Rechazo por Pedido Inconcluso"
+                    },
+                    {
+                        "key": "ZE",
+                        "desc": "Fórmula Abreviada"
+                    },
+                    {
+                        "key": "ZF",
+                        "desc": "Cambio de Fórmula"
+                    },
+                    {
+                        "key": "ZG",
+                        "desc": "Cambio de Imagen"
+                    },
+                    {
+                        "key": "ZH",
+                        "desc": "Cambio de EAN"
+                    },
+                    {
+                        "key": "ZI",
+                        "desc": "Error Lectura de EAN"
                     }
                 ]
                 return oModel;
