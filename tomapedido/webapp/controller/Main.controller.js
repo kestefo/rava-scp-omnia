@@ -184,7 +184,6 @@ sap.ui.define([
                                 "Pltyp":y[0].Pltyp,
                                 "Strku":y[0].Strku
                             };
-                             
                             oDirecciones.push(jDireccionDist)
                         }
 
