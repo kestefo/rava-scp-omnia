@@ -694,12 +694,41 @@ sap.ui.define([
                                 );
                             }
 
-                            var count = 0;
+                            var oDirecciones = [];
+                            if(y[0].Kundm != y[0].Kunnr){
+                                var jDireccionDist = {
+                                    "Kunnr":y[0].Kunnr,
+                                    "Namec":y[0].Namec,
+                                    "Smtp_addr":y[0].Smtp_addr,
+                                    "Telf1":y[0].Telf1,
+                                    "Stcd1":y[0].Stcd1,
+                                    "Kdgrp":y[0].Kdgrp,
+                                    "Txtfv":y[0].Txtfv,
+                                    "Stras":y[0].Strku,
+                                    "Vkbur":y[0].Vkbur,
+                                    "Txtpv":y[0].Txtpv,
+                                    "Zterm":y[0].Zterm,
+                                    "Txtcp":y[0].Txtcp,
+                                    "Vtweg":y[0].Vtweg,
+                                    "Txtca":y[0].Txtca,
+                                    "Pardm":y[0].Pardm,
+                                    "Kundm":y[0].Kundm,
+                                    "Pltyp":y[0].Pltyp,
+                                    "Strku":y[0].Strku
+                                };
+                                oDirecciones.push(jDireccionDist)
+                            }
+
                             y.forEach(function(value, index){
+                                oDirecciones.push(value);
+                            });
+
+                            var count = 0;
+                            oDirecciones.forEach(function(value, index){
                                 count ++;
                                 value.posStras = count.toString();
                             });
-                            jFamilia.oDireccion = y;
+                            jFamilia.oDireccion = oDirecciones;
 
                             oClienteGroup.push(jFamilia);
                         });
