@@ -175,6 +175,7 @@ sap.ui.define([
                     that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", []);
                 }else{
                     that.oModelGetPedidoVenta.setProperty("/oClientePorVendedor", []);
+                    that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", []);
                     that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", []);
                 }
 
@@ -234,7 +235,34 @@ sap.ui.define([
                 };
 				return new Promise(function (resolve, reject) {
                     // var sCodeUser = '9600000068';
-                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"')&$expand=NAVCUSTO,NAVMATER";
+                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"' and Type eq 'V')&$expand=NAVCUSTO,NAVMATER";
+                    Services.getoDataERPSync(that, sPath, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                oResp.sEstado = "S";
+                                oResp.oResults = oData.data;
+                                resolve(oResp);
+                            },
+                            error: function (message) {
+                                oResp.oResults = [];
+                                resolve(oResp);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        _getMateriales: function (sCodeUser) {
+			try{
+                var oResp = {
+                    "sEstado": "E",
+                    "oResults": []
+                };
+				return new Promise(function (resolve, reject) {
+                    // var sCodeUser = '9600000068';
+                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '"+sCodeUser+"' and Type eq 'C')&$expand=NAVCUSTO,NAVMATER";
                     Services.getoDataERPSync(that, sPath, function (result) {
                         util.response.validateAjaxGetERPNotMessage(result, {
                             success: function (oData, message) {
@@ -435,10 +463,13 @@ sap.ui.define([
             //     that.getMessageBox("error", that.getI18nText("errorProductNoSearch"));
             //     return;
             // }
-
-            var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
+            
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected)]).then((values) => {
+            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected)], that._getMateriales(jSelected.codeCliente)).then((values) => {
+                var oResultMaterial = values[2].oResults[0].NAVMATER.results;
+                that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", oResultMaterial);
+
+                var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
                 values[0].sCredito = values[0].CreditLimit;
                 values[0].sConsumo = values[0].Amount;
                 values[0].sSaldo = (parseFloat(values[0].sCredito) - parseFloat(values[0].sConsumo)).toString();
@@ -669,11 +700,13 @@ sap.ui.define([
 
             var oSelectedItem = slUsuario.getSelectedItem();
             var oObjectSelected = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
-            var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([]).then((values) => {
+            Promise.all([that._getMateriales(oObjectSelected.Kunnr)]).then((values) => {
                 that._dialogSelectClient.close();
-
+                var oResultMaterial = values[0].oResults[0].NAVMATER.results;
+                that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", oResultMaterial);
+                
+                var oMaterialTotal = that.oModelGetPedidoVenta.getProperty("/oMaterialTotal");
                 var oMaterialFilter = oMaterialTotal.filter(function(value,index){
                     if(oObjectSelected.Vtweg == value.Vtweg && oObjectSelected.Kunnr === value.Kunnr){
                     // if(oObjectSelected.Vtweg == value.Vtweg){
