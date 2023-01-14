@@ -266,7 +266,9 @@ sap.ui.define([
                 var that = this;
                 var oClienteGroup =[];
                 sap.ui.core.BusyIndicator.show();
-                var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
+                //var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
+                var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"' and Type eq 'V')&$expand=NAVCUSTO,NAVMATER";
+                
                 jQuery.ajax({
                         type: "GET",
                         cache: false,
