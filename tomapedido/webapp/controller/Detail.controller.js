@@ -227,6 +227,7 @@ sap.ui.define([
                     that._byId("frgIdAddManualProduct--btnAcceptAddManualProduct").setVisible(true);
                     // that._byId("frgIdAddManualProduct--tbMaterialesManual").removeSelections(true);
                     that.oModelGetPedidoVenta.setProperty("/oMaterialFamiliaSelected", oMaterial);
+                    that._byId("frgIdAddManualProduct--tbMaterialesManual").getBinding("items").filter([]);
                     sap.ui.core.BusyIndicator.hide(0);
                 }).catch(function (oError) {
                     console.log(oError);
@@ -295,14 +296,16 @@ sap.ui.define([
             var tbMaterialesManual = this._byId("frgIdAddManualProduct--tbMaterialesManual");
             var oMaterialesSelected = [];
 
-            var oSelectItems = tbMaterialesManual.getItems();
+            // var oSelectItems = tbMaterialesManual.getItems();
+            var oSelectItems = that.oModelGetPedidoVenta.getProperty("/oMaterialFamiliaSelected");
             if(oSelectItems.length == 0){
                 that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
                 return;
             }
 
             oSelectItems.forEach(function(value, index){
-                var jObject = value.getBindingContext("oModelGetPedidoVenta").getObject();
+                // var jObject = value.getBindingContext("oModelGetPedidoVenta").getObject();
+                var jObject = value;
                 if(parseFloat(jObject.cantidad) > 0){
                     oMaterialesSelected.push(jObject);
                 }
@@ -1591,6 +1594,19 @@ sap.ui.define([
             var sValue = oSource.getValue();
 
             var oTable = this.byId("tbProductos");
+
+            var aFilter = [];
+            if (!this.isEmpty(sValue))
+                aFilter.push(new Filter("Maktg", 'Contains', sValue));
+
+            oTable.getBinding("items").filter(aFilter);
+            
+        },
+        _onLiveChangeBuscarProduct: function(oEvent){
+            var oSource = oEvent.getSource();
+            var sValue = oSource.getValue();
+
+            var oTable = that._byId("frgIdAddManualProduct--tbMaterialesManual");
 
             var aFilter = [];
             if (!this.isEmpty(sValue))

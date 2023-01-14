@@ -7,12 +7,23 @@
                     <Text text="{i18n>textFamilia}"/>
                     <!-- <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia" -->
                     <ComboBox id="slFamilia" width="100%" change="_onChangeFamilia"
-                        items="{oModelGetPedidoVenta>/oFamiliaMaterial}">
+                        items="{
+                            path:'oModelGetPedidoVenta>/oFamiliaMaterial',
+                            sorter : {
+                                path : 'textFamilia' , descending: false 
+                            }
+                        }">
                         <core:Item key="{oModelGetPedidoVenta>codeFamilia}" text="{path:'oModelGetPedidoVenta>textFamilia', formatter:'.formatMay'}"/>
                     </ComboBox>
                 </HBox>
                 <Table id="tbMaterialesManual" growingThreshold="20"
                     items="{oModelGetPedidoVenta>/oMaterialFamiliaSelected}">
+                    <headerToolbar>
+                        <Toolbar>
+                            <ToolbarSpacer/>
+                            <Input value="" placeholder="{i18n>titleTableBuscar}" width="auto" liveChange="_onLiveChangeBuscarProduct"></Input>
+                        </Toolbar>
+                    </headerToolbar>
                     <columns>
                         <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
