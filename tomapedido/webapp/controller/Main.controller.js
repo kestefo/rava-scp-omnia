@@ -465,7 +465,7 @@ sap.ui.define([
             // }
             
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected)], that._getMateriales(jSelected.codeCliente)).then((values) => {
+            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected), that._getMateriales(jSelected.codeCliente)]).then((values) => {
                 var oResultMaterial = values[2].oResults[0].NAVMATER.results;
                 that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", oResultMaterial);
 
