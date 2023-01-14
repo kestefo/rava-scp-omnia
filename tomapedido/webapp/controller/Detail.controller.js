@@ -1345,10 +1345,20 @@ sap.ui.define([
                         }else{
                             sPrice="0";
                         }
-                    }else{//Mat combo hijos y otras promociones
+                    }else if(jObject.tipo === "PROCOMH"){//Mat combo hijos y otras promociones
                         if(parseFloat(jObject.Kbetr) > 0){
                             sPrice=(parseFloat(jObject.Kbetr)).toFixed(3);
                             sTipoPosicion="ZCMB";//con precio fijo
+                            sTipoReparto="ZB";
+                        }else{
+                            sPrice="0";
+                            sTipoPosicion="ZBBP";//no precio
+                            sTipoReparto="Z1";
+                        }
+                    }else{
+                        if(parseFloat(jObject.Kbetr) > 0){
+                            sPrice=(parseFloat(jObject.Kbetr)).toFixed(3);
+                            sTipoPosicion="ZBMS";//con precio fijo
                             sTipoReparto="ZB";
                         }else{
                             sPrice="0";
