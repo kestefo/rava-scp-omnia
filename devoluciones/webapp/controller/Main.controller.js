@@ -262,12 +262,12 @@ sap.ui.define([
             filtroCliente: function (sCodeUser) {
                 var oView = this.getView();
                 var oModelDevolucion = oView.getModel("oModelDevolucion");
-                var model = new sap.ui.model.json.JSONModel();
+                var model = new sap.ui.model.json.JSONModel(); 
                 var that = this;
                 var oClienteGroup =[];
                 sap.ui.core.BusyIndicator.show();
                 //var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"')&$expand=NAVCUSTO,NAVMATER";
-                var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/SAP/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"' and Type eq 'V')&$expand=NAVCUSTO,NAVMATER";
+                var sPath = jQuery.sap.getModulePath("devoluciones") +"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/SelectionSet?$filter=(Kunn2 eq '" + sCodeUser +"' and Type eq 'V')&$expand=NAVCUSTO,NAVMATER";
                 
                 jQuery.ajax({
                         type: "GET",
