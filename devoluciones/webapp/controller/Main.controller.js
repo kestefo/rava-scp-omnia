@@ -52,6 +52,7 @@ sap.ui.define([
 
             _onbtnRefresh:function(){
                 this.handleRouteMatched();
+                MessageBox.success(that.getI18nText("sucessActualizacion"));
             },
             _getUsers: function () {
                 try {
