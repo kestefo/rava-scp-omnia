@@ -403,7 +403,10 @@ sap.ui.define([
             var sHasta = "";
             var sEstado = "";
             var sCliente = "";
-            var sCanal
+            var sCanal;
+            var oUser = this.getModel("oModelUser").getProperty("/oUser");
+            var sCodeUser = oUser["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0].value;
+
             sDesde = this.formatDaySlDateRay(this.reformatDateString(filter.sDesde));
             sHasta = this.formatDaySlDateRay(this.reformatDateString(filter.sHasta));
             sCliente = filter.sCliente;
@@ -414,9 +417,10 @@ sap.ui.define([
             
             var sPath = jQuery.sap.getModulePath("tomapedido")+
             "/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/BuscaPedidoSet?$filter=Erdat ge '"+sDesde+"' and Erdat le '"+sHasta+"' "+
-            "and Estado eq '"+sEstado+"' and Kunnr eq '"+sCliente+"' and Type eq 'L'&$expand=DetalleBuscaPedidoSet";
+            "and Estado eq '"+sEstado+"' and Kunnr eq '"+sCliente+"' and Vende eq '"+sCodeUser+"' and Type eq 'L'&$expand=DetalleBuscaPedidoSet";
             Services.getoDataERPSync(that, sPath, function (result) {
                 util.response.validateAjaxGetERPNotMessage(result, {
+                    
                     success: function (oData, message) {
                         var oResp = oData.data;
                         var oClientePorVendedor = that.oModelGetPedidoVenta.getProperty("/oClientePorVendedor");
