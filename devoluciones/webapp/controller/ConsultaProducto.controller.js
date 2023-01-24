@@ -501,11 +501,12 @@ sap.ui.define([
             if(parseFloat(oObject.Cantidad) >= parseFloat(cantSumDev)){
                 oObject.montonc = (parseFloat(oObject.totalunitario)*parseFloat(sValueUsed)).toString();
                 oSource.setValue(sValueUsed);
-            }else{
-                this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
-                oObject.montonc = "0";
-                oSource.setValue("0");
             }
+            // else{//comentado pro mientras
+            //     this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
+            //     oObject.montonc = "0";
+            //     oSource.setValue("0");
+            // }
 
             datosDetalle.forEach(function(obs){
                 contaMontoNC+=parseFloat(obs.montonc);

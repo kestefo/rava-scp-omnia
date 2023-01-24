@@ -278,11 +278,12 @@ sap.ui.define([
              
                 oObject.montonc = (parseFloat(oObject.totalunitario)*parseFloat(sValueUsed)).toString();
                 oSource.setValue(sValueUsed);
-            }else{
-                this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
-                oObject.montonc = "0";
-                oSource.setValue("0");
-            }
+            }// comentado por mientras
+            // else{
+            //     this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
+            //     oObject.montonc = "0";
+            //     oSource.setValue("0");
+            // }
 
             datosDetalle.forEach(function(obs){
                 contaMontoNC+=parseFloat(obs.montonc);
