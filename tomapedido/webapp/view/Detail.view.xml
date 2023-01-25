@@ -85,19 +85,19 @@
                                     </IconTabFilter>
                                     <IconTabFilter icon="sap-icon://detail-view" key="keyDatoEntrega" text="{i18n>textIconTabDatos}">
                                         <VBox width="100%">
-                                            <HBox width="100%" class="sapUiTinyMargin">
-                                                <HBox width="20%">
-                                                    <Label design="Bold" text="{i18n>textFechaEntrega}"/>
+                                            <HBox width="100%" class="sapUiTinyMargin" wrap="Wrap">
+                                                <HBox width="auto">
+                                                    <Label design="Bold" text="{i18n>textFechaEntrega}: "/>
                                                 </HBox>
-                                                <HBox width="80%">
+                                                <HBox width="auto">
                                                     <Label text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFechaEntrega}"/>
                                                 </HBox>
                                             </HBox>
                                             <HBox width="100%" class="sapUiTinyMargin">
-                                                <HBox width="20%">
-                                                    <Label design="Bold" text="{i18n>textDireccion}"/>
+                                                <HBox width="auto">
+                                                    <Label design="Bold" text="{i18n>textDireccion}: "/>
                                                 </HBox>
-                                                <HBox width="80%">
+                                                <HBox width="auto">
                                                     <Label design="Bold" text="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textDirecccion}"/>
                                                 </HBox>
                                             </HBox>
@@ -116,10 +116,10 @@
                                                 </vbm:vos>
                                             </vbm:GeoMap> -->
                                             <HBox width="100%" class="sapUiTinyMargin">
-                                                <HBox width="20%">
-                                                    <Label design="Bold"  text="{i18n>textObservaciones}"/>
+                                                <HBox width="auto">
+                                                    <Label design="Bold"  text="{i18n>textObservaciones}: "/>
                                                 </HBox>
-                                                <HBox width="80%">
+                                                <HBox width="auto">
                                                     <TextArea id="taObservaciones" value="{oModelPedidoVenta>/DataGeneral/oSelectedCliente/textObservacion}"  
                                                         placeholder="{i18n>phObservaciones}" showExceededText="false" 
                                                         maxLength="132" rows="5" width="100%" valueLiveUpdate="false" editable="false"/>

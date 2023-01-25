@@ -19,7 +19,7 @@ server:
           - path: /sap
             url: http://life:44300
             client: '300'
-            destination: LIFE-PRD
+            destination: LIFE-ERP-DEV-210
           - path: /service/scim
             url: https://aijy7d89l.accounts.ondemand.com
             destination: API-USER-IAS

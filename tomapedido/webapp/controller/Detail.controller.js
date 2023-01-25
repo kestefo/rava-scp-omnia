@@ -1373,7 +1373,13 @@ sap.ui.define([
                     }else if(jObject.tipo === "PROCOM"){
                         sUepos = jObject.Posnr;
                     }
-                    
+
+                    var sDescna = "";
+                    if(jObject.tipo === "PROFV"||jObject.tipo === "PROVEN"||jObject.tipo === "PROVM"||jObject.tipo === "PROVV"
+                        ||jObject.tipo === "PROOP"||jObject.tipo === "PROCLI"||jObject.tipo === "PROPV"||jObject.tipo === "PROCOM"||jObject.tipo === "PROCOMH"){
+                        sDescna = "X";
+                    }
+
                     var jDataSap = {
                         "Type": sStatus,
                         //6/12/2022
@@ -1393,7 +1399,8 @@ sap.ui.define([
                         "Price": sPrice,
                         "Ettyp": sTipoReparto,
                         "Edatu": sEdatu,
-                        "Uepos": jObject.tipo === "PROCOMH"? sUepos:""
+                        "Uepos": jObject.tipo === "PROCOMH"? sUepos:"",
+                        "Descna": sDescna,
                     };
                     oMaterial.push(jObject);
                     oMaterialSap.push(jDataSap);
