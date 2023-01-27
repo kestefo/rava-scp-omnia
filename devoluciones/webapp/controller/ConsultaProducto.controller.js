@@ -284,7 +284,13 @@ sap.ui.define([
             selected.DetalleBuscaReceiptSet.results.forEach(function(items){
                 items.sumTotalPos = (parseFloat(items.Impuesto) + parseFloat(items.ImpNeto)).toString();
                 items.cantsoldev = "0";
-                items.totalunitario = (parseFloat(items.sumTotalPos)/ parseFloat(items.Cantidad)).toFixed(3);
+                //Cambios de Claudia 27/01/2023
+                if(parseFloat(items.Cantidad) !== 0){
+                    items.totalunitario = (parseFloat(items.sumTotalPos)/ parseFloat(items.Cantidad)).toFixed(3);
+                }else{
+                    items.totalunitario = "0.00";
+                }
+               
                 var formatoMaterial = parseFloat(items.Material).toString();
                 items.codigoMaterial = formatoMaterial.substring(0,2) +"-" + formatoMaterial.substring(2,10);
                 contCantidad   += parseFloat(items.Cantidad);
@@ -502,11 +508,11 @@ sap.ui.define([
                 oObject.montonc = (parseFloat(oObject.totalunitario)*parseFloat(sValueUsed)).toString();
                 oSource.setValue(sValueUsed);
             }
-            // else{//comentado pro mientras
-            //     this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
-            //     oObject.montonc = "0";
-            //     oSource.setValue("0");
-            // }
+            else{//comentado pro mientras
+                this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
+                oObject.montonc = "0";
+                oSource.setValue("0");
+            }
 
             datosDetalle.forEach(function(obs){
                 contaMontoNC+=parseFloat(obs.montonc);

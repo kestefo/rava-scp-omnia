@@ -57,7 +57,13 @@ sap.ui.define([
             oDetailSelected.forEach(function (element) {
                 element.sumTotalPos = (parseFloat(element.Impuesto) + parseFloat(element.ImpNeto)).toString();
                 element.cantsoldev = "0";
-                element.totalunitario = (parseFloat(element.sumTotalPos)/ parseFloat(element.Cantidad)).toFixed(3);
+                //Cambios de Claudia 27/01/2023
+                if(parseFloat(element.Cantidad) !== 0){
+                    element.totalunitario = (parseFloat(element.sumTotalPos)/ parseFloat(element.Cantidad)).toFixed(3);
+                }else{
+                    element.totalunitario ="0.00";  
+                }
+                
                 var formatoMaterial = parseFloat(element.Material).toString();
                 element.codigoMaterial = formatoMaterial.substring(0,2) +"-" + formatoMaterial.substring(2,10);
                 contadorCant += parseFloat(element.Cantidad);
@@ -279,11 +285,11 @@ sap.ui.define([
                 oObject.montonc = (parseFloat(oObject.totalunitario)*parseFloat(sValueUsed)).toString();
                 oSource.setValue(sValueUsed);
             }// comentado por mientras
-            // else{
-            //     this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
-            //     oObject.montonc = "0";
-            //     oSource.setValue("0");
-            // }
+            else{
+                this.getMessageBox("error", this.getI18nText("errorSupPermitido"));
+                oObject.montonc = "0";
+                oSource.setValue("0");
+            }
 
             datosDetalle.forEach(function(obs){
                 contaMontoNC+=parseFloat(obs.montonc);
