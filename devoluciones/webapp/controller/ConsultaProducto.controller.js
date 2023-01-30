@@ -436,39 +436,59 @@ sap.ui.define([
                         }).always(async function (data, status, response) {
                             
                           var datos = data.d.ResultPedidosDevSet.results[0];
-                          if(datos.Type === "S"){//Claudia 09/01/2023
-                            oModelDevolucion.setProperty("/KeyAddUser", "");
-                            tablaCliente02.removeSelections(true);
-                            MessageBox.success(that.getI18nText("txtbtnBuscarCancelar")+" "+ datos.Pedido+" .", {
+                          var datos1 = data.d.ResultPedidosDevSet.results;
+
+                          if(datos1 !== 0){//Nuevo cambio 30/01/2022
+                              if(datos.Type === "S"){//Claudia 09/01/2023
+                                oModelDevolucion.setProperty("/KeyAddUser", "");
+                                tablaCliente02.removeSelections(true);
+                                MessageBox.success(that.getI18nText("txtbtnBuscarCancelar")+" "+ datos.Pedido+" .", {
+                                    actions: [that.getI18nText("acceptText")],
+                                    emphasizedAction: "",
+                                    onClose: function (sAction) {
+                                        if (sAction === that.getI18nText("acceptText")) {
+                                            oModelDevolucion.setProperty("/AddProductoDetail", []);
+                                            oModelDevolucion.setProperty("/KeyMotivo", "");
+                                            oModelDevolucion.setProperty("/datosLote", "");
+                                            that.getOwnerComponent().getRouter().navTo("Main");
+                                            sap.ui.core.BusyIndicator.hide(0);
+                                        }
+                                        
+                                      
+                                        //that.AbrirProducto.close();
+                                    }
+                                });
+                              }else{
+                                MessageBox.error(that.getI18nText("txtbtnErrorDevolucion"), {
                                 actions: [that.getI18nText("acceptText")],
                                 emphasizedAction: "",
                                 onClose: function (sAction) {
                                     if (sAction === that.getI18nText("acceptText")) {
-                                        oModelDevolucion.setProperty("/AddProductoDetail", []);
-                                        oModelDevolucion.setProperty("/KeyMotivo", "");
-                                        oModelDevolucion.setProperty("/datosLote", "");
-                                        that.getOwnerComponent().getRouter().navTo("Main");
+                                        
                                         sap.ui.core.BusyIndicator.hide(0);
                                     }
-                                    
                                   
-                                    //that.AbrirProducto.close();
+        
                                 }
                             });
+                              }
+
+
                           }else{
-                            MessageBox.error(that.getI18nText("txtbtnErrorDevolucion"), {
-                            actions: [that.getI18nText("acceptText")],
-                            emphasizedAction: "",
-                            onClose: function (sAction) {
-                                if (sAction === that.getI18nText("acceptText")) {
-                                    
-                                    sap.ui.core.BusyIndicator.hide(0);
+                            MessageBox.error(that.getI18nText("txtbtnErrorRespuesta"), {
+                                actions: [that.getI18nText("acceptText")],
+                                emphasizedAction: "",
+                                onClose: function (sAction) {
+                                    if (sAction === that.getI18nText("acceptText")) {
+                                        
+                                        sap.ui.core.BusyIndicator.hide(0);
+                                    }
+                                  
+        
                                 }
-                              
-    
-                            }
-                        });
-                    }
+                            });
+                          }
+                     
                           
                            
                     });
