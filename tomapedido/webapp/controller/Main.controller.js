@@ -67,6 +67,9 @@ sap.ui.define([
                 var sMail = this.getUserLoged();
                 var model = new sap.ui.model.json.JSONModel();
                 return new Promise(function (resolve, reject) {
+                    // var oDataTemp = models.JsonUserLoged()
+                    // that.getModel("oModelUser").setProperty("/oUser", oDataTemp.Resources[0]);
+                    // resolve(oDataTemp.Resources[0]["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"].attributes[0]);
                     if(that.local){
                         var sPath = '/service/scim/Users?filter=emails eq "' + sMail + '"';
                         const sUrl = that.getOwnerComponent().getManifestObject().resolveUri(sPath);

@@ -1043,11 +1043,15 @@ sap.ui.define([
             var booleanCanal = false;
             var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
             var oFlete = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oFlete");
-            oFlete.forEach(function(value){
-                if(value.total === "10 por monto menor a 450"){
-                    booleanCanal = true;
-                }
-            });
+            var oSelectedCliente = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oSelectedCliente");
+            if(oSelectedCliente.codeCanal==="10" && oSelectedCliente.codeGrupoCliente==="13"){
+                booleanCanal = true;
+            }
+            // oFlete.forEach(function(value){
+            //     if(value.total === "10 por monto menor a 450"){
+            //         booleanCanal = true;
+            //     }
+            // });
             var oMaterial = [];
             if(booleanCanal){
                 oMaterialPrev.forEach(function(value){
@@ -1332,7 +1336,9 @@ sap.ui.define([
                     var sTipoPosicion="";
                     var sPrice="";
                     var sTipoReparto="";
+                    var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
                     var sEdatu = that.reformatDateString(that.getYYYYMMDD(new Date()));
+                    var sEdatu2 = oSelectedCliente.textFechaEntrega;
                     if(jObject.tipo === "MAT"){
                         sTipoPosicion="ZBMS";
                         sPrice="0";
@@ -1398,7 +1404,7 @@ sap.ui.define([
                         "Kbetr2": iDesc2.toFixed(3),
                         "Price": sPrice,
                         "Ettyp": sTipoReparto,
-                        "Edatu": sEdatu,
+                        "Edatu": sEdatu2,
                         "Uepos": jObject.tipo === "PROCOMH"? sUepos:"",
                         "Descna": sDescna,
                     };
