@@ -140,7 +140,17 @@ sap.ui.define([
             var FacturaBoletaDetal = oModelDevolucion.getProperty("/FacturaBoletaDetal");
             var oPosDetailNotPermited = FacturaBoletaDetal.DetalleBuscaReceiptSet.results;
             var oPosDetailPermited = [];
+            var TipoDoc ="";
+
+            // de minuscula pasa a mayuscula .
+            if(FacturaBoletaDetal.Desc.toUpperCase() === "BOLETA"){
+                TipoDoc= "ZPBD" ;   
+            }else{
+                TipoDoc= "ZPDC" ;
+            }
+
             oPosDetailNotPermited.forEach(function(value, index){
+
                 if(parseFloat(value.cantsoldev) > 0){
                     oPosDetailPermited.push(value);
                 }
@@ -168,7 +178,7 @@ sap.ui.define([
 
              datos = {
                 "CodCli": oClientSelect.Kunnr,
-                "Tipo": "ZPDC",
+                "Tipo": TipoDoc,
                 "Canal": oClientSelect.Vtweg,
                 "Referencia": FacturaBoletaDetal.mostFactura,
                 "NumDocMod": FacturaBoletaDetal.CodFact,

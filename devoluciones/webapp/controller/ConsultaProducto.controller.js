@@ -345,6 +345,8 @@ sap.ui.define([
             var keyCliente          =oModelDevolucion.getProperty("/keyCliente");
             var textDataDocumento   =oModelDevolucion.getProperty("/textDataDocumento");
             var oUser               =oModelDevolucion.getProperty("/oUser");
+            var TipoDoc             ="";
+            var ProductDetal        =oModelDevolucion.getProperty("/ProductDetal");
 
             if (KeyMotivo === undefined || KeyMotivo === "") {
                 MessageBox.warning(that.getI18nText("txtMensajeDevolucion"));
@@ -356,7 +358,17 @@ sap.ui.define([
             
             var oPosDetailNotPermited = AddProductoDetail;
             var oPosDetailPermited = [];
+
+            // de minuscula pasa a mayuscula .
+            if(ProductDetal.Desc.toUpperCase() === "BOLETA"){
+                TipoDoc= "ZPBD" ;   
+            }else{
+                TipoDoc= "ZPDC" ;
+            }
+            
             oPosDetailNotPermited.forEach(function(value, index){
+
+               
                 if(parseFloat(value.cantsoldev) > 0){
                     oPosDetailPermited.push(value);
                 }
@@ -374,7 +386,7 @@ sap.ui.define([
 
             var arraydetallePed = [];
             oPosDetailPermited.forEach(function (obj) {
-
+              
                 var detalleproducto = {
                     "Material": obj.Material,
                     "Cantidad": obj.cantsoldev,
@@ -386,7 +398,7 @@ sap.ui.define([
         
             var datos = {
                 "CodCli": oClientSelect.Kunnr,
-                "Tipo": "ZPDC",
+                "Tipo": TipoDoc,
                 "Canal": oClientSelect.Vtweg,
                 "Referencia": ProductDetal.mostFactura,
                 "NumDocMod": ProductDetal.CodFact,
