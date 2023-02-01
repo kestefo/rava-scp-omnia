@@ -1948,11 +1948,20 @@ sap.ui.define([
                         
                         var splitDescuento2 = value.descuentosVolumen2.split("%");
                         var iDescuento2 = parseFloat(splitDescuento2[0])/100;
+
+                        var iMult1 = 1-iDescuentoCondPago;
+                        var iMult2 = 1-iDescuento1;
+                        var iMult3 = 1-iDescuento2;
+
+                        var iSaldo1 = ( ( parseFloat(value.cantidad)*parseFloat((parseFloat(value.Kbetr)*that.igv)) )*iMult1).toFixed(3);
+                        var iSaldo2 = (parseFloat(iSaldo1)*iMult2).toFixed(3);
+                        var iSaldo3 = (parseFloat(iSaldo2)*iMult3).toFixed(3);
     
-                        var iDescuentoTotal = iDescuentoCondPago + iDescuento1 + iDescuento2;
-                        var iMult = 1-iDescuentoTotal;
-    
-                        value.total =( (parseFloat(value.cantidad) * parseFloat((parseFloat(value.Kbetr)*that.igv).toFixed(3)) )*iMult ).toString();
+                        // var iDescuentoTotal = iDescuentoCondPago + iDescuento1 + iDescuento2;
+                        // var iMult = 1-iDescuentoTotal;
+                        // value.total =( (parseFloat(value.cantidad) * parseFloat((parseFloat(value.Kbetr)*that.igv).toFixed(3)) )*iMult ).toString();
+
+                        value.total = (iSaldo3).toString();
                     }
                 });
                 
