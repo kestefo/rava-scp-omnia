@@ -482,6 +482,12 @@ sap.ui.define([
                                 }
                             });
                         }
+
+                        var iImporte = 0;
+                        oPedido.forEach(function(value){
+                            iImporte += parseFloat(value.importe);
+                        });
+                        that._byId("lImporte").setText(that.currencyFormatIGV(iImporte.toString()));
                         that.oModelPedidoVenta.setProperty("/PedidosCreados", oPedido);
                         sap.ui.core.BusyIndicator.hide();
                     },

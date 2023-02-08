@@ -9,10 +9,15 @@
             </Toolbar>
         </headerToolbar>
         <columns>
-            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleColPedidos}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
+                <footer>
+                    <VBox height="100%">                        
+                        <Text id="textFooterColTotalMain" text="{i18n>titleFooterColProducto}" />
+                    </VBox>
+                </footer>
             </Column>
             <Column width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
@@ -39,10 +44,15 @@
                     <Text text="{i18n>titleColCompr}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="auto" hAlign="Center" vAlign="Middle" minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleColImporte}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
+                <footer>
+                    <VBox>
+                        <Label id="lImporte" />
+                    </VBox>
+                </footer>
             </Column>
             <Column width="6rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
