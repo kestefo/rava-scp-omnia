@@ -2285,7 +2285,8 @@ sap.ui.define([
                         "MATNR": value.Matnr,
                         "BUTTONPRESS": value.tipo,
                         "NUMPRO": value.Numpro,
-                        "CANTIDAD": value.cantidad
+                        "CANTIDAD": value.cantidad,
+                        "CANTPROM": value.cantidadProm
                     }
                     oMaterialProm.push(jPromFuerzaVenta);
                 }
@@ -3143,7 +3144,7 @@ sap.ui.define([
                 
                 var oPromotionsPrev = [];
                 var oPromotions = [];
-
+                
                 oSelectItems.forEach(function(value, index){
                     var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
                     if(jObject.Numpro === cbSelectPromo){
@@ -3172,13 +3173,15 @@ sap.ui.define([
                             "MatnrPrinc": "",
                             "PosnrPrinc":"",
                             "Probon": jObject.Probon,
-                            "Numpro": jObject.Numpro
+                            "Numpro": jObject.Numpro,
+                            "cantidadProm": sCantProm
                         }
     
                         oPromotionsPrev.push(jMatPro);
                     }
                 });
             }else{
+                var sCantProm = that.oModelPedidoVenta.getProperty("/DataGeneral/oPromotions/sCantProm");
                 var oPromotionsPrev = [];
                 var oPromotions = [];
                 var totalImporte = 0;
@@ -3212,7 +3215,8 @@ sap.ui.define([
                             "MatnrPrinc": "",
                             "PosnrPrinc":"",
                             "Probon": jObject.Probon,
-                            "Numpro": jObject.Numpro
+                            "Numpro": jObject.Numpro,
+                            "cantidadProm": sCantProm
                         }
 
                         var oFind= that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial").find(item => item.Matnr  === jObject.Matnr && item.tipo === "MAT");
@@ -3580,6 +3584,9 @@ sap.ui.define([
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionDetail", []);
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionPadre", []);
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoni", "");
+            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantProm", "");
+            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sPromotionSelect", "");
+            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionSelect", []);
         },
         _onNavDetallePromocion: function(){
             this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
