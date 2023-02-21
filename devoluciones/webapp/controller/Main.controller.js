@@ -43,11 +43,13 @@ sap.ui.define([
                     }else{
                         that.getMessageBox("error", that.getI18nText("errorUserNoCode"));
                     }
+                    this.oModelDevolucion.setSizeLimit(9999999999999999999999);
                 }).catch(function (oError) {
                     console.log(oError);
                     that.getMessageBox("error", that.getI18nText("errorUserData"));
                     sap.ui.core.BusyIndicator.hide(0);
                 });
+                
             },
 
             _onbtnRefresh:function(){
