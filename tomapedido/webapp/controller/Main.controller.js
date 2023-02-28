@@ -19,15 +19,19 @@ sap.ui.define([
         onInit: function () {
             that = this;
             this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            // this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
+            this.oRouter.getTarget("Main").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
 
             this.frgIdSelectClient = "frgIdSelectClient";
             this.frgIdDetailCliente = "frgIdDetailCliente";
             this.frgIdEditContact = "frgIdEditContact";
             this.frgIdLoadData = "frgIdLoadData";
-            this.handleRouteMatched();
+            this.handleRouteMatched2();
         },
         handleRouteMatched: function(oEvent){
+            that._byId("lImporte").setText(this.currencyFormatIGV("0"));
+            this._onClear();
+        },
+        handleRouteMatched2: function(oEvent){
             Promise.all([that._getUsers()]).then((values) => {
                 that._byId("dpDateFilterHasta").setEnabled(false);
                 that.getModel("oModelPedidoVenta").setProperty("/DataGeneral", models.createDataGeneralModel());
@@ -58,7 +62,7 @@ sap.ui.define([
 			});
         },
         _onbtnRefresh: function(){
-            this.handleRouteMatched();
+            this.handleRouteMatched2();
         },
         onAfterRendering: function(){
         },
@@ -348,7 +352,9 @@ sap.ui.define([
         //Limpiar
         _onClear: function (oEvent) {
             this._byId("dpDateFilterHasta").setEnabled(false);
-            this.oModelPedidoVenta.setProperty("/PedidosCreados", []);
+            if(this.oModelPedidoVenta){
+                this.oModelPedidoVenta.setProperty("/PedidosCreados", []);
+            }
 			var oFilterBar = that._byId("idFilterBar");
 			var oItems = oFilterBar.getAllFilterItems(true);
 			that
@@ -448,9 +454,18 @@ sap.ui.define([
                                 "canal": value.Vtweg,
                                 "icon": "sap-icon://pending",
                                 "estate": "Warning",
+                                "sEstateBloqSap": value.Lifsk,
+                                "sEstateBloq": (value.Estado).toUpperCase()==="PEDIDO" ? "I" : "N",
                                 "oMateriales": value.DetalleBuscaPedidoSet
                             };
 
+                            //modificacion
+                            if(jPedido.sEstateBloq === "I"){
+                                if(!that.isEmpty(jPedido.sEstateBloqSap)){
+                                    jPedido.sEstateBloq = "E";
+                                }
+                            }
+                            
                             var iNoContable = 0;
                             jPedido.oMateriales.results.forEach(function(value){
                                 if(value.Abgru){
@@ -498,10 +513,19 @@ sap.ui.define([
                 });
             });
         },
-        _onPressDetailProduct: function(oEvent){
+        _onPressDetailProduct: function(oEvent, estado, oSelected){
             var oSource = oEvent.getSource();
-            var oParent = oSource.getParent();
-            var jSelected = oParent.getBindingContext("oModelPedidoVenta").getObject();
+            var oParent;
+            var jSelected = {};
+            if(estado === "M"){
+                oParent = oSource;
+                jSelected = oSelected;
+                that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "M");
+            }else{
+                oParent = oSource.getParent();
+                jSelected = oParent.getBindingContext("oModelPedidoVenta").getObject();
+                that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "V");
+            }
 
             // if(jSelected.oMateriales.results.length === 0){
             //     that.getMessageBox("error", that.getI18nText("errorProductNoSearch"));
@@ -610,15 +634,18 @@ sap.ui.define([
                     "descCondPago": jSelected.desc === undefined ? "0%":jSelected.desc
                 };
 
-                that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "M");
+                // that.oModelPedidoVenta.setProperty("/DataGeneral/sStatus", "M");
                 that.oModelPedidoVenta.setProperty("/DataGeneral/sNumPedido", jSelected.pedido);
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
 
                 var oMaterial=[];
                 jSelected.oMateriales.results.forEach(function(value, index){
                     var jMaterial={
-                        "Posnr": value.Posnr,
+                        "Kunnr": "",
+                        "Ean11": "",
+                        "Kdgrp": "",
                         "Labst":"",
+
                         "Codfa":value.Codfa,
                         "Kbetr":value.Precio,
                         "Matnr":value.Matnr,
@@ -632,11 +659,31 @@ sap.ui.define([
                         "cantidad":value.Totca,
                         "total":  ((value.Precio * that.igv)*parseFloat(value.Totca)).toString(),
                         "descuentos":"0%",
-                        "descuentosVolumen":"0%",
+                        "descuentosVolumen1":"0%",
+                        "descuentosVolumen2":"0%",
                         "status": that.isEmpty(value.Abgru) ? "None":"Error",
+                        "tipo":"",
+                        "Posnr": value.Posnr,
                         "codeMotivo":value.Abgru,
-                        "descMotivo":value.Bezei
+                        "descMotivo":value.Bezei,
+                        "cantidadRecalculo":value.Totca,
+
+                        "MatnrPrinc": "",
+                        "PosnrPrinc": "",
+                        "NumPro": ""
                     };
+                    //modificacion
+                    if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000010"){
+                        jMaterial.tipo = "MAT";
+                    }else if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000020"){
+                        jMaterial.tipo = "BON";
+                        jMaterial.MatnrPrinc = "000000001200000241";
+                        jMaterial.PosnrPrinc = "000010";
+                    }else if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000030"){
+                        jMaterial.tipo = "PROFV";
+                    }else if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000040"){
+                        jMaterial.tipo = "PROVEN";
+                    }
                     // var jFindMaterial = oMaterialFilter.find(item => item.Matnr  === value.Matnr);
                     // if(jFindMaterial){
                         // jMaterial.Codfa = jFindMaterial.Codfa;
@@ -648,6 +695,37 @@ sap.ui.define([
                         oMaterial.push(jMaterial);
                     // }
                 });
+
+                if(oChangeParameterSelected.textFlete === "0"){
+                    that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
+                }else{
+                    var jFlete = {
+                        "Codfa":"",
+                        "Kbetr":"0",
+                        "Labst":"0",
+                        "Maktg": "",
+                        "Matnr":"0",
+                        "Meins":"",
+                        "Txtfa":"",
+                        "Umrez":"0",
+                        "Vtweg":"0",
+                        "icon":"sap-icon://inbox",
+                        "state":"Success",
+                        "cantidad": "0",
+                        "total": (parseFloat(oChangeParameterSelected.textFlete)*that.igv).toFixed(3),
+                        "descuentos":"0%",
+                        "descuentosVolumen1":"0%",
+                        "descuentosVolumen2":"0%",
+                        "status":"None",
+                        "codeMotivo":"",
+                        "descMotivo":"",
+                        "tipo":"FLE",
+                        "Posnr":"",
+                        "cantidadRecalculo":"0"
+                    };
+                    oMaterial.unshift(jFlete);
+                    that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", [jFlete]);
+                }
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 sap.ui.core.BusyIndicator.hide(0);
                 that.oRouter.navTo("Detail", {
@@ -1109,6 +1187,66 @@ sap.ui.define([
         _onPressEditContact: function(){
             this.setFragment("_dialogEditContact", this.frgIdEditContact, "EditContact", this);
         },
+
+        //Funcionalidades Modificar
+        _onPressSelectPedido: function(oEvent){
+            var oSource = oEvent.getSource();
+            var jSelected = oSource.getBindingContext("oModelPedidoVenta").getObject();
+
+            var sTextMessage = "";
+            if(jSelected.sEstateBloq === "N"){
+                that.getMessageBox("error", that.getI18nText("errorSelectPedidoNotPedido"));
+                return
+            }else{
+                sTextMessage = this.getI18nText("warningBloqueoPedido");
+            }
+
+            utilUI.messageBox(sTextMessage,"I", function(value){
+                if(value){
+                    var oDataSap = {
+                        "Vbeln": jSelected.pedido,
+                        "Operator": "B",
+                        "ResultBlockSet": [
+                          {
+                            "Vbeln": "",
+                            "Type": "",
+                            "Message": ""
+                          }
+                        ]
+                    };
+                    sap.ui.core.BusyIndicator.show(0);
+                    Promise.all([that._postBloqueoPedido(oDataSap)]).then((values) => {
+                        that._onPressDetailProduct(oEvent,"M", jSelected);
+                    }).catch(function (oError) {
+                        that.getMessageBox("error", that.getI18nText("errorSave"));
+                        sap.ui.core.BusyIndicator.hide(0);
+                    });
+
+                }
+            });
+        },
+        _postBloqueoPedido: function(oDataSap){
+            try{
+				return new Promise(function (resolve, reject) {
+                    var urlget = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/";
+				    var urlpost = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/HeaderBlockSet";
+
+                    Services.postoDataERPAsync(that, urlget, urlpost, oDataSap, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                resolve(oData.data);
+                            },
+                            error: function (message) {
+                                reject(message);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+        },
+
 
     });
 });

@@ -550,7 +550,9 @@ sap.ui.define([
 								c: "ex",
 								u: urlpost,
 								m: "Error HTTP - GET",
-								data: error
+								data: error,
+								responseText: xhr.responseText,
+								status: xhr.status
 							};
 							return callback(respuestaService);
 						}

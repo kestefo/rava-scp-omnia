@@ -47,19 +47,19 @@
                                     <ObjectStatus text="{path:'oModelPedidoVenta>/DataGeneral/sNumPedido', formatter: '.formatInteger'}" state="Information" class="MyTextLabelSize"/>
                                 </HBox>
                                 <HBox wrap="Wrap">
+                                     <Button text="{i18n>textbtnModificar}" type="Critical" icon="sap-icon://edit" press="_onPressEdit" 
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
+                                        <!-- visible="false"/> -->
                                     <Button id="btnAgregarDetail" text="{i18n>textbtnAgregar}" type="Default" icon="sap-icon://add" press="_onPressAddProduct"
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'||${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
                                     <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'||${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
                                     <!-- <Button id="btnDeleteDetail" text="{i18n>textbtnDelete}" type="Reject" icon="sap-icon://delete" press="_onPressDeletePro"
                                         visible="false"/> -->
                                     <Button id="btnSaveDetail" text="{i18n>textbtnGuardar}" type="Accept" icon="sap-icon://save" press="_onPressSave"
-                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                                        visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'||${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
                                     <!-- <Button id="btnCerrarDetail" text="{i18n>textbtnCerrar}" type="Transparent" icon="sap-icon://decline" press="_onPressAddEan" 
                                         visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?false:true}"/> -->
-                                    <Button text="{i18n>textbtnEditar}" type="Transparent" icon="sap-icon://edit" press="_onPressAddEdit" 
-                                        visible="false"/>
-                                        <!-- visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/> -->
                                 </HBox>
                             </HBox>
                             <IconTabBar
@@ -128,8 +128,8 @@
                                                         editable="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/> -->
                                                 </HBox>
                                             </HBox>
-                                            <Button type="Accept" text="{i18n>txtbtnSaveObs}" press="_onPressSaveObs"
-                                                visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
+                                            <!-- <Button type="Accept" text="{i18n>txtbtnSaveObs}" press="_onPressSaveObs"
+                                                visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/> -->
                                         </VBox>
                                     </IconTabFilter>
                                 </items>

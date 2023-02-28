@@ -1,7 +1,7 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
     <Table id="tbProductos" items="{oModelPedidoVenta>/DataGeneral/oMaterial}" growingThreshold="20"
-        mode="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?'SingleSelect':'None'}" selectionChange="_onPressSelectionChange">
+        mode="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'||${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?'SingleSelect':'None'}" selectionChange="_onPressSelectionChange">
         <headerToolbar>
             <Toolbar>
                 <!-- <HBox justifyContent="SpaceBetween" alignItems="Center" width="100%"> -->

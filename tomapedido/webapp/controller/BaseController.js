@@ -1136,6 +1136,37 @@ sap.ui.define([
 			var day = parseInt(sValueDesdeSplit[0]);
 			oSource.setMinDate(new Date(year, mount-1, day));
 		},
+		onColorForState: function(value){
+			var sReturn;
+			if(this.isEmpty(value)){
+				sReturn = "None";
+			}else{
+				switch (value) {
+					case "N":
+						sReturn = "None";
+						break;
+					case "S":
+						sReturn = "Success";
+						break;
+					case "E":
+						sReturn = "Error";
+						break;
+					case "W":
+						sReturn = "Warning";
+						break;
+					case "I":
+						sReturn = "Information";
+						break;
+					case "C":
+						sReturn = "Confirm";
+						break;
+					default:
+						sReturn = "None";
+						break;
+				}
+			}
+			return sReturn;
+		},
 		
 		_onCalculoDescuento: function( oMaterial,oData1, oData2){
 			//descuentos D1
