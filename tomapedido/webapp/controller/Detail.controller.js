@@ -2162,7 +2162,7 @@ sap.ui.define([
                 that.onConteoMaterial();
                 sap.ui.core.BusyIndicator.hide(0);
             }).catch(function (oError) {
-                that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+                that.getMessageBox("error", that.getI18nText("errorDataUpdateMateriales"));
 				sap.ui.core.BusyIndicator.hide(0);
 			});
         },
@@ -2371,7 +2371,7 @@ sap.ui.define([
                 this._byId("VBoxPrimeraTabla").setVisible(true);
                 this._byId("VBoxOctavaTabla").setVisible(false);
             }).catch(function (oError) {
-                that.getMessageBox("error", that.getI18nText("errorDataUpdate"));
+                that.getMessageBox("error", that.getI18nText("errorDataUpdatePromocion"));
 				sap.ui.core.BusyIndicator.hide(0);
 			});
             // this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
