@@ -4269,7 +4269,7 @@ sap.ui.define([
 			// 	});
 			// });
 
-            that.fnExportarExcel(oMaterialPrev,[],[],sCodeCliente)
+            that.fnExportarExcel(oMaterial,[],[],sCodeCliente)
         },
         _onImportPressRespaldo: function(oEvent){
             var pUpload = $.Deferred();
