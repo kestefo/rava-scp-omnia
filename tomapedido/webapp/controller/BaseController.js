@@ -11,9 +11,10 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"tomapedido/model/models",
 	"sap/ui/model/Filter",
-	"tomapedido/model/formatter"
+	"tomapedido/model/formatter",
+	"sap/ui/export/Spreadsheet"
 ], function (Controller, History, UIComponent, MessageBox, MessageToast, Fragment, BarcodeScanner, ServiceOdata, BusyIndicator, JSONModel,
-	models, Filter, Formatter) {
+	models, Filter, Formatter, Spreadsheet) {
 	"use strict";
 	var that;
 	var sMessage = "";
@@ -1166,6 +1167,88 @@ sap.ui.define([
 				}
 			}
 			return sReturn;
+		},
+		fnExportarExcel: function(oData1,oData2,oData3,sAuthor){
+			var jsonDataTotal = oData1;
+			var jsonDataMaster = oData2;
+			var jsonDataHija = oData3;
+			
+			var jsonDataTableExcel=[];
+			if(jsonDataTotal.length != 0){
+				for(var i=0;i<jsonDataTotal.length;i++){
+					jsonDataTableExcel.push(jsonDataTotal[i]);
+				}
+			}
+			if(jsonDataMaster.length != 0){
+				for(var i=0;i<jsonDataMaster.length;i++){
+					jsonDataTableExcel.push(jsonDataMaster[i]);
+				}
+			}else if(jsonDataHija.length != 0){
+				for(var j=0;j<jsonDataHija.length;j++){
+					jsonDataTableExcel.push(jsonDataHija[j]);
+				}
+			}
+			
+			if(jsonDataTableExcel.length < 1){
+				this.getMessageBox("error", this.getI18nText("errorNoDataExport"));
+				return;
+			}
+			
+			var aCols, oSettings;
+
+			aCols = this.createColumnConfig();
+			var dDate = new Date();
+			var sGetTime = dDate.getTime().toString();
+			var sTitleExcel = this.getI18nText("sTitleExport")+'-'+sGetTime+'.xlsx';
+			var sTitleDocument = ""
+			if(this.isEmpty(sAuthor)){
+				sTitleDocument = this.getI18nText("Token");
+			}else{
+				sTitleDocument = this.getI18nText("Token")+"-"+sAuthor;
+			}
+
+			oSettings = {
+				workbook: {
+					context: {
+						title: sTitleDocument,
+						modifiedBy: this.getI18nText("author")
+					},
+					columns: aCols
+				},
+				dataSource: jsonDataTableExcel,
+				fileName: sTitleExcel
+			};
+
+			var oSheet = new Spreadsheet(oSettings);
+			oSheet.build().finally(function () {
+				oSheet.destroy();
+			});
+		},
+		createColumnConfig: function () {
+			return [
+				{
+					label: this.getI18nText("titleExportColEAN"),
+					property: 'Ean11',
+					width: '20',
+					type: 'String'
+				}, 
+				{
+					label: this.getI18nText("titleExportColMat"),
+					property: 'Ean11',
+					width: '20',
+					type: 'String'
+				},
+				{
+					label: this.getI18nText("titleExportColCantidad"),
+					property: 'cantidad',
+					width: '15'
+				}, 
+				{
+					label: this.getI18nText("titleExportColPrecio"),
+					property: 'Kbetr',
+					width: '15'
+				}
+			];
 		},
 		
 		_onCalculoDescuento: function( oMaterial,oData1, oData2){

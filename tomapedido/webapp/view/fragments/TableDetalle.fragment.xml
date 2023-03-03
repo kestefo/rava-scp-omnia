@@ -12,6 +12,8 @@
                 <!-- </HBox> -->
                 <ToolbarSpacer/>
                 <Input value="" placeholder="{i18n>titleTableBuscar}" width="auto" liveChange="_onLiveChangeBuscar"></Input>
+                <Button id="btnExpRespaldo" text="{i18n>textbtnExpRespaldo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressExportRespaldo" 
+                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
             </Toolbar>
         </headerToolbar>
         <columns>
@@ -53,17 +55,17 @@
                     <Text text="{i18n>titleDetColPrecio}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="5rem" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleDetColDesc}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="5rem" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleDetColDesc1}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
             </Column>
-            <Column width="5rem" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                 <header>
                     <Text text="{i18n>titleDetColDesc2}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit" visible="true"/>
                 </header>
@@ -92,7 +94,7 @@
                     <Text text="{oModelPedidoVenta>Maktg}"/>
                     <Text text="{path:'oModelPedidoVenta>cantidad', formatter: '.currencyFormat'}"/>
                     <Text text="{path:'oModelPedidoVenta>Kbetr', formatter: '.currencyFormatIGVTreeDig'}"/>
-                    <Text text="{oModelPedidoVenta>descuentos}" visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                    <Text text="{oModelPedidoVenta>descuentos}"/>
                     <Text text="{oModelPedidoVenta>descuentosVolumen1}" />
                     <Text text="{oModelPedidoVenta>descuentosVolumen2}" />
                     <!-- <HBox visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}" justifyContent="SpaceAround">

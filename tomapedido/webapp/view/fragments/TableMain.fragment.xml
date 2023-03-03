@@ -68,9 +68,9 @@
         <items>
             <ColumnListItem type="Inactive">
                 <cells>
-                    <Text text="{path:'oModelPedidoVenta>pedido', formatter:'.formatInteger'}"/>
-                    <!-- <ObjectStatus text="{path:'oModelPedidoVenta>pedido', formatter:'.formatInteger'}" active="{=${oModelPedidoVenta>sEstateBloq}==='N'?false:true}"
-                        state="{path:'oModelPedidoVenta>sEstateBloq', formatter:'.onColorForState'}" press="_onPressSelectPedido"/> -->
+                    <!-- <Text text="{path:'oModelPedidoVenta>pedido', formatter:'.formatInteger'}"/> -->
+                    <ObjectStatus text="{path:'oModelPedidoVenta>pedido', formatter:'.formatInteger'}" active="{=${oModelPedidoVenta>sEstateBloq}==='N'?false:true}"
+                        state="{path:'oModelPedidoVenta>sEstateBloq', formatter:'.onColorForState'}" press="_onPressSelectPedido"/>
                     <Text text="{oModelPedidoVenta>razonsocial}"/>
                     <Text text="{oModelPedidoVenta>tipodoc}"/>
                     <Text text="{path:'oModelPedidoVenta>fechacrea', formatter:'.formatYYYYMMDDAbap'}"/>

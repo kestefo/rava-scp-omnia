@@ -662,15 +662,16 @@ sap.ui.define([
                         "descuentosVolumen1":"0%",
                         "descuentosVolumen2":"0%",
                         "status": that.isEmpty(value.Abgru) ? "None":"Error",
-                        "tipo":"",
+                        "tipo":value.Prepos,
                         "Posnr": value.Posnr,
                         "codeMotivo":value.Abgru,
                         "descMotivo":value.Bezei,
                         "cantidadRecalculo":value.Totca,
 
-                        "MatnrPrinc": "",
-                        "PosnrPrinc": "",
-                        "NumPro": ""
+                        "MatnrPrinc": value.Matnrsup,
+                        "PosnrPrinc": value.Uepos,
+                        "Numpro": value.Zznumpro,
+                        "TipPro": value.Zztippro
                     };
                     //modificacion
                     if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000010"){
