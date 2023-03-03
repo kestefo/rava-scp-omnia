@@ -1169,9 +1169,11 @@ sap.ui.define([
 			return sReturn;
 		},
 		fnExportarExcel: function(oData1,oData2,oData3,sAuthor){
+			var that = this;
 			var jsonDataTotal = oData1;
 			var jsonDataMaster = oData2;
 			var jsonDataHija = oData3;
+			
 			
 			var jsonDataTableExcel=[];
 			if(jsonDataTotal.length != 0){
@@ -1234,7 +1236,7 @@ sap.ui.define([
 				}, 
 				{
 					label: this.getI18nText("titleExportColMat"),
-					property: 'Ean11',
+					property: 'Matnr',
 					width: '20',
 					type: 'String'
 				},

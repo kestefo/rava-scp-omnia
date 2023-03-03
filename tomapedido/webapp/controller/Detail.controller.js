@@ -4227,8 +4227,19 @@ sap.ui.define([
                 }
             });
             var sCodeCliente = this.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente/codeCliente");
+            var oMaterialTotalFilter = that.oModelGetPedidoVenta.getProperty("/oMaterialTotalFilter");
+			var datosimportar =[];
+			
 
-            that.fnExportarExcel(oMaterial,[],[],sCodeCliente)
+			oMaterialTotalFilter.forEach(function(items){// Cambios Claudia 03.03.2023
+				oMaterial.forEach(function(obj){
+					if(items.Matnr === obj.Matnr && items.Ean11 === obj.Ean11){//Cambio Claudia 03.03.2023
+						datosimportar.push(obj);
+					}
+				});
+			});
+
+            that.fnExportarExcel(datosimportar,[],[],sCodeCliente)
         },
         _onImportPressRespaldo: function(oEvent){
             var pUpload = $.Deferred();
@@ -4332,8 +4343,40 @@ sap.ui.define([
             var oMaterialTotalFilter = that.oModelGetPedidoVenta.getProperty("/oMaterialTotalFilter");
             var oMaterialEan = [];
             var oDetailStockSet = [];
-            oDataCargadaPrev.forEach(function(value, index){
-                var oFindStock = oMaterialTotalFilter.find(item => item.Matnr  === value.Ean11);
+            var arraymaterial =[];
+            var count =[];
+            $.each(that._groupBy(oDataCargadaPrev,'Material'), function (x, y) {// Cambio Claudia 03.03.2023
+                var material01 = {
+                    "Cantidad":y[0].Cantidad,
+                    "Ean11":y[0].Ean11,
+                    "Kbetr":y[0].Kbetr,
+                    "Material":y[0].Material,
+                    "Precio":y[0].Precio,
+                    "cantidad":y[0].cantidad,
+                    "cantidadRecalculo":y[0].cantidadRecalculo,
+                    "descuentos":y[0].descuentos,
+                    "descuentosVolumen1":y[0].descuentosVolumen1,
+                    "pos":y[0].pos,
+                    "descuentosVolumen2":y[0].descuentosVolumen2,
+                    "precioUnidXsl":y[0].precioUnidXsl,
+                    "solXsl":y[0].solXsl,
+                    "tipo":y[0].tipo,
+                    "materiales": []
+                };
+
+                
+              
+                y.forEach(function(value, index){
+                    count ++;
+                    value.pos = count.toString();
+                });
+                material01.materiales = y;
+
+                arraymaterial.push(material01);
+            });
+
+            arraymaterial.forEach(function(value, index){
+                var oFindStock = oMaterialTotalFilter.find(item => item.Matnr  === value.Material && item.Ean11  === value.Ean11);
                 value.Kbetr = "0";
                 value.Matnr = "";
                 value.Meins = "";
