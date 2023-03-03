@@ -1120,6 +1120,7 @@ sap.ui.define([
             var totalNot = 0;
             var cantidadNot = 0;
             var totalmMaterialesNot = 0;
+
             oProductosNoValidos.forEach(function(value, index){
                 cantidadNot += parseFloat(value.cantidad);
                 if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
@@ -1139,7 +1140,7 @@ sap.ui.define([
                     total += parseFloat(value.total);
                 }
             });
-
+            
             var booleanCanal = false;
             var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
             var oFlete = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oFlete");
@@ -1172,15 +1173,40 @@ sap.ui.define([
                 }
             }
 
-            that._byId("lTotalProductos").setText( this.currencyFormat(total.toString()));
-            that._byId("lCantidadProductos").setText( this.currencyFormat(cantidad.toString()));
+            var totalRec = 0;
+            var cantidadRec = 0;
+            var totalNotRec = 0;
+            var cantidadNotRec = 0;
 
-            that._byId("lTotalProductosNot").setText( this.currencyFormat(totalNot.toString()));
-            that._byId("lCantidadProductosNot").setText( this.currencyFormat(cantidadNot.toString()));
+            oMaterial.forEach(function(value, index){
+                if(value.status === "None"){
+                    cantidadRec += parseFloat(value.cantidad);
+                    if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
+                        totalRec += 10;
+                    }else{
+                        totalRec += parseFloat(value.total);
+                    }
+                }
+
+                if(value.status === "Error"){
+                    cantidadNotRec += parseFloat(value.cantidad);
+                    if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
+                        totalNotRec += 10;
+                    }else{
+                        totalNotRec += parseFloat(value.total);
+                    }
+                }
+            });
+
+            that._byId("lTotalProductos").setText( this.currencyFormat(totalRec.toString()));
+            that._byId("lCantidadProductos").setText( this.currencyFormat(cantidadRec.toString()));
+
+            that._byId("lTotalProductosNot").setText( this.currencyFormat(totalNotRec.toString()));
+            that._byId("lCantidadProductosNot").setText( this.currencyFormat(cantidadNotRec.toString()));
 
             if(this.getModel("device").getProperty("/system/phone")){
-                that._byId("lTotalDisponible").setText( this.currencyFormat(cantidad.toString()) + " ; " + this.currencyFormat(total.toString()) );
-                that._byId("lTotalNoDisponible").setText( this.currencyFormat(cantidadNot.toString()) + " ; " + this.currencyFormat(totalNot.toString()) );
+                that._byId("lTotalDisponible").setText( this.currencyFormat(cantidad.toString()) + " ; " + this.currencyFormat(totalRec.toString()) );
+                that._byId("lTotalNoDisponible").setText( this.currencyFormat(cantidadNot.toString()) + " ; " + this.currencyFormat(totalNotRec.toString()) );
             }
 
             if(this.isEmpty(sParameter)){
@@ -1555,7 +1581,11 @@ sap.ui.define([
                         var sKundm = oSelectedCliente.textKundm;
                         var sKundm = oSelectedCliente.textKundm;
                         var sCondPago = oSelectedCliente.codeCondPago === 'C001' ? oSelectedCliente.codeCondPago: '';
-                        var sFlete = parseFloat(that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente/textFlete")).toFixed(3);
+                        var bTipoFle = that.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial")[0].tipo === "FLE" ? true:false;
+                        var sFlete = "0";
+                        if(bTipoFle){
+                            sFlete = parseFloat(that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente/textFlete")).toFixed(3);
+                        }
     
                         oDataSap={
                             "Cond_Type": "ZG07",
@@ -4231,15 +4261,15 @@ sap.ui.define([
 			var datosimportar =[];
 			
 
-			oMaterialTotalFilter.forEach(function(items){// Cambios Claudia 03.03.2023
-				oMaterial.forEach(function(obj){
-					if(items.Matnr === obj.Matnr && items.Ean11 === obj.Ean11){//Cambio Claudia 03.03.2023
-						datosimportar.push(obj);
-					}
-				});
-			});
+			// oMaterialTotalFilter.forEach(function(items){// Cambios Claudia 03.03.2023
+			// 	oMaterial.forEach(function(obj){
+			// 		if(items.Matnr === obj.Matnr && items.Ean11 === obj.Ean11){//Cambio Claudia 03.03.2023
+			// 			datosimportar.push(obj);
+			// 		}
+			// 	});
+			// });
 
-            that.fnExportarExcel(datosimportar,[],[],sCodeCliente)
+            that.fnExportarExcel(oMaterialPrev,[],[],sCodeCliente)
         },
         _onImportPressRespaldo: function(oEvent){
             var pUpload = $.Deferred();
@@ -4332,6 +4362,7 @@ sap.ui.define([
                     value.descuentos="0%",
                     value.descuentosVolumen1="0%",
                     value.descuentosVolumen2="0%",
+                    value.Posnr = "";
                     value.tipo = "MAT"
                     value.precioUnidXsl = value.Precio;
                     value.solXsl = value.Cantidad;
@@ -4376,7 +4407,7 @@ sap.ui.define([
             });
 
             arraymaterial.forEach(function(value, index){
-                var oFindStock = oMaterialTotalFilter.find(item => item.Matnr  === value.Material && item.Ean11  === value.Ean11);
+                var oFindStock = oMaterialTotalFilter.find(item => item.Matnr  === value.Material);
                 value.Kbetr = "0";
                 value.Matnr = "";
                 value.Meins = "";
@@ -4406,8 +4437,8 @@ sap.ui.define([
                         "Labst": "0"
                     }
                     oDetailStockSet.push(jValue)
+                    oMaterialEan.push(value);
                 }
-                oMaterialEan.push(value);
             });
 
             sap.ui.core.BusyIndicator.show(0);
@@ -4487,6 +4518,7 @@ sap.ui.define([
                             "Txtfa":value.Txtfa,
                             "Umrez":value.Umrez,
                             "Vtweg":value.Vtweg,
+                            "Posnr": "",
                             
                             "codeMotivo": "",
                             "descMotivo": "",
@@ -4508,8 +4540,8 @@ sap.ui.define([
                             "cantidadProm": "",
                             "cantidadRecalculo": value.solXsl
                         }
+                        oMaterialesSelectedEnv.push(jMaterial);
                     }
-                     oMaterialesSelectedEnv.push(jMaterial);
                 });
                 
                 that._onFunctionValidateMaterial(oMaterialesSelectedEnv,oMaterial);
