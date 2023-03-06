@@ -1609,7 +1609,7 @@ sap.ui.define([
                             "Netwr": totalMaterialesSinIGV.toFixed(3),
                             "Existe_Ped": "01",
                             "DetailSOSet": oMaterialSap,
-                            //"campo_falla": "asodosad",
+                            // "campo_falla": "asodosad",
                             "ResultSOSet": [
                                 {
                                     "Type": "C",
@@ -4366,7 +4366,7 @@ sap.ui.define([
                     value.descuentosVolumen2="0%",
                     value.Posnr = "";
                     value.tipo = "MAT"
-                    value.precioUnidXsl = value.Precio;
+                    // value.precioUnidXsl = value.Precio;
                     value.solXsl = value.Cantidad;
                 });
                 that.onValidarRespaldo(oData);
@@ -4391,7 +4391,7 @@ sap.ui.define([
                     "descuentosVolumen1":y[0].descuentosVolumen1,
                     "pos":y[0].pos,
                     "descuentosVolumen2":y[0].descuentosVolumen2,
-                    "precioUnidXsl":y[0].precioUnidXsl,
+                    //"precioUnidXsl":y[0].precioUnidXsl,
                     "solXsl":y[0].solXsl,
                     "tipo":y[0].tipo,
                     "materiales": []
@@ -4420,7 +4420,7 @@ sap.ui.define([
                 value.Ean11 = "";
                 value.Kdgrp = "";
                 if(!that.isEmpty(oFindStock)){
-                    value.Kbetr = oFindStock.Kbetr;
+                    value.Kbetr = oFindStock.Kbetr;// ver si el prcio
                     value.descripcion = oFindStock.Maktg;
                     value.Matnr = oFindStock.Matnr;
                     value.Meins = oFindStock.Meins;
@@ -4471,12 +4471,12 @@ sap.ui.define([
                     }else{
                         var arrMsg = [];
 
-                        if(parseFloat(value.precioUnidXsl) != parseFloat(value.precioUnidSap)){
-                            value.status = "Error";
-                            value.statusNoProduct = "E";
-                            value.statusPrecio = "Error";
-                            arrMsg.push(that.getI18nText("sDescStatusNoPrec"));
-                        }
+                        // if(parseFloat(value.precioUnidXsl) != parseFloat(value.precioUnidSap)){
+                        //     value.status = "Error";
+                        //     value.statusNoProduct = "E";
+                        //     value.statusPrecio = "Error";
+                        //     arrMsg.push(that.getI18nText("sDescStatusNoPrec"));
+                        // }
 
                         if(parseFloat(value.solXsl) > parseFloat(value.solSap)){
                             value.status = "Error";
@@ -4511,7 +4511,7 @@ sap.ui.define([
                     if(value.statusNoProduct != "E"){   
                         var jMaterial = {
                             "Codfa":"C06 S21",
-                            "Kbetr":value.precioUnidXsl,
+                            "Kbetr":value.Kbetr,//value.Kbetr poner si en caso es 
                             "Labst":value.solSap,
                             "Maktg":value.descripcion,
                             "Matnr":value.Matnr,
@@ -4528,8 +4528,8 @@ sap.ui.define([
                             "state":"Success",
         
                             "cantidad":value.solXsl,
-                            "total": ((parseFloat(value.precioUnidXsl)*that.igv) * parseFloat(value.solXsl)).toString(),
-                            "totalSinIGV": ((parseFloat(value.precioUnidXsl)) * parseFloat(value.solXsl)).toString(),
+                            "total": ((parseFloat(value.Kbetr)*that.igv) * parseFloat(value.solXsl)).toString(),//
+                            "totalSinIGV": ((parseFloat(value.Kbetr)) * parseFloat(value.solXsl)).toString(),//
                             "descuentos":"0%",
                             "descuentosVolumen1":"0%",
                             "descuentosVolumen2":"0%",

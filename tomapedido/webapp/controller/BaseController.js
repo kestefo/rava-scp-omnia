@@ -1228,12 +1228,12 @@ sap.ui.define([
 		},
 		createColumnConfig: function () {
 			return [
-				{
-					label: this.getI18nText("titleExportColEAN"),
-					property: 'Ean11',
-					width: '20',
-					type: 'String'
-				}, 
+				// {
+				// 	label: this.getI18nText("titleExportColEAN"),
+				// 	property: 'Ean11',
+				// 	width: '20',
+				// 	type: 'String'
+				// }, 
 				{
 					label: this.getI18nText("titleExportColMat"),
 					property: 'Matnr',
@@ -1245,11 +1245,11 @@ sap.ui.define([
 					property: 'cantidad',
 					width: '15'
 				}, 
-				{
-					label: this.getI18nText("titleExportColPrecio"),
-					property: 'Kbetr',
-					width: '15'
-				}
+				// {
+				// 	label: this.getI18nText("titleExportColPrecio"),
+				// 	property: 'Kbetr',
+				// 	width: '15'
+				// }
 			];
 		},
 		
