@@ -1505,7 +1505,7 @@ sap.ui.define([
                         ||jObject.tipo === "PROOP"||jObject.tipo === "PROCLI"||jObject.tipo === "PROPV"){
                         sUepos = "";
                     }else if(jObject.tipo === "PROCOM"){
-                        sUepos = jObject.Posnr;
+                        sUepos = that.zfill(cont,6);
                     }
 
                     var sDescna = "";
@@ -3870,7 +3870,8 @@ sap.ui.define([
                 "PosnrPrinc":"",
                 "Probon": "",
                 "Numpro": oPromotionPadre.Numpro,
-                "cantidadRecalculo": ( parseFloat(sCantBoni) ).toString()
+                "cantidadRecalculo": ( parseFloat(sCantBoni) ).toString(),
+                "TipPro":oPromotionPadre.TipPro
             }
             oPromotionsPrev.push(jMatPadre);
 
@@ -3907,7 +3908,8 @@ sap.ui.define([
                     "PosnrPrinc":"",
                     "Probon": jObject.Probon,
                     "Numpro": jObject.Numpro,
-                    "cantidadRecalculo": ( parseFloat(jObject.cantidadManual)*parseFloat(sCantidad) ).toString()
+                    "cantidadRecalculo": ( parseFloat(jObject.cantidadManual)*parseFloat(sCantidad) ).toString(),
+                    "TipPro":jObject.TipPro
                 }
                 oPromotionsPrev.push(jMatPro);
             });
