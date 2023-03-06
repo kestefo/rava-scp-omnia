@@ -7,7 +7,7 @@ sap.ui.define([
     '../util/util',
     '../util/utilUI',
     "../services/Services",
-    "../estructuras/Estructura"
+    "../estructuras/Estructura" 
 ], function (Controller, BaseController, models, Filter, FilterOperator, util, utilUI, Services, Estructura) {
     "use strict";
 
