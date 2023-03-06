@@ -14,7 +14,7 @@ sap.ui.define([
 
     var that, 
     bValueHelpEquipment = false,
-    clouconnector = true;
+    clouconnector = true; 
     return BaseController.extend("tomapedido.controller.Main", {
         onInit: function () {
             that = this;
