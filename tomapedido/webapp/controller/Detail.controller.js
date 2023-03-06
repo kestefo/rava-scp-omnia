@@ -1609,7 +1609,7 @@ sap.ui.define([
                             "Netwr": totalMaterialesSinIGV.toFixed(3),
                             "Existe_Ped": "01",
                             "DetailSOSet": oMaterialSap,
-                            "campo_falla": "asodosad",
+                            //"campo_falla": "asodosad",
                             "ResultSOSet": [
                                 {
                                     "Type": "C",
