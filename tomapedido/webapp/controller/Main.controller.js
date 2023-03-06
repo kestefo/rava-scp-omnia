@@ -13,8 +13,8 @@ sap.ui.define([
     "use strict";
 
     var that, 
-        bValueHelpEquipment = false,
-        clouconnector = true;
+    bValueHelpEquipment = false,
+    clouconnector = true;
     return BaseController.extend("tomapedido.controller.Main", {
         onInit: function () {
             that = this;
