@@ -456,6 +456,7 @@ sap.ui.define([
                                 "estate": "Warning",
                                 "sEstateBloqSap": value.Lifsk,
                                 "sEstateBloq": (value.Estado).toUpperCase()==="PEDIDO" ? "I" : "N",
+                                "Zterm": value.Zterm,
                                 "oMateriales": value.DetalleBuscaPedidoSet
                             };
 
@@ -621,7 +622,7 @@ sap.ui.define([
                     "oCondPago": jSelected.oCondPago,
                     "codePuntoVenta": "",
                     "textPuntoVenta": "",
-                    "codeCondPago": "",
+                    "codeCondPago": jSelected.Zterm,
                     "textCondPago": "",
                     "textFlete": sFlete,
                     "textFechaEntrega": date,
@@ -639,7 +640,32 @@ sap.ui.define([
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oSelectedCliente", oChangeParameterSelected);
 
                 var oMaterial=[];
+                var sStatus = that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus");
+                
                 jSelected.oMateriales.results.forEach(function(value, index){
+                    // var splitDescuentoCondPago = value.Kbetrd.split("%");
+                    // var iDescuentoCondPago = parseFloat(splitDescuentoCondPago[0])/100;
+
+                    // var splitDescuento1 = value.Kbetrd1.split("%");
+                    // var iDescuento1 = parseFloat(splitDescuento1[0])/100;
+                    
+                    // var splitDescuento2 = value.Kbetrd2.split("%");
+                    // var iDescuento2 = parseFloat(splitDescuento2[0])/100;
+
+                    // var iMult1 = 1-iDescuentoCondPago;
+                    // var iMult2 = 1-iDescuento1;
+                    // var iMult3 = 1-iDescuento2;
+
+                    // var iSaldo1 = ( ( parseFloat(value.Totca)*parseFloat((parseFloat(value.Kbetr)*that.igv)) )*iMult1).toFixed(3);
+                    // var iSaldo2 = (parseFloat(iSaldo1)*iMult2).toFixed(3);
+                    // var iSaldo3 = (parseFloat(iSaldo2)*iMult3).toFixed(3);
+
+                    // var iSaldoSinIGV1 = ( ( parseFloat(value.Totca)*parseFloat((parseFloat(value.Kbetr))) )*iMult1).toFixed(3);
+                    // var iSaldoSinIGV2 = (parseFloat(iSaldoSinIGV1)*iMult2).toFixed(3);
+                    // var iSaldoSinIGV3 = (parseFloat(iSaldoSinIGV2)*iMult3).toFixed(3);
+
+                    // var sPrecio = sStatus === "V" ? value.Precio: value.Kbetr;
+                    var sPrecio = value.Kbetr;
                     var jMaterial={
                         "Kunnr": "",
                         "Ean11": "",
@@ -647,7 +673,7 @@ sap.ui.define([
                         "Labst":"",
 
                         "Codfa":value.Codfa,
-                        "Kbetr":value.Precio,
+                        "Kbetr": ( parseFloat(sPrecio) ).toFixed(2),
                         "Matnr":value.Matnr,
                         "Maktg":value.Maktg,
                         "Meins":value.Meins,
@@ -657,10 +683,12 @@ sap.ui.define([
                         "icon":"sap-icon://inbox",
                         "state":"Success",
                         "cantidad":value.Totca,
-                        "total":  ((value.Precio * that.igv)*parseFloat(value.Totca)).toString(),
-                        "descuentos":"0%",
-                        "descuentosVolumen1":"0%",
-                        "descuentosVolumen2":"0%",
+                        "total":  value.Total ,
+                        "totalSinIGV": (value.Total*that.sinigv).toFixed(3),
+                        // "total": value.Total,
+                        "descuentos": value.Kbetrd + "%",
+                        "descuentosVolumen1": value.Kbetrd1 + "%",
+                        "descuentosVolumen2": value.Kbetrd2 + "%",
                         "status": that.isEmpty(value.Abgru) ? "None":"Error",
                         "tipo":value.Prepos,
                         "Posnr": value.Posnr,
@@ -668,33 +696,17 @@ sap.ui.define([
                         "descMotivo":value.Bezei,
                         "cantidadRecalculo":value.Totca,
 
-                        "MatnrPrinc": value.Matnrsup,
-                        "PosnrPrinc": value.Uepos,
+                        "MatnrPrinc": value.Matnrsup === "PROCOMH" ? "": value.Matnrsup,
+                        "PosnrPrinc": value.Uepos === "PROCOMH" ? "": value.Uepos,
                         "Numpro": value.Zznumpro,
                         "TipPro": value.Zztippro
                     };
-                    //modificacion
-                    if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000010"){
-                        jMaterial.tipo = "MAT";
-                    }else if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000020"){
-                        jMaterial.tipo = "BON";
-                        jMaterial.MatnrPrinc = "000000001200000241";
-                        jMaterial.PosnrPrinc = "000010";
-                    }else if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000030"){
-                        jMaterial.tipo = "PROFV";
-                    }else if(jSelected.pedido === "0004000989" && jMaterial.Posnr === "000040"){
-                        jMaterial.tipo = "PROVEN";
+
+                    if(!that.isEmpty(value.Matnrsup)){
+                        jMaterial.Posnr = that.zfill(parseFloat(value.Uepos) + 1 ,6);
                     }
-                    // var jFindMaterial = oMaterialFilter.find(item => item.Matnr  === value.Matnr);
-                    // if(jFindMaterial){
-                        // jMaterial.Codfa = jFindMaterial.Codfa;
-                        // jMaterial.Maktg = jFindMaterial.Maktg;
-                        // jMaterial.Meins = jFindMaterial.Meins;
-                        // jMaterial.Txtfa = jFindMaterial.Txtfa;
-                        // jMaterial.Umrez = jFindMaterial.Umrez;
-                        // jMaterial.Vtweg = jFindMaterial.Vtweg;
-                        oMaterial.push(jMaterial);
-                    // }
+
+                    oMaterial.push(jMaterial);
                 });
 
                 if(oChangeParameterSelected.textFlete === "0"){
@@ -1195,36 +1207,46 @@ sap.ui.define([
             var jSelected = oSource.getBindingContext("oModelPedidoVenta").getObject();
 
             var sTextMessage = "";
+            var bBloqueo = false;
             if(jSelected.sEstateBloq === "N"){
+                bBloqueo = false;
                 that.getMessageBox("error", that.getI18nText("errorSelectPedidoNotPedido"));
                 return
+            }else if (jSelected.sEstateBloq === "E"){
+                bBloqueo = true;
+                sTextMessage = this.getI18nText("warningBloqueoPedido");
             }else{
+                bBloqueo = false;
                 sTextMessage = this.getI18nText("warningBloqueoPedido");
             }
 
-            utilUI.messageBox(sTextMessage,"I", function(value){
-                if(value){
-                    var oDataSap = {
-                        "Vbeln": jSelected.pedido,
-                        "Operator": "B",
-                        "ResultBlockSet": [
-                          {
-                            "Vbeln": "",
-                            "Type": "",
-                            "Message": ""
-                          }
-                        ]
-                    };
-                    sap.ui.core.BusyIndicator.show(0);
-                    Promise.all([that._postBloqueoPedido(oDataSap)]).then((values) => {
-                        that._onPressDetailProduct(oEvent,"M", jSelected);
-                    }).catch(function (oError) {
-                        that.getMessageBox("error", that.getI18nText("errorSave"));
-                        sap.ui.core.BusyIndicator.hide(0);
-                    });
-
-                }
-            });
+            if(!bBloqueo){
+                utilUI.messageBox(sTextMessage,"I", function(value){
+                    if(value){
+                        var oDataSap = {
+                            "Vbeln": jSelected.pedido,
+                            "Operator": "B",
+                            "ResultBlockSet": [
+                              {
+                                "Vbeln": "",
+                                "Type": "",
+                                "Message": ""
+                              }
+                            ]
+                        };
+                        sap.ui.core.BusyIndicator.show(0);
+                        Promise.all([that._postBloqueoPedido(oDataSap)]).then((values) => {
+                            that._onPressDetailProduct(oEvent,"M", jSelected);
+                        }).catch(function (oError) {
+                            that.getMessageBox("error", that.getI18nText("errorSave"));
+                            sap.ui.core.BusyIndicator.hide(0);
+                        });
+    
+                    }
+                });
+            }else{
+                that._onPressDetailProduct(oEvent,"M", jSelected);
+            }
         },
         _postBloqueoPedido: function(oDataSap){
             try{

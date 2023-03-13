@@ -23,6 +23,7 @@ sap.ui.define([
         local: window.location.href.indexOf('launchpad') == -1 ? true : false,
 		userSet: "liderdeproyecto1@omniasolution.com",
 		igv:1.18,
+		sinigv: 0.82,
         getUserLoged: function(){
 			var user = "";
 			if(this.isEmpty(sap.ushell.Container)){
