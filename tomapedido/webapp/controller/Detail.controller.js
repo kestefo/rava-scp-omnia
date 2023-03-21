@@ -4356,7 +4356,7 @@ sap.ui.define([
                 oDetailStockSet.push(jValue);
             });
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionPadreCombo", seleccionmat);// Cambios Claudia 16/03/2023
-            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoniCombo", "0");
+            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoniCombo", parseFloat(seleccionmat.cantidad).toFixed(2));//Cambios Claudia 21/03/2023
 
             // if(booleanProm){// Cambio de Claudia 15/03/2023
             //     that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
