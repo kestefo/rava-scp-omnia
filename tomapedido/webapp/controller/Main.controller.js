@@ -1137,7 +1137,7 @@ sap.ui.define([
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
                         }else{
-                            var iFlete = parseFloat((parseFloat(oSelectedCliente.textFlete)*that.igv).toFixed(0));
+                            var iFlete = parseFloat((parseFloat(oSelectedCliente.textFlete)*that.igv).toFixed(0)); 
                             var jFlete = {
                                 "Codfa":"",
                                 "Kbetr":"0",
