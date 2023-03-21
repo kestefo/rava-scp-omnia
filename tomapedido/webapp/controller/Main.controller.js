@@ -29,6 +29,8 @@ sap.ui.define([
         },
         handleRouteMatched: function(oEvent){
             that._byId("lImporte").setText(this.currencyFormatIGV("0"));
+            this.getModel("oModelSavePedidoVenta").setProperty("/",[]);
+            this.getModel("oModelGetPedidoVenta").setProperty("/oFlete",[]);
             this._onClear();
         },
         handleRouteMatched2: function(oEvent){
@@ -311,6 +313,25 @@ sap.ui.define([
                             error: function (message) {
                                 oResp.oResults = [];
                                 resolve(oResp);
+                            }
+                        });
+                    });
+				});
+			}catch(oError){
+				that.getMessageBox("error", that.getI18nText("sErrorTry"));
+			}
+		},
+        _getFlete: function (sCanal, sGrupo) {
+			try{
+				return new Promise(function (resolve, reject) {
+                    var sPath = jQuery.sap.getModulePath("tomapedido")+"/sap/opu/odata/sap/ZOSSD_GW_TOMA_PEDIDO_SRV/FleteSet?$filter=VTWEG eq '"+sCanal+"' and KDGRP eq '"+sGrupo+"'";
+                    Services.getoDataERPSync(that, sPath, function (result) {
+                        util.response.validateAjaxGetERPNotMessage(result, {
+                            success: function (oData, message) {
+                                resolve(oData);
+                            },
+                            error: function (message) {
+                                reject(message);
                             }
                         });
                     });
@@ -691,6 +712,7 @@ sap.ui.define([
                         "descuentosVolumen2": value.Kbetrd2 + "%",
                         "status": that.isEmpty(value.Abgru) ? "None":"Error",
                         "tipo":value.Prepos,
+                        "PosnrPrev": value.Posnr,
                         "Posnr": value.Posnr,
                         "codeMotivo":value.Abgru,
                         "descMotivo":value.Bezei,
@@ -708,6 +730,8 @@ sap.ui.define([
 
                     oMaterial.push(jMaterial);
                 });
+                
+                that.oModelSavePedidoVenta.setProperty("/",oMaterial);
 
                 if(oChangeParameterSelected.textFlete === "0"){
                     that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
@@ -739,6 +763,7 @@ sap.ui.define([
                     oMaterial.unshift(jFlete);
                     that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", [jFlete]);
                 }
+
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 sap.ui.core.BusyIndicator.hide(0);
                 that.oRouter.navTo("Detail", {
@@ -865,8 +890,24 @@ sap.ui.define([
             var oSelectedItem = slUsuario.getSelectedItem();
             var oObjectSelected = oSelectedItem.getBindingContext("oModelGetPedidoVenta").getObject();
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([that._getMateriales(oObjectSelected.Kunnr)]).then((values) => {
+            Promise.all([that._getMateriales(oObjectSelected.Kunnr),that._getFlete(oObjectSelected.Vtweg,oObjectSelected.Kdgrp)]).then((values) => {
                 that._dialogSelectClient.close();
+                var oResulFlete = values[1].data;
+                var booleanErrorFlete = false;
+                oResulFlete.forEach(function(items){
+                    if(items.MESSAGE === "E"){
+                        booleanErrorFlete = true;
+                    }
+                });
+
+                if(booleanErrorFlete){
+                    that.getMessageBox("error", that.getI18nText("errorNotFlete"));
+                    sap.ui.core.BusyIndicator.hide(0);
+                    return;
+                }
+
+                that.oModelGetPedidoVenta.setProperty("/oFlete", oResulFlete);
+
                 var oResultMaterial = values[0].oResults[0].NAVMATER.results;
                 that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", oResultMaterial);
                 
@@ -908,17 +949,25 @@ sap.ui.define([
                 that.oModelGetPedidoVenta.setProperty("/oFamiliaMaterial", oFamiliaMateriales);
                 that.oModelGetPedidoVenta.setProperty("/oMaterialTotalFilter", oMaterialFilter);
 
-
                 that.setFragment("_dialogDetailCliente", this.frgIdDetailCliente, "DetailCliente", this);
                 that._onClearComponentDetailClient();
 
                 var date = that.reformatDateString(that.getYYYYMMDD( new Date( new Date().getTime() + 2 *24  * 60  * 60 * 1000) ));
                 var sFlete = "0";
-                if(oObjectSelected.Vtweg === "10"){
-                    if(oObjectSelected.Kdgrp === "12"){
-                        sFlete = "8.4745762711864406779661016949153";
-                    }else if(oObjectSelected.Kdgrp === "13"){ // falta poner menor a 450
-                        sFlete = "8.4745762711864406779661016949153 por monto menor a 450";
+                //cambio 21/03/2022
+                var sContInicial = 0.01;
+                var jFleteSelect = {};
+                if(oResulFlete.length > 0){
+                    oResulFlete.forEach(function(items){
+                        if(parseFloat(items.KSTBW) <= sContInicial && parseFloat(items.KSTBWB) > sContInicial){
+                            jFleteSelect = items;
+                        }
+                    });
+                    
+                    if(that.isEmpty(jFleteSelect.KZBZG)){
+                        sFlete = (parseFloat(jFleteSelect.KBETR)).toString();
+                    }else{
+                        sFlete = (parseFloat(jFleteSelect.KBETR)).toString() +" "+that.getI18nText("messageMontoMenor")+ (parseFloat(jFleteSelect.KSTBWB)).toString();
                     }
                 }
                 var oChangeParameterSelected = {
@@ -1083,20 +1132,12 @@ sap.ui.define([
                             "oSelectedLineaCredito": oLineaCredito,
                             "oMateriales": []
                         };
-                        that.oModelSavePedidoVenta.getData().push(objCreado);
-                        that.oModelSavePedidoVenta.refresh();
-
-                        var sFlete = "";
-                        if(oSelectedCliente.textFlete === "10 por monto menor a 450"){
-                            sFlete = "8.4745762711864406779661016949153";
-                        }else{
-                            sFlete = oSelectedCliente.textFlete;
-                        }
 
                         if(oSelectedCliente.textFlete === "0"){
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oMaterial", []);
                             that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
                         }else{
+                            var iFlete = parseFloat((parseFloat(oSelectedCliente.textFlete)*that.igv).toFixed(0));
                             var jFlete = {
                                 "Codfa":"",
                                 "Kbetr":"0",
@@ -1110,7 +1151,7 @@ sap.ui.define([
                                 "icon":"sap-icon://inbox",
                                 "state":"Success",
                                 "cantidad": "0",
-                                "total": (parseFloat(oSelectedCliente.textFlete)*that.igv).toFixed(3),
+                                "total": (iFlete).toFixed(3),
                                 "descuentos":"0%",
                                 "descuentosVolumen1":"0%",
                                 "descuentosVolumen2":"0%",

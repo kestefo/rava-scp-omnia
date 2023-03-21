@@ -542,19 +542,6 @@ sap.ui.define([
 				return "0.000";
 			}
 		},
-		currencyFormatTreeDigRest: function (value) {
-			if(value){
-				if(value === "8.4745762711864406779661016949153 por monto menor a 450"){
-					return parseFloat(value).toFixed(3) + " por monto menor a 450";
-				}else{
-					var sNumberReplace = value.replaceAll(",","");
-					var iNumber = parseFloat(sNumberReplace);
-					return iNumber.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-				}
-			}else{
-				return "0.000";
-			}
-		},
 		currencyFormatIGV: function (value) {
 			if(value){
 				var sNumberReplace = value.replaceAll(",","");

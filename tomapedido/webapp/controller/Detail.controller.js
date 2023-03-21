@@ -1123,137 +1123,106 @@ sap.ui.define([
 
             oProductosNoValidos.forEach(function(value, index){
                 cantidadNot += parseFloat(value.cantidad);
-                if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                    totalNot += 10;
-                }else{
+                //cambio 21/03/2022
+                if(value.tipo != "FLE"){
                     totalmMateriales += parseFloat(value.total);
                     totalNot += parseFloat(value.total);
                 }
+                //     totalmMateriales += parseFloat(value.total);
+                //     totalNot += parseFloat(value.total);
             });
             
             oProductosValidos.forEach(function(value, index){
                 cantidad += parseFloat(value.cantidad);
-                if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                    total += 10;
-                }else{
-                    totalmMateriales += parseFloat(value.total);
+                //cambio 21/03/2022
+                if(value.tipo != "FLE"){
+                    totalmMateriales += parseFloat(value.totalSinIGV);
                     total += parseFloat(value.total);
                 }
+                //     totalmMateriales += parseFloat(value.total);
+                //     total += parseFloat(value.total);
             });
             
             var booleanCanal = false;
             var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
             var oFlete = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oFlete");
             var oSelectedCliente = this.getModel("oModelPedidoVenta").getProperty("/DataGeneral/oSelectedCliente");
-            if(oSelectedCliente.codeCanal==="10" && oSelectedCliente.codeGrupoCliente==="13"){
-                booleanCanal = true;
-            }
+            //cambio 21/03/2022
+            // if(oSelectedCliente.codeCanal==="10" && oSelectedCliente.codeGrupoCliente==="13"){
+            //     booleanCanal = true;
+            // }
+            var oFleteService = that.oModelGetPedidoVenta.getProperty("/oFlete");
+            var jFleteSelect = {};
+            oFleteService.forEach(function(value,index){
+                if(parseFloat(value.KSTBW) <= totalmMateriales && parseFloat(value.KSTBWB) > totalmMateriales){
+                    if(!that.isEmpty(value.KZBZG)){
+                        jFleteSelect = value;
+                        booleanCanal = true;
+                    }
+                }
+            });
 
             var oMaterial = [];
 
-            // if(that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus") === "C" || that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus") === "M"){
-                if(booleanCanal){
-                    oMaterialPrev.forEach(function(value){
-                        if(value.tipo != "FLE"){
-                            oMaterial.push(value);
-                        }
-                    });
-                    if(parseFloat(totalmMateriales) >= 450){
-                        total = totalmMateriales;
-                        this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
-                    }else{
-                        var jFlete = {};
-                        if(oFlete.length > 0){
-                            jFlete = oFlete[0];
+            if(booleanCanal){
+                oMaterialPrev.forEach(function(value){
+                    if(value.tipo != "FLE"){
+                        oMaterial.push(value);
+                    }
+                });
+                if(parseFloat(totalmMateriales) >= parseFloat(jFleteSelect.KSTBWB)){
+                    total = totalmMateriales;
+                    this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+                }else{
+                    var jFlete = {};
+                    if(oFlete.length > 0){
+                        var iFlete = parseFloat((parseFloat(jFleteSelect.KBETR)*that.igv).toFixed(0));
+                        oFlete[0].total = (iFlete).toFixed(3);
+                        jFlete = oFlete[0];
+
+                        if(iFlete > 0){
                             oMaterial.unshift(jFlete);
                         }
-                        this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                     }
-    
-                    var totalRec = 0;
-                    var cantidadRec = 0;
-                    var totalNotRec = 0;
-                    var cantidadNotRec = 0;
-    
-                    oMaterial.forEach(function(value, index){
-                        if(value.status === "None"){
-                            cantidadRec += parseFloat(value.cantidad);
-                            if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                                totalRec += 10;
-                            }else{
-                                totalRec += parseFloat(value.total);
-                            }
-                        }
-    
-                        if(value.status === "Error"){
-                            cantidadNotRec += parseFloat(value.cantidad);
-                            if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                                totalNotRec += 10;
-                            }else{
-                                totalNotRec += parseFloat(value.total);
-                            }
-                        }
-                    });
-                }else{
-                    var totalRec = 0;
-                    var cantidadRec = 0;
-                    var totalNotRec = 0;
-                    var cantidadNotRec = 0;
-    
-                    oMaterialPrev.forEach(function(value, index){
-                        if(value.status === "None"){
-                            cantidadRec += parseFloat(value.cantidad);
-                            if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                                totalRec += 10;
-                            }else{
-                                totalRec += parseFloat(value.total);
-                            }
-                        }
-    
-                        if(value.status === "Error"){
-                            cantidadNotRec += parseFloat(value.cantidad);
-                            if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                                totalNotRec += 10;
-                            }else{
-                                totalNotRec += parseFloat(value.total);
-                            }
-                        }
-                    });
+                    this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 }
-            // }else{
-                // oMaterialPrev.forEach(function(value){
-                //     if(value.tipo != "FLE"){
-                //         oMaterial.push(value);
-                //     }
-                // });
 
-                // this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+                var totalRec = 0;
+                var cantidadRec = 0;
+                var totalNotRec = 0;
+                var cantidadNotRec = 0;
 
-                // var totalRec = 0;
-                // var cantidadRec = 0;
-                // var totalNotRec = 0;
-                // var cantidadNotRec = 0;
+                oMaterial.forEach(function(value, index){
+                    if(value.status === "None"){
+                        cantidadRec += parseFloat(value.cantidad);
 
-                // oMaterial.forEach(function(value, index){
-                //     if(value.status === "None"){
-                //         cantidadRec += parseFloat(value.cantidad);
-                //         if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                //             totalRec += 10;
-                //         }else{
-                //             totalRec += parseFloat(value.total);
-                //         }
-                //     }
+                        totalRec += parseFloat(value.total);
+                    }
 
-                //     if(value.status === "Error"){
-                //         cantidadNotRec += parseFloat(value.cantidad);
-                //         if(value.total === "8.4745762711864406779661016949153 por monto menor a 450"){
-                //             totalNotRec += 10;
-                //         }else{
-                //             totalNotRec += parseFloat(value.total);
-                //         }
-                //     }
-                // });
-            // }
+                    if(value.status === "Error"){
+                        cantidadNotRec += parseFloat(value.cantidad);
+                        
+                        totalNotRec += parseFloat(value.total);
+                    }
+                });
+            }else{
+                var totalRec = 0;
+                var cantidadRec = 0;
+                var totalNotRec = 0;
+                var cantidadNotRec = 0;
+
+                oMaterialPrev.forEach(function(value, index){
+                    if(value.status === "None"){
+                        cantidadRec += parseFloat(value.cantidad);
+                        totalRec += parseFloat(value.total);
+                    }
+
+                    if(value.status === "Error"){
+                        cantidadNotRec += parseFloat(value.cantidad);
+                        totalNotRec += parseFloat(value.total);
+                    }
+                });
+            }
 
             that._byId("lTotalProductos").setText( this.currencyFormat(totalRec.toString()));
             that._byId("lCantidadProductos").setText( this.currencyFormat(cantidadRec.toString()));
@@ -1316,14 +1285,20 @@ sap.ui.define([
             // return;
 
             if(booleanWarningMat){
-                utilUI.messageBox(this.getI18nText("warningPromoBoni"),"I", function(value){
+                var sMessageAlert = "";
+                if(booleanWarningProComb){
+                    sMessageAlert = that.getI18nText("warningPromoComb");
+                }else{
+                    sMessageAlert = that.getI18nText("warningPromoBoni");
+                }
+                utilUI.messageBox(sMessageAlert,"I", function(value){
                     if(value){
                         var sStatus = that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus");
                         if(sStatus==="M"){
                             if(!booleanWarningProComb){
                                 that._onPressDeletePromotionsNotComb();
                             }else{
-                                that._onPressDeletePromotions();
+                                that._onPressDeletePromotionsComb();
                             }
                         }else if(sStatus==="C"){
                             that._onPressDeletePromotions();
@@ -1378,6 +1353,46 @@ sap.ui.define([
 
                     oSelectItems.push(jObject);
 
+                }
+            });
+
+            oSelectItems.forEach(function(value, index){
+                var booleanWarningMat = false;
+                oMaterial.forEach(function(value2, index2){
+                    if(value2.tipo != "MAT"){
+                        if(value2.MatnrPrinc === value.Matnr && value2.PosnrPrinc === value.Posnr){
+                            booleanWarningMat = true;
+                            oSelectItems.push(value2);
+                        }
+                    }
+                });
+            });
+
+            oSelectItems.forEach(function(value, index){
+                var indice = oMaterial.indexOf(value);
+                if(indice != -1)
+                oMaterial.splice( indice, 1 );
+            });
+
+            if(oMaterial.length > 0){
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
+            }else{
+                that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",[]);
+            }
+        },
+        _onPressDeletePromotionsComb: function(oEvent){
+            var oSelectItems = [];
+            var oOtrosDescuentos = [];
+            var oMaterialPrev = this.oModelPedidoVenta.getProperty("/DataGeneral/oMaterial");
+            var oMaterial = [];
+            oMaterialPrev.forEach(function(value){
+                oMaterial.push(value);
+            });
+            
+            that._byId("tbProductos").getItems().forEach(function(value, index){
+                var jObject = value.getBindingContext("oModelPedidoVenta").getObject();
+                if(jObject.tipo === "PROCOM" ||jObject.tipo === "PROCOMH"){
+                    oSelectItems.push(jObject);
                 }
             });
 
@@ -1595,6 +1610,97 @@ sap.ui.define([
                 }
             });
 
+            var sStatus = that.oModelPedidoVenta.getProperty("/DataGeneral/sStatus");
+            var oMaterialSapOrigin = [];
+            if(sStatus === "M"){
+                this.getModel("oModelSavePedidoVenta").getData().forEach(function(jObject, index){
+                    if(jObject.tipo==="MAT"||jObject.tipo === "PROFV"||jObject.tipo === "PROVEN"||jObject.tipo === "PROVM"||jObject.tipo === "PROVV"
+                        ||jObject.tipo === "PROOP"||jObject.tipo === "PROCLI"||jObject.tipo === "PROPV"||jObject.tipo === "PROCOM"||jObject.tipo === "PROCOMH"){
+                        var sCodeMotivo = "";
+                        if(!that.isEmpty(jObject.codeMotivo)){
+                            sCodeMotivo = jObject.codeMotivo;
+                        }
+                        
+                        var sSplitDesc1 = jObject.descuentosVolumen1.split("%");
+                        var iDesc1 = parseFloat(sSplitDesc1[0]);
+    
+                        var sSplitDesc2 = jObject.descuentosVolumen2.split("%");
+                        var iDesc2 = parseFloat(sSplitDesc2[0]);
+                        var sTipoPosicion="";
+                        var sPrice="";
+                        var sTipoReparto="";
+                        var oSelectedCliente = that.oModelPedidoVenta.getProperty("/DataGeneral/oSelectedCliente");
+                        var sEdatu = that.reformatDateString(that.getYYYYMMDD(new Date()));
+                        var sEdatu2 = oSelectedCliente.textFechaEntrega;
+                        if(jObject.tipo === "MAT"){
+                            sTipoPosicion="ZBMS";
+                            sPrice="0";
+                            sTipoReparto="ZB";
+                        }else if(jObject.tipo === "PROCOM"){//Mat combo padre
+                            sTipoPosicion="ZTAQ";
+                            sTipoReparto="ZJ";
+                            if(parseFloat(jObject.Kbetr) > 0){
+                                sPrice=(parseFloat(jObject.Kbetr)).toFixed(3);
+                            }else{
+                                sPrice="0";
+                            }
+                        }else if(jObject.tipo === "PROCOMH"){//Mat combo hijos y otras promociones
+                            if(parseFloat(jObject.Kbetr) > 0){
+                                sPrice=(parseFloat(jObject.Kbetr)).toFixed(3);
+                                sTipoPosicion="ZCMB";//con precio fijo
+                                sTipoReparto="ZB";
+                            }else{
+                                sPrice="0";
+                                sTipoPosicion="ZBBP";//no precio
+                                sTipoReparto="Z1";
+                            }
+                        }else{
+                            if(parseFloat(jObject.Kbetr) > 0){
+                                sPrice=(parseFloat(jObject.Kbetr)).toFixed(3);
+                                sTipoPosicion="ZBMS";//con precio fijo
+                                sTipoReparto="ZB";
+                            }else{
+                                sPrice="0";
+                                sTipoPosicion="ZBBP";//no precio
+                                sTipoReparto="Z1";
+                            }
+                        }
+    
+                        var sDescna = "";
+                        if(jObject.tipo === "PROFV"||jObject.tipo === "PROVEN"||jObject.tipo === "PROVM"||jObject.tipo === "PROVV"
+                            ||jObject.tipo === "PROOP"||jObject.tipo === "PROCLI"||jObject.tipo === "PROPV"||jObject.tipo === "PROCOM"||jObject.tipo === "PROCOMH"){
+                            sDescna = "X";
+                        }
+    
+                        var jDataSap = {
+                            "Type": sStatus,
+                            //6/12/2022
+                            "Posnr": jObject.PosnrPrev,
+                            // "Posnr": jObject.Posnr,
+                            "Matnr": jObject.Matnr,
+                            "Werks": "1020",
+                            "Lgort": "0201",
+                            "Fkimg": jObject.cantidad,
+                            "Meins": jObject.Meins,
+                            "Abgru": sCodeMotivo,
+                            "Pstyv": sTipoPosicion,
+                            "Kscha": "ZD02",
+                            "Kbetr": iDesc1.toFixed(3),
+                            "Kscha2": "ZD03",
+                            "Kbetr2": iDesc2.toFixed(3),
+                            "Price": sPrice,
+                            "Ettyp": sTipoReparto,
+                            "Edatu": sEdatu2,
+                            "Uepos": jObject.PosnrPrinc ,
+                            "Descna": sDescna,
+                            "Zznumpro": that.isEmpty(jObject.Numpro) ? "":jObject.Numpro,
+                            "Zztippro": that.isEmpty(jObject.TipPro) ? "":jObject.TipPro
+                        };
+                        oMaterialSapOrigin.push(jDataSap);
+                    }
+                });
+            }
+
             if(oMaterialSap.length == 0){
                 that.getMessageBox("error", that.getI18nText("errorNotProductSave"));
                 return;
@@ -1652,6 +1758,7 @@ sap.ui.define([
                             "Netwr": totalMaterialesSinIGV.toFixed(3),
                             "Existe_Ped": "01",
                             "DetailSOSet": oMaterialSap,
+                            "DetailBkSOSet": [],
                             // "campo_falla": "asodosad",
                             "ResultSOSet": [
                                 {
@@ -1681,6 +1788,7 @@ sap.ui.define([
                             "Netwr": "0",
                             "Existe_Ped": "01",
                             "DetailSOSet": oMaterialSap,
+                            "DetailBkSOSet": oMaterialSapOrigin,
                             "ResultSOSet": [
                                 {
                                     "Type": sStatus,

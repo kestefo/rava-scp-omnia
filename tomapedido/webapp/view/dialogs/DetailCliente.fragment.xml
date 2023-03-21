@@ -47,7 +47,7 @@
                     </Input>
                     <Label text="{i18n>textFlete}"/>
                     <Input id="inFlete" maxLength="40" enabled="{=${oModelPedidoVenta>/DataGeneral/oSelectedCliente/codeCanal}==='30'?true:false}"
-                        value="{path:'oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFlete', formatter: '.currencyFormatTreeDigRest'}" liveChange="liveChangeFormatFloat">
+                        value="{path:'oModelPedidoVenta>/DataGeneral/oSelectedCliente/textFlete'}" liveChange="liveChangeFormatFloat">
                         <layoutData>
                             <l:GridData span="L3 M5"/>
                         </layoutData>
