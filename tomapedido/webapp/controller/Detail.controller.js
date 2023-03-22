@@ -3784,7 +3784,7 @@ sap.ui.define([
         _onPressDetailPromotion: function (oEvent) {
             var oSource = oEvent.getSource();
             var jObject = oSource.getBindingContext("oModelPedidoVenta").getObject();
-            var oMaterial = jObject.oMaterialPadre;
+            var oMaterial = jObject.oMaterialPadre ;
             if (oMaterial.length > 0) {
                 this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
                 var sCodeProm = parseFloat(oMaterial[0].codeProm).toString();
@@ -4376,7 +4376,7 @@ sap.ui.define([
                 oDetailStockSet.push(jValue);
             });
             that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/oPromotionPadreCombo", seleccionmat);// Cambios Claudia 16/03/2023
-            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoniCombo", "0");
+            that.oModelPedidoVenta.setProperty("/DataGeneral/oPromotions/sCantBoniCombo", parseFloat(seleccionmat.cantidad).toFixed(2));//Cambios Claudia 21/03/2023
 
             // if(booleanProm){// Cambio de Claudia 15/03/2023
             //     that.getMessageBox("error", that.getI18nText("errorSelectProduct"));
