@@ -13,7 +13,7 @@
                 <ToolbarSpacer/>
                 <Input value="" placeholder="{i18n>titleTableBuscar}" width="auto" liveChange="_onLiveChangeBuscar"></Input>
                 <Button id="btnExpRespaldo" text="{i18n>textbtnExpRespaldo}" type="Accept" icon="sap-icon://excel-attachment" press="_onPressExportRespaldo" 
-                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='C'?true:false}"/>
+                    visible="{=${oModelPedidoVenta>/DataGeneral/sStatus}==='M'?true:false}"/>
             </Toolbar>
         </headerToolbar>
         <columns>
