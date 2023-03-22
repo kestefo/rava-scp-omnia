@@ -1176,15 +1176,35 @@ sap.ui.define([
                     this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 }else{
                     var jFlete = {};
-                    if(oFlete.length > 0){
-                        var iFlete = parseFloat((parseFloat(jFleteSelect.KBETR)*that.igv).toFixed(0));
-                        oFlete[0].total = (iFlete).toFixed(3);
-                        jFlete = oFlete[0];
-
-                        if(iFlete > 0){
-                            oMaterial.unshift(jFlete);
-                        }
+                    var iFlete = parseFloat((parseFloat(jFleteSelect.KBETR)*that.igv).toFixed(0));
+                    var jFlete = {
+                        "Codfa":"",
+                        "Kbetr":"0",
+                        "Labst":"0",
+                        "Maktg": "",
+                        "Matnr":"0",
+                        "Meins":"",
+                        "Txtfa":"",
+                        "Umrez":"0",
+                        "Vtweg":"0",
+                        "icon":"sap-icon://inbox",
+                        "state":"Success",
+                        "cantidad": "0",
+                        "total": (iFlete).toFixed(3),
+                        "descuentos":"0%",
+                        "descuentosVolumen1":"0%",
+                        "descuentosVolumen2":"0%",
+                        "status":"None",
+                        "codeMotivo":"",
+                        "descMotivo":"",
+                        "tipo":"FLE",
+                        "Posnr":"",
+                        "cantidadRecalculo":"0"
                     }
+                    if(iFlete > 0){
+                        oMaterial.unshift(jFlete);
+                    }
+                    
                     this.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 }
 

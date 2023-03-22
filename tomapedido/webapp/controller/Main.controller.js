@@ -14,7 +14,8 @@ sap.ui.define([
 
     var that, 
     bValueHelpEquipment = false,
-    clouconnector = true; 
+    clouconnector = true;
+    var iCont = 0;
     return BaseController.extend("tomapedido.controller.Main", {
         onInit: function () {
             that = this;
@@ -31,7 +32,10 @@ sap.ui.define([
             that._byId("lImporte").setText(this.currencyFormatIGV("0"));
             this.getModel("oModelSavePedidoVenta").setProperty("/",[]);
             this.getModel("oModelGetPedidoVenta").setProperty("/oFlete",[]);
-            this._onClear();
+            // this._onClear();
+            if(iCont != 0){
+                this._onSearchFB()
+            }
         },
         handleRouteMatched2: function(oEvent){
             Promise.all([that._getUsers()]).then((values) => {
@@ -555,7 +559,24 @@ sap.ui.define([
             // }
             
             sap.ui.core.BusyIndicator.show(0);
-            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected), that._getMateriales(jSelected.codeCliente)]).then((values) => {
+            Promise.all([that._getLineaCredito(jSelected), that._getDataDetail(jSelected), that._getMateriales(jSelected.codeCliente),
+                that._getFlete(jSelected.canal,jSelected.Kdgrp)]).then((values) => {
+                var oResulFlete = values[3].data;
+                var booleanErrorFlete = false;
+                oResulFlete.forEach(function(items){
+                    if(items.MESSAGE === "E"){
+                        booleanErrorFlete = true;
+                    }
+                });
+
+                if(booleanErrorFlete){
+                    that.getMessageBox("error", that.getI18nText("errorNotFlete"));
+                    sap.ui.core.BusyIndicator.hide(0);
+                    return;
+                }
+
+                that.oModelGetPedidoVenta.setProperty("/oFlete", oResulFlete);
+                
                 var oResultMaterial = values[2].oResults[0].NAVMATER.results;
                 that.oModelGetPedidoVenta.setProperty("/oMaterialTotal", oResultMaterial);
 
@@ -616,13 +637,34 @@ sap.ui.define([
 
                 var date = that.reformatDateString(jSelected.fechaentrega);
                 var sFlete = "0";
-                if(jSelected.canal === "10"){
-                    if(jSelected.Kdgrp === "12"){
-                        sFlete = "8.4745762711864406779661016949153";
-                    }else if(jSelected.Kdgrp === "13"){ // falta poner menor a 450
-                        sFlete = "8.4745762711864406779661016949153 por monto menor a 450";
+                //cambio 21/03/2022
+                var sContInicial = 0;
+                var jFleteSelect = {};
+                jSelected.oMateriales.results.forEach(function(value, index){
+                    sContInicial += parseFloat(value.Total)*that.sinigv;
+                });
+                if(oResulFlete.length > 0){
+                    oResulFlete.forEach(function(items){
+                        if(parseFloat(items.KSTBW) <= sContInicial && parseFloat(items.KSTBWB) > sContInicial){
+                            jFleteSelect = items;
+                        }
+                    });
+
+                    if(Object.keys(jFleteSelect).length > 0){
+                        var iKbetr = parseFloat(jFleteSelect.KBETR);
+                        if(iKbetr > 0){
+                            if(that.isEmpty(jFleteSelect.KZBZG)){
+                                sFlete = iKbetr.toString();
+                            }else{
+                                sFlete = iKbetr.toString() +" "+that.getI18nText("messageMontoMenor")+ (parseFloat(jFleteSelect.KSTBWB)).toString();
+                            }
+                        }else{
+                            sFlete = iKbetr.toString();
+                        }
                     }
+                    
                 }
+                
                 var oChangeParameterSelected = {
                     "sNumeroPedido": jSelected.pedido,
                     "sTextDescContacto": "",
@@ -736,6 +778,7 @@ sap.ui.define([
                 if(oChangeParameterSelected.textFlete === "0"){
                     that.getModel("oModelPedidoVenta").setProperty("/DataGeneral/oFlete", []);
                 }else{
+                    var iFlete = parseFloat((parseFloat(oChangeParameterSelected.textFlete)*that.igv).toFixed(0)); 
                     var jFlete = {
                         "Codfa":"",
                         "Kbetr":"0",
@@ -749,7 +792,7 @@ sap.ui.define([
                         "icon":"sap-icon://inbox",
                         "state":"Success",
                         "cantidad": "0",
-                        "total": (parseFloat(oChangeParameterSelected.textFlete)*that.igv).toFixed(3),
+                        "total": (iFlete).toFixed(3),
                         "descuentos":"0%",
                         "descuentosVolumen1":"0%",
                         "descuentosVolumen2":"0%",
@@ -766,6 +809,7 @@ sap.ui.define([
 
                 that.oModelPedidoVenta.setProperty("/DataGeneral/oMaterial",oMaterial);
                 sap.ui.core.BusyIndicator.hide(0);
+                iCont = 1;
                 that.oRouter.navTo("Detail", {
                     app: "2"
                 });
@@ -963,11 +1007,17 @@ sap.ui.define([
                             jFleteSelect = items;
                         }
                     });
-                    
-                    if(that.isEmpty(jFleteSelect.KZBZG)){
-                        sFlete = (parseFloat(jFleteSelect.KBETR)).toString();
-                    }else{
-                        sFlete = (parseFloat(jFleteSelect.KBETR)).toString() +" "+that.getI18nText("messageMontoMenor")+ (parseFloat(jFleteSelect.KSTBWB)).toString();
+                    if(Object.keys(jFleteSelect).length > 0){
+                        var iKbetr = parseFloat(jFleteSelect.KBETR);
+                        if(iKbetr.length > 0){
+                            if(that.isEmpty(jFleteSelect.KZBZG)){
+                                sFlete = iKbetr.toString();
+                            }else{
+                                sFlete = iKbetr.toString() +" "+that.getI18nText("messageMontoMenor")+ (parseFloat(jFleteSelect.KSTBWB)).toString();
+                            }
+                        }else{
+                            sFlete = iKbetr.toString(); 
+                        }
                     }
                 }
                 var oChangeParameterSelected = {
@@ -1185,7 +1235,7 @@ sap.ui.define([
                         that._onClearComponentSelectClient();
                         that._onClearComponentClient();
                         that["_dialogDetailCliente"].close();
-
+                        iCont = 1;
                         that.oRouter.navTo("Detail", {
                             app: "2"
                         });
