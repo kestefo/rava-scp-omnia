@@ -3764,7 +3764,7 @@ sap.ui.define([
         _onPressDetailPromotion: function (oEvent) {
             var oSource = oEvent.getSource();
             var jObject = oSource.getBindingContext("oModelPedidoVenta").getObject();
-            var oMaterial = jObject.oMaterialPadre;
+            var oMaterial = jObject.oMaterialPadre ;
             if (oMaterial.length > 0) {
                 this.setFragment("_dialogAddPromotions", this.frgIdAddPromotions, "AddPromotions", this);
                 var sCodeProm = parseFloat(oMaterial[0].codeProm).toString();
